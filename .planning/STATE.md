@@ -19,3 +19,11 @@ See: .planning/PROJECT.md (updated 2026-06-20)
 
 ## Concerns Backlog
 All items in `.planning/codebase/CONCERNS.md` are intentionally deferred. Address after design is approved.
+
+### Quick Tasks Completed
+
+| # | Description | Date | Directory |
+|---|-------------|------|-----------|
+| 260620-q01 | Fix navbar scroll navigation | 2026-06-20 | [260620-q01-navbar-scroll-fix](.planning/quick/260620-q01-navbar-scroll-fix/) |
+
+Last activity: 2026-06-20 - Completed quick task 260620-q01: Fix navbar scroll navigation
