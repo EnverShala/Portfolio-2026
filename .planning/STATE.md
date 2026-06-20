@@ -25,5 +25,6 @@ All items in `.planning/codebase/CONCERNS.md` are intentionally deferred. Addres
 | # | Description | Date | Directory |
 |---|-------------|------|-----------|
 | 260620-q01 | Fix navbar scroll navigation | 2026-06-20 | [260620-q01-navbar-scroll-fix](.planning/quick/260620-q01-navbar-scroll-fix/) |
+| 260620-q04 | Create translatable Imprint/Impressum page | 2026-06-20 | [260620-q04-impressum-page](.planning/quick/260620-q04-impressum-page/) |
 
-Last activity: 2026-06-20 - Completed quick task 260620-q01: Fix navbar scroll navigation
+Last activity: 2026-06-20 - Completed quick task 260620-q04: Create translatable Imprint/Impressum page
