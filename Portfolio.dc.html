@@ -254,7 +254,7 @@
           <textarea required rows="5" placeholder="{{ t.contact.msgPh }}" data-hover style="padding: 16px 18px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-family: 'Manrope', sans-serif; font-size: 15px; outline: none; resize: vertical; transition: border-color .2s;" style-focus="border-color: var(--purple);"></textarea>
           <label style="display: flex; align-items: flex-start; gap: 10px; font-size: 13px; line-height: 1.5; color: var(--muted); cursor: pointer;">
             <input type="checkbox" required style="margin-top: 3px; accent-color: #34d399; width: 16px; height: 16px;" />
-            <span>{{ t.contact.privacy1 }} <span style="color: var(--purple);">{{ t.contact.privacyLink }}</span> {{ t.contact.privacy2 }}</span>
+            <span>{{ t.contact.privacy1 }} <a href="datenschutz.dc.html" target="_blank" style="color: var(--purple); text-decoration: underline; cursor: pointer;">{{ t.contact.privacyLink }}</a> {{ t.contact.privacy2 }}</span>
           </label>
           <button type="submit" data-hover style="margin-top: 6px; align-self: flex-start; display: inline-flex; align-items: center; gap: 10px; padding: 15px 34px; background: var(--green); color: #08230a; border: none; border-radius: 12px; font-family: 'Manrope', sans-serif; font-weight: 700; font-size: 15px; cursor: pointer; transition: transform .2s, box-shadow .2s; box-shadow: 0 10px 30px rgba(52,211,153,0.25);" style-hover="transform: translateY(-2px); box-shadow: 0 14px 40px rgba(52,211,153,0.4);">{{ t.contact.send }} &nbsp;→</button>
         </sc-if>
