@@ -27,6 +27,7 @@
   @keyframes bobArrow { 0%,100% { transform: translateY(0); opacity: .5; } 50% { transform: translateY(8px); opacity: 1; } }
   @keyframes ringSpin { to { transform: rotate(360deg); } }
   @media (hover: none) { .cc-cursor { display: none !important; } }
+  #about, #skills, #portfolio, #contact { scroll-margin-top: 80px; }
 </style>
 </helmet>
 
@@ -568,7 +569,6 @@ class Component extends DCLogic {
   }
 
   setupNavScroll() {
-    const nav = document.querySelector('nav');
     document.querySelectorAll('a[href^="#"]').forEach(link => {
       link.addEventListener('click', (e) => {
         const id = link.getAttribute('href').slice(1);
@@ -577,9 +577,7 @@ class Component extends DCLogic {
         if (id === 'top') { window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
         const target = document.getElementById(id);
         if (!target) return;
-        const navH = nav ? nav.getBoundingClientRect().height : 80;
-        const top = target.getBoundingClientRect().top + window.scrollY - navH - 10;
-        window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
     });
   }
