@@ -27,7 +27,7 @@
   @keyframes bobArrow { 0%,100% { transform: translateY(0); opacity: .5; } 50% { transform: translateY(8px); opacity: 1; } }
   @keyframes ringSpin { to { transform: rotate(360deg); } }
   @media (hover: none) { .cc-cursor { display: none !important; } }
-  #about, #skills, #portfolio, #contact { scroll-margin-top: 80px; }
+  #about, #skills, #portfolio, #contact { scroll-margin-top: 0; }
 </style>
 </helmet>
 
@@ -100,7 +100,7 @@
   </section>
 
   <!-- ABOUT -->
-  <section id="about" data-screen-label="Über mich" style="position: relative; z-index: 1; padding: clamp(70px, 11vw, 130px) clamp(20px, 5vw, 64px); max-width: 1280px; margin: 0 auto; scroll-margin-top: 80px;">
+  <section id="about" data-screen-label="Über mich" style="position: relative; z-index: 1; padding: clamp(70px, 11vw, 130px) clamp(20px, 5vw, 64px); max-width: 1280px; margin: 0 auto; scroll-margin-top: 0;">
     <div data-reveal style="display: flex; align-items: center; gap: 14px; margin-bottom: 14px;">
       <span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--green);">01</span>
       <span style="flex: 1; max-width: 80px; height: 1px; background: var(--border);"></span>
@@ -132,7 +132,7 @@
   </section>
 
   <!-- SKILLS -->
-  <section id="skills" data-screen-label="Skills" style="position: relative; z-index: 1; padding: clamp(70px, 11vw, 130px) clamp(20px, 5vw, 64px); max-width: 1280px; margin: 0 auto; scroll-margin-top: 80px;">
+  <section id="skills" data-screen-label="Skills" style="position: relative; z-index: 1; padding: clamp(70px, 11vw, 130px) clamp(20px, 5vw, 64px); max-width: 1280px; margin: 0 auto; scroll-margin-top: 0;">
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: clamp(40px, 6vw, 70px); align-items: center;">
       <div data-reveal style="display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 14px;">
         <sc-for list="{{ skills }}" as="sk" hint-placeholder-count="14">
@@ -157,7 +157,7 @@
   </section>
 
   <!-- PORTFOLIO -->
-  <section id="portfolio" data-screen-label="Portfolio" style="position: relative; z-index: 1; padding: clamp(70px, 11vw, 130px) clamp(20px, 5vw, 64px); max-width: 1280px; margin: 0 auto; scroll-margin-top: 80px;">
+  <section id="portfolio" data-screen-label="Portfolio" style="position: relative; z-index: 1; padding: clamp(70px, 11vw, 130px) clamp(20px, 5vw, 64px); max-width: 1280px; margin: 0 auto; scroll-margin-top: 0;">
     <div data-reveal style="display: flex; align-items: center; justify-content: center; gap: 20px; margin-bottom: 18px;">
       <span style="flex: 1; max-width: 120px; height: 1px; background: linear-gradient(90deg, transparent, var(--purple));"></span>
       <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: clamp(2.4rem, 6vw, 4rem); line-height: 1; letter-spacing: -0.02em; color: var(--text);">{{ t.portfolio.heading }}</h2>
@@ -230,7 +230,7 @@
   </section>
 
   <!-- CONTACT -->
-  <section id="contact" data-screen-label="Kontakt" style="position: relative; z-index: 1; padding: clamp(70px, 11vw, 130px) clamp(20px, 5vw, 64px) clamp(60px, 8vw, 100px); max-width: 1280px; margin: 0 auto; scroll-margin-top: 80px;">
+  <section id="contact" data-screen-label="Kontakt" style="position: relative; z-index: 1; padding: clamp(70px, 11vw, 130px) clamp(20px, 5vw, 64px) clamp(60px, 8vw, 100px); max-width: 1280px; margin: 0 auto; scroll-margin-top: 0;">
     <div data-reveal style="display: flex; align-items: center; gap: 20px; margin-bottom: 18px;">
       <span style="flex: 1; max-width: 160px; height: 1px; background: linear-gradient(90deg, transparent, var(--purple));"></span>
       <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: clamp(2.4rem, 6vw, 4rem); line-height: 1; letter-spacing: -0.02em; color: var(--text);">{{ t.contact.heading }}</h2>
@@ -569,6 +569,7 @@ class Component extends DCLogic {
   }
 
   setupNavScroll() {
+    const nav = document.querySelector('nav');
     document.querySelectorAll('a[href^="#"]').forEach(link => {
       link.addEventListener('click', (e) => {
         const id = link.getAttribute('href').slice(1);
@@ -577,7 +578,9 @@ class Component extends DCLogic {
         if (id === 'top') { window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
         const target = document.getElementById(id);
         if (!target) return;
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        const navH = nav ? nav.getBoundingClientRect().height : 0;
+        const top = target.getBoundingClientRect().top + window.scrollY - navH;
+        window.scrollTo({ top, behavior: 'smooth' });
       });
     });
   }
