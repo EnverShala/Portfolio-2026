@@ -38,7 +38,6 @@
   <nav style="position: fixed; top: 0; left: 0; right: 0; z-index: 150; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px clamp(20px, 5vw, 64px); backdrop-filter: blur(14px); background: rgba(7,10,11,0.80); border-bottom: 1px solid var(--border);">
     <a href="./" data-hover style="display: inline-flex; align-items: center; gap: 8px; text-decoration: none; color: var(--muted); font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 0.04em; transition: color .2s, text-shadow .2s;" style-hover="color: var(--text); text-shadow: 0 0 12px rgba(255,255,255,0.5);">← {{ t.nav.back }}</a>
     <div style="display: flex; align-items: center; gap: 14px;">
-      <a href="./" data-hover style="text-decoration: none; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 17px; color: var(--text); transition: color .2s, text-shadow .2s;" style-hover="color: var(--green); text-shadow: 0 0 14px rgba(52,211,153,0.5);">Enver Shala</a>
       <button data-hover onClick="{{ toggleLang }}" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border: 1px solid var(--border); background: var(--surface); color: var(--text); border-radius: 9px; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 500; cursor: pointer; transition: border-color .2s, color .2s, transform .2s;" style-hover="border-color: var(--green); color: var(--green); transform: scale(1.06);">{{ langLabel }}</button>
     </div>
   </nav>
