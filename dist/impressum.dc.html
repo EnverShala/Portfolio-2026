@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="./fonts/fonts.css">
+<style>
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: #070a0b; color: #e9efee; font-family: 'Manrope', system-ui, sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+  ::selection { background: rgba(52,211,153,0.28); color: #fff; }
+  ::-webkit-scrollbar { width: 10px; }
+  ::-webkit-scrollbar-track { background: #070a0b; }
+  ::-webkit-scrollbar-thumb { background: #1c2829; border-radius: 6px; }
+  ::-webkit-scrollbar-thumb:hover { background: #28383a; }
+  @keyframes floatBlob { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(36px,-28px) scale(1.1); } }
+  @keyframes floatBlob2 { 0%,100% { transform: translate(0,0) scale(1.06); } 50% { transform: translate(-44px,34px) scale(0.96); } }
+  @media (hover: none) { .cc-cursor { display: none !important; } }
+  h1, h2, h3 { font-family: 'Space Grotesk', sans-serif; }
+</style>
+</helmet>
+
+<div style="--bg: #070a0b; --surface: rgba(255,255,255,0.03); --surface2: #0f1719; --border: rgba(255,255,255,0.09); --text: #e9efee; --muted: #8a9794; --green: #34d399; --green-rgb: 52,211,153; position: relative; min-height: 100vh; background: #070a0b; overflow: hidden;">
+
+  <!-- animated background -->
+  <div style="position: fixed; top: -12%; left: -8%; width: 46vw; height: 46vw; max-width: 620px; max-height: 620px; border-radius: 50%; background: radial-gradient(circle, rgba(52,211,153,0.07), transparent 70%); filter: blur(46px); z-index: 0; pointer-events: none; animation: floatBlob 22s ease-in-out infinite;"></div>
+  <div style="position: fixed; bottom: -16%; right: -10%; width: 52vw; height: 52vw; max-width: 700px; max-height: 700px; border-radius: 50%; background: radial-gradient(circle, rgba(52,211,153,0.05), transparent 70%); filter: blur(54px); z-index: 0; pointer-events: none; animation: floatBlob2 28s ease-in-out infinite;"></div>
+
+  <!-- custom cursor -->
+  <div class="cc-cursor" ref="{{ cursorRingRef }}" style="position: fixed; top: 0; left: 0; width: 240px; height: 240px; border-radius: 50%; background: radial-gradient(circle, rgba(52,211,153,0.12), rgba(52,211,153,0.04) 40%, transparent 70%); transform: translate(-50%,-50%); pointer-events: none; z-index: 9999; transition: opacity .3s ease; mix-blend-mode: screen; opacity: 0.9;"></div>
+
+  <!-- NAV -->
+  <nav style="position: fixed; top: 0; left: 0; right: 0; z-index: 150; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px clamp(20px, 5vw, 64px); backdrop-filter: blur(14px); background: rgba(13,21,38,0.6); border-bottom: 1px solid var(--border);">
+    <a href="Portfolio.dc.html" data-hover style="display: inline-flex; align-items: center; gap: 8px; text-decoration: none; color: var(--muted); font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 0.04em; transition: color .2s;" style-hover="color: var(--text);">← {{ t.nav.back }}</a>
+    <div style="display: flex; align-items: center; gap: 14px;">
+      <span style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 17px; color: var(--text);">Enver Shala</span>
+      <button data-hover onClick="{{ toggleLang }}" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border: 1px solid var(--border); background: var(--surface); color: var(--text); border-radius: 9px; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 500; cursor: pointer; transition: border-color .2s, color .2s;" style-hover="border-color: var(--green); color: var(--green);">{{ langLabel }}</button>
+    </div>
+  </nav>
+
+  <!-- CONTENT -->
+  <main style="position: relative; z-index: 1; max-width: 800px; margin: 0 auto; padding: clamp(100px, 14vw, 150px) clamp(20px, 5vw, 64px) clamp(60px, 8vw, 100px);">
+
+    <!-- Heading -->
+    <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 14px;">
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--green);">§</span>
+      <span style="flex: 1; max-width: 80px; height: 1px; background: var(--border);"></span>
+    </div>
+    <h1 style="margin: 0 0 60px; font-weight: 700; font-size: clamp(2.4rem, 6vw, 3.6rem); line-height: 1; letter-spacing: -0.02em; color: var(--text);">{{ t.heading }}</h1>
+
+    <!-- Section: Legal Info -->
+    <section style="margin-bottom: 48px; padding: 32px; border: 1px solid var(--border); border-radius: 16px; background: var(--surface);">
+      <h2 style="margin: 0 0 20px; font-size: 1.1rem; font-weight: 600; color: var(--green); font-family: 'JetBrains Mono', monospace; letter-spacing: 0.04em; text-transform: uppercase;">{{ t.section1.title }}</h2>
+      <p style="margin: 0 0 6px; font-size: 1rem; line-height: 1.7; color: var(--text);">Enver Shala</p>
+      <p style="margin: 0 0 6px; font-size: 1rem; line-height: 1.7; color: var(--muted);">Gartenstr. 86</p>
+      <p style="margin: 0 0 24px; font-size: 1rem; line-height: 1.7; color: var(--muted);">70734 Fellbach</p>
+      <p style="margin: 0; font-size: 0.95rem; color: var(--muted);"><span style="color: var(--text); font-weight: 500;">{{ t.section1.repLabel }}</span>&nbsp; Enver Shala</p>
+    </section>
+
+    <!-- Section: Contact -->
+    <section style="margin-bottom: 48px; padding: 32px; border: 1px solid var(--border); border-radius: 16px; background: var(--surface);">
+      <h2 style="margin: 0 0 20px; font-size: 1.1rem; font-weight: 600; color: var(--green); font-family: 'JetBrains Mono', monospace; letter-spacing: 0.04em; text-transform: uppercase;">{{ t.section2.title }}</h2>
+      <p style="margin: 0 0 8px; font-size: 1rem; line-height: 1.7; color: var(--muted);"><span style="color: var(--text); font-weight: 500;">{{ t.section2.phone }}:</span>&nbsp; 017664136199</p>
+      <p style="margin: 0; font-size: 1rem; line-height: 1.7; color: var(--muted);"><span style="color: var(--text); font-weight: 500;">{{ t.section2.email }}:</span>&nbsp; <a href="mailto:envershala1989@gmail.com" style="color: var(--green); text-decoration: none;">envershala1989@gmail.com</a></p>
+    </section>
+
+    <!-- Section: Disclaimer -->
+    <section style="margin-bottom: 48px; padding: 32px; border: 1px solid var(--border); border-radius: 16px; background: var(--surface);">
+      <h2 style="margin: 0 0 8px; font-size: 1.1rem; font-weight: 600; color: var(--green); font-family: 'JetBrains Mono', monospace; letter-spacing: 0.04em; text-transform: uppercase;">{{ t.section3.title }}</h2>
+      <h3 style="margin: 0 0 16px; font-size: 1rem; font-weight: 600; color: var(--text);">{{ t.section3.privacyHeading }}</h3>
+      <p style="margin: 0 0 16px; font-size: 0.97rem; line-height: 1.75; color: var(--muted);">{{ t.section3.p1 }}</p>
+      <p style="margin: 0 0 16px; font-size: 0.97rem; line-height: 1.75; color: var(--muted);">{{ t.section3.p2 }}</p>
+      <p style="margin: 0; font-size: 0.97rem; line-height: 1.75; color: var(--muted);">{{ t.section3.p3 }}</p>
+    </section>
+
+    <!-- Generator note -->
+    <p style="font-size: 0.85rem; color: var(--muted); line-height: 1.6; border-top: 1px solid var(--border); padding-top: 28px;">
+      {{ t.generatorNote }}
+    </p>
+
+  </main>
+
+  <!-- FOOTER -->
+  <div style="position: relative; z-index: 1; height: 3px; background: linear-gradient(90deg, #34d399, #34d399); box-shadow: 0 0 16px rgba(52,211,153,0.4);"></div>
+  <footer style="position: relative; z-index: 1; padding: 30px clamp(20px, 5vw, 64px); max-width: 800px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: center;">
+    <a href="Portfolio.dc.html" data-hover style="color: var(--muted); text-decoration: none; font-family: 'JetBrains Mono', monospace; font-size: 13px; transition: color .2s;" style-hover="color: var(--green);">← {{ t.nav.back }}</a>
+    <span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--muted);">© Enver Shala 2026</span>
+  </footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:&quot;100%&quot;}}">
+class Component extends DCLogic {
+  state = { lang: 'de' };
+
+  cursorRingRef = React.createRef();
+
+  CONTENT = {
+    de: {
+      nav: { back: 'Zurück zum Portfolio' },
+      heading: 'Impressum',
+      section1: {
+        title: 'Angaben gemäß § 5 DDG',
+        repLabel: 'Vertreten durch:'
+      },
+      section2: {
+        title: 'Kontakt',
+        phone: 'Telefon',
+        email: 'E-Mail'
+      },
+      section3: {
+        title: 'Haftungsausschluss',
+        privacyHeading: 'Datenschutz',
+        p1: 'Die Nutzung unserer Webseite ist in der Regel ohne Angabe personenbezogener Daten möglich. Soweit auf unseren Seiten personenbezogene Daten (beispielsweise Name, Anschrift oder eMail-Adressen) erhoben werden, erfolgt dies, soweit möglich, stets auf freiwilliger Basis. Diese Daten werden ohne Ihre ausdrückliche Zustimmung nicht an Dritte weitergegeben.',
+        p2: 'Wir weisen darauf hin, dass die Datenübertragung im Internet (z.B. bei der Kommunikation per E-Mail) Sicherheitslücken aufweisen kann. Ein lückenloser Schutz der Daten vor dem Zugriff durch Dritte ist nicht möglich.',
+        p3: 'Der Nutzung von im Rahmen der Impressumspflicht veröffentlichten Kontaktdaten durch Dritte zur Übersendung von nicht ausdrücklich angeforderter Werbung und Informationsmaterialien wird hiermit ausdrücklich widersprochen. Die Betreiber der Seiten behalten sich ausdrücklich rechtliche Schritte im Falle der unverlangten Zusendung von Werbeinformationen, etwa durch Spam-Mails, vor.'
+      },
+      generatorNote: 'Impressum erstellt durch den Impressum Generator der Kanzlei Hasselbach, Rechtsanwälte für Familienrecht'
+    },
+    en: {
+      nav: { back: 'Back to Portfolio' },
+      heading: 'Imprint',
+      section1: {
+        title: 'Information according to § 5 DDG',
+        repLabel: 'Represented by:'
+      },
+      section2: {
+        title: 'Contact',
+        phone: 'Phone',
+        email: 'E-Mail'
+      },
+      section3: {
+        title: 'Disclaimer',
+        privacyHeading: 'Privacy Policy',
+        p1: 'The use of our website is generally possible without providing personal data. If personal data (such as name, address, or email addresses) is collected on our pages, this is always done on a voluntary basis whenever possible. These data will not be passed on to third parties without your explicit consent.',
+        p2: 'We would like to point out that data transmission on the Internet (e.g., when communicating via email) can have security vulnerabilities. A complete protection of data from access by third parties is not possible.',
+        p3: 'The use of contact data published within the scope of the legal imprint obligation by third parties for sending unsolicited advertising and information materials is hereby expressly prohibited. The operators of the pages expressly reserve the right to take legal action in the event of the unsolicited sending of advertising information, such as spam emails.'
+      },
+      generatorNote: 'Imprint from Impressum Generator the Hasselbach Law Firm, Specialist Lawyers for Family Law'
+    }
+  };
+
+  toggleLang = () => {
+    this.setState({ lang: this.state.lang === 'de' ? 'en' : 'de' });
+  };
+
+  renderVals() {
+    return {
+      t: this.CONTENT[this.state.lang],
+      langLabel: this.state.lang === 'de' ? 'EN ↔' : 'DE ↔',
+      toggleLang: this.toggleLang,
+      cursorRingRef: this.cursorRingRef
+    };
+  }
+
+  componentDidMount() {
+    this.mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+    this.ring = { x: this.mouse.x, y: this.mouse.y };
+    this._onMove = (e) => { this.mouse.x = e.clientX; this.mouse.y = e.clientY; };
+    window.addEventListener('mousemove', this._onMove);
+    const ring = this.cursorRingRef.current;
+    const loop = () => {
+      this.ring.x += (this.mouse.x - this.ring.x) * 0.18;
+      this.ring.y += (this.mouse.y - this.ring.y) * 0.18;
+      if (ring) ring.style.transform = 'translate(' + this.ring.x + 'px,' + this.ring.y + 'px) translate(-50%,-50%)';
+      this._craf = requestAnimationFrame(loop);
+    };
+    this._craf = requestAnimationFrame(loop);
+  }
+
+  componentWillUnmount() {
+    cancelAnimationFrame(this._craf);
+    if (this._onMove) window.removeEventListener('mousemove', this._onMove);
+  }
+}
+</script>
+</body>
+</html>

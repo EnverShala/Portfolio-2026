@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Disallow: /sendMail.php
+Disallow: /uploads/

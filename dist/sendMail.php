@@ -1,36 +1,70 @@
 <?php
 
+// --- Config ---
+$behindProxy = false; // set true if behind Cloudflare or a trusted Nginx reverse proxy
+
 // --- Rate limiting (file-based, no DB required) ---
 $rateLimit  = 3;    // max requests
 $rateWindow = 600;  // per 10 minutes (seconds)
-$ip         = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
-$cacheFile  = sys_get_temp_dir() . '/rl_' . md5($ip) . '.json';
+
+function getClientIp(bool $behindProxy): string {
+    if ($behindProxy) {
+        // Cloudflare always sets this; only trust it when actually using CF
+        if (!empty($_SERVER['HTTP_CF_CONNECTING_IP'])) {
+            $ip = trim($_SERVER['HTTP_CF_CONNECTING_IP']);
+            if (filter_var($ip, FILTER_VALIDATE_IP)) return $ip;
+        }
+        // Standard reverse-proxy header — take only the leftmost (client) IP
+        if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            $ip = trim(explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])[0]);
+            if (filter_var($ip, FILTER_VALIDATE_IP)) return $ip;
+        }
+    }
+    return $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+}
 
 function checkRateLimit(string $file, int $limit, int $window): bool {
-    $now  = time();
+    $now = time();
+    $fh  = fopen($file, 'c+');
+    if ($fh === false) return true; // fail open if filesystem unavailable
+
+    flock($fh, LOCK_EX); // exclusive lock covers the entire read-check-write cycle
+
+    $raw  = stream_get_contents($fh);
     $data = ['count' => 0, 'reset' => $now + $window];
 
-    if (file_exists($file)) {
-        $raw = file_get_contents($file);
-        if ($raw !== false) {
-            $stored = json_decode($raw, true);
-            if (is_array($stored) && isset($stored['reset'], $stored['count']) && $stored['reset'] > $now) {
-                $data = $stored;
-            }
+    if ($raw !== '') {
+        $stored = json_decode($raw, true);
+        if (is_array($stored) && isset($stored['reset'], $stored['count']) && $stored['reset'] > $now) {
+            $data = $stored;
         }
     }
 
     if ($data['count'] >= $limit) {
+        flock($fh, LOCK_UN);
+        fclose($fh);
         return false;
     }
 
     $data['count']++;
-    file_put_contents($file, json_encode($data), LOCK_EX);
+    ftruncate($fh, 0);
+    rewind($fh);
+    fwrite($fh, json_encode($data));
+    flock($fh, LOCK_UN);
+    fclose($fh);
     return true;
 }
 
+$ip        = getClientIp($behindProxy);
+$cacheFile = sys_get_temp_dir() . '/rl_' . md5($ip) . '.json';
+
+// --- Security headers ---
+header('X-Content-Type-Options: nosniff');
+header('X-Frame-Options: DENY');
+header('Referrer-Policy: strict-origin-when-cross-origin');
+
 // --- CORS: restrict to own domain ---
-$allowedOrigins = ['https://vizionists.com', 'https://www.vizionists.com'];
+$allowedOrigins = ['https://enver-shala.de', 'https://www.enver-shala.de'];
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 if (in_array($origin, $allowedOrigins, true)) {
     header('Access-Control-Allow-Origin: ' . $origin);
@@ -69,6 +103,14 @@ switch ($_SERVER['REQUEST_METHOD']) {
         if (!is_array($params)) {
             http_response_code(400);
             echo json_encode(['error' => 'Invalid request.']);
+            exit;
+        }
+
+        // Honeypot: bots fill hidden fields, humans don't
+        // Return fake success so attackers learn nothing about the mechanism
+        if (!empty($params['website'])) {
+            http_response_code(200);
+            echo json_encode(['success' => true]);
             exit;
         }
 
@@ -122,7 +164,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
         $headers   = [];
         $headers[] = 'MIME-Version: 1.0';
         $headers[] = 'Content-Type: text/plain; charset=utf-8';
-        $headers[] = 'From: portfolio-no-reply@vizionists.com';
+        $headers[] = 'From: portfolio-no-reply@enver-shala.de';
         $headers[] = 'Reply-To: ' . $email;
 
         $sent = mail($recipient, $subject, $body, implode("\r\n", $headers));

@@ -1,0 +1,13 @@
+# Deploy artifacts
+portfolio-deploy.zip
+portfolio-deploy.tar.gz
+
+# Uploaded user files (screenshots, images dropped into image-slots)
+uploads/*
+!uploads/.htaccess
+dist/uploads/*
+!dist/uploads/.htaccess
+
+# Internal tooling
+.planning/
+.thumbnail

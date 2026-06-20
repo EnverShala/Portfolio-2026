@@ -46,12 +46,12 @@
 
   <!-- NAV -->
   <nav style="position: fixed; top: 0; left: 0; right: 0; z-index: 150; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px clamp(20px, 5vw, 64px); backdrop-filter: blur(14px); background: rgba(13,21,38,0.6); border-bottom: 1px solid var(--border);">
-    <a href="#top" data-hover style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 19px; letter-spacing: -0.01em; transition: color .2s, transform .2s, text-shadow .2s;" style-hover="color: var(--green); transform: scale(1.05); text-shadow: 0 0 14px rgba(52,211,153,0.5);">Enver Shala</a>
+    <a href="#top" data-hover style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 19px; letter-spacing: -0.01em; transition: color .2s, text-shadow .2s;" style-hover="color: var(--green); text-shadow: 0 0 14px rgba(52,211,153,0.5);">Enver Shala</a>
     <div style="display: flex; align-items: center; gap: clamp(14px, 2vw, 30px); flex-wrap: wrap; justify-content: flex-end;">
-      <a href="#about" data-hover style="text-decoration: none; color: var(--muted); font-size: 14px; font-weight: 500; transition: color .2s, transform .2s, text-shadow .2s;" style-hover="color: var(--text); transform: scale(1.08); text-shadow: 0 0 12px rgba(255,255,255,0.5);">{{ t.nav.about }}</a>
-      <a href="#skills" data-hover style="text-decoration: none; color: var(--muted); font-size: 14px; font-weight: 500; transition: color .2s, transform .2s, text-shadow .2s;" style-hover="color: var(--text); transform: scale(1.08); text-shadow: 0 0 12px rgba(255,255,255,0.5);">{{ t.nav.skills }}</a>
-      <a href="#portfolio" data-hover style="text-decoration: none; color: var(--muted); font-size: 14px; font-weight: 500; transition: color .2s, transform .2s, text-shadow .2s;" style-hover="color: var(--text); transform: scale(1.08); text-shadow: 0 0 12px rgba(255,255,255,0.5);">{{ t.nav.portfolio }}</a>
-      <a href="#contact" data-hover style="text-decoration: none; color: var(--muted); font-size: 14px; font-weight: 500; transition: color .2s, transform .2s, text-shadow .2s;" style-hover="color: var(--text); transform: scale(1.08); text-shadow: 0 0 12px rgba(255,255,255,0.5);">{{ t.nav.contact }}</a>
+      <a href="#about" data-hover style="text-decoration: none; color: var(--muted); font-size: 14px; font-weight: 500; transition: color .2s, text-shadow .2s;" style-hover="color: var(--text); text-shadow: 0 0 12px rgba(255,255,255,0.5);">{{ t.nav.about }}</a>
+      <a href="#skills" data-hover style="text-decoration: none; color: var(--muted); font-size: 14px; font-weight: 500; transition: color .2s, text-shadow .2s;" style-hover="color: var(--text); text-shadow: 0 0 12px rgba(255,255,255,0.5);">{{ t.nav.skills }}</a>
+      <a href="#portfolio" data-hover style="text-decoration: none; color: var(--muted); font-size: 14px; font-weight: 500; transition: color .2s, text-shadow .2s;" style-hover="color: var(--text); text-shadow: 0 0 12px rgba(255,255,255,0.5);">{{ t.nav.portfolio }}</a>
+      <a href="#contact" data-hover style="text-decoration: none; color: var(--muted); font-size: 14px; font-weight: 500; transition: color .2s, text-shadow .2s;" style-hover="color: var(--text); text-shadow: 0 0 12px rgba(255,255,255,0.5);">{{ t.nav.contact }}</a>
       <button data-hover onClick="{{ toggleLang }}" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border: 1px solid var(--border); background: var(--surface); color: var(--text); border-radius: 9px; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 500; cursor: pointer; transition: border-color .2s, color .2s, transform .2s;" style-hover="border-color: var(--green); color: var(--green); transform: scale(1.06);">{{ langLabel }}</button>
     </div>
   </nav>
@@ -166,69 +166,9 @@
       <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: clamp(2.4rem, 6vw, 4rem); line-height: 1; letter-spacing: -0.02em; color: var(--text);">{{ t.portfolio.heading }}</h2>
       <span style="flex: 1; max-width: 120px; height: 1px; background: linear-gradient(90deg, var(--purple), transparent);"></span>
     </div>
-    <p data-reveal style="margin: 0 auto 70px; max-width: 560px; text-align: center; font-size: 1.02rem; line-height: 1.7; color: var(--muted);">{{ t.portfolio.intro }}</p>
-
-    <!-- Join -->
-    <div data-reveal style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: clamp(30px, 5vw, 60px); align-items: center; margin-bottom: clamp(60px, 9vw, 110px);">
-      <div>
-        <h3 style="margin: 0 0 8px; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: clamp(1.7rem, 4vw, 2.4rem); color: var(--text);">Join</h3>
-        <p style="margin: 0 0 18px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--green); letter-spacing: 0.02em;">JavaScript | HTML | CSS | Firebase</p>
-        <p style="margin: 0 0 28px; max-width: 420px; font-size: 1rem; line-height: 1.7; color: var(--muted);">{{ t.portfolio.joinD }}</p>
-        <div style="display: flex; gap: 14px; flex-wrap: wrap;">
-          <a href="#" data-hover style="padding: 12px 24px; background: var(--purple); color: #fff; text-decoration: none; border-radius: 11px; font-weight: 600; font-size: 14px; transition: transform .2s, box-shadow .2s, filter .2s; box-shadow: 0 8px 26px rgba(52,211,153,0.3);" style-hover="transform: scale(1.05) translateY(-2px); box-shadow: 0 12px 34px rgba(52,211,153,0.45); filter: brightness(1.12);">{{ t.portfolio.live }}</a>
-          <a href="#" data-hover style="padding: 12px 24px; background: transparent; color: var(--green); text-decoration: none; border: 1px solid var(--green); border-radius: 11px; font-weight: 600; font-size: 14px; transition: background .2s, transform .2s, filter .2s;" style-hover="background: rgba(52,211,153,0.12); transform: scale(1.05) translateY(-2px); filter: brightness(1.15);">Github</a>
-        </div>
-      </div>
-      <div data-hover style="border: 1px solid var(--border); border-radius: 16px; overflow: hidden; background: var(--surface2); transition: border-color .3s, transform .3s; box-shadow: 0 20px 50px rgba(0,0,0,0.35);" style-hover="border-color: rgba(var(--purple-rgb),0.5); transform: translateY(-5px);">
-        <div style="display: flex; align-items: center; gap: 7px; padding: 11px 14px; border-bottom: 1px solid var(--border);">
-          <span style="width: 10px; height: 10px; border-radius: 50%; background: #ff5f57;"></span>
-          <span style="width: 10px; height: 10px; border-radius: 50%; background: #febc2e;"></span>
-          <span style="width: 10px; height: 10px; border-radius: 50%; background: #28c840;"></span>
-        </div>
-        <image-slot id="proj-join" shape="rect" fit="cover" placeholder="Join Screenshot" style="display: block; width: 100%; aspect-ratio: 16/10;"></image-slot>
-      </div>
-    </div>
-
-    <!-- El Pollo Loco (reversed) -->
-    <div data-reveal style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: clamp(30px, 5vw, 60px); align-items: center; margin-bottom: clamp(60px, 9vw, 110px);">
-      <div data-hover style="order: 2; border: 1px solid var(--border); border-radius: 16px; overflow: hidden; background: var(--surface2); transition: border-color .3s, transform .3s; box-shadow: 0 20px 50px rgba(0,0,0,0.35);" style-hover="border-color: rgba(var(--purple-rgb),0.5); transform: translateY(-5px);">
-        <div style="display: flex; align-items: center; gap: 7px; padding: 11px 14px; border-bottom: 1px solid var(--border);">
-          <span style="width: 10px; height: 10px; border-radius: 50%; background: #ff5f57;"></span>
-          <span style="width: 10px; height: 10px; border-radius: 50%; background: #febc2e;"></span>
-          <span style="width: 10px; height: 10px; border-radius: 50%; background: #28c840;"></span>
-        </div>
-        <image-slot id="proj-pollo" shape="rect" fit="cover" placeholder="El Pollo Loco Screenshot" style="display: block; width: 100%; aspect-ratio: 16/10;"></image-slot>
-      </div>
-      <div style="order: 1;">
-        <h3 style="margin: 0 0 8px; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: clamp(1.7rem, 4vw, 2.4rem); color: var(--text);">El Pollo Loco</h3>
-        <p style="margin: 0 0 18px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--green); letter-spacing: 0.02em;">JavaScript | HTML | CSS</p>
-        <p style="margin: 0 0 28px; max-width: 420px; font-size: 1rem; line-height: 1.7; color: var(--muted);">{{ t.portfolio.polloD }}</p>
-        <div style="display: flex; gap: 14px; flex-wrap: wrap;">
-          <a href="#" data-hover style="padding: 12px 24px; background: var(--purple); color: #fff; text-decoration: none; border-radius: 11px; font-weight: 600; font-size: 14px; transition: transform .2s, box-shadow .2s, filter .2s; box-shadow: 0 8px 26px rgba(52,211,153,0.3);" style-hover="transform: scale(1.05) translateY(-2px); box-shadow: 0 12px 34px rgba(52,211,153,0.45); filter: brightness(1.12);">{{ t.portfolio.live }}</a>
-          <a href="#" data-hover style="padding: 12px 24px; background: transparent; color: var(--green); text-decoration: none; border: 1px solid var(--green); border-radius: 11px; font-weight: 600; font-size: 14px; transition: background .2s, transform .2s, filter .2s;" style-hover="background: rgba(52,211,153,0.12); transform: scale(1.05) translateY(-2px); filter: brightness(1.15);">Github</a>
-        </div>
-      </div>
-    </div>
-
-    <!-- Pokèdex -->
-    <div data-reveal style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: clamp(30px, 5vw, 60px); align-items: center;">
-      <div>
-        <h3 style="margin: 0 0 8px; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: clamp(1.7rem, 4vw, 2.4rem); color: var(--text);">Pokèdex</h3>
-        <p style="margin: 0 0 18px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--green); letter-spacing: 0.02em;">JavaScript | HTML | CSS | API</p>
-        <p style="margin: 0 0 28px; max-width: 420px; font-size: 1rem; line-height: 1.7; color: var(--muted);">{{ t.portfolio.pokedexD }}</p>
-        <div style="display: flex; gap: 14px; flex-wrap: wrap;">
-          <a href="#" data-hover style="padding: 12px 24px; background: var(--purple); color: #fff; text-decoration: none; border-radius: 11px; font-weight: 600; font-size: 14px; transition: transform .2s, box-shadow .2s, filter .2s; box-shadow: 0 8px 26px rgba(52,211,153,0.3);" style-hover="transform: scale(1.05) translateY(-2px); box-shadow: 0 12px 34px rgba(52,211,153,0.45); filter: brightness(1.12);">{{ t.portfolio.live }}</a>
-          <a href="#" data-hover style="padding: 12px 24px; background: transparent; color: var(--green); text-decoration: none; border: 1px solid var(--green); border-radius: 11px; font-weight: 600; font-size: 14px; transition: background .2s, transform .2s, filter .2s;" style-hover="background: rgba(52,211,153,0.12); transform: scale(1.05) translateY(-2px); filter: brightness(1.15);">Github</a>
-        </div>
-      </div>
-      <div data-hover style="border: 1px solid var(--border); border-radius: 16px; overflow: hidden; background: var(--surface2); transition: border-color .3s, transform .3s; box-shadow: 0 20px 50px rgba(0,0,0,0.35);" style-hover="border-color: rgba(var(--purple-rgb),0.5); transform: translateY(-5px);">
-        <div style="display: flex; align-items: center; gap: 7px; padding: 11px 14px; border-bottom: 1px solid var(--border);">
-          <span style="width: 10px; height: 10px; border-radius: 50%; background: #ff5f57;"></span>
-          <span style="width: 10px; height: 10px; border-radius: 50%; background: #febc2e;"></span>
-          <span style="width: 10px; height: 10px; border-radius: 50%; background: #28c840;"></span>
-        </div>
-        <image-slot id="proj-pokedex" shape="rect" fit="cover" placeholder="Pokèdex Screenshot" style="display: block; width: 100%; aspect-ratio: 16/10;"></image-slot>
-      </div>
+    <div data-reveal style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: clamp(60px, 10vw, 120px) 20px; text-align: center; gap: 20px;">
+      <p style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: clamp(2.4rem, 7vw, 5rem); line-height: 1.1; letter-spacing: -0.03em; color: var(--text);">{{ t.portfolio.comingSoon }}</p>
+      <p style="margin: 0; font-family: 'JetBrains Mono', monospace; font-size: clamp(1rem, 2.5vw, 1.4rem); letter-spacing: 0.06em; color: var(--green);">{{ t.portfolio.wip }}</p>
     </div>
   </section>
 
@@ -252,9 +192,10 @@
           </div>
         </sc-if>
         <sc-if value="{{ notSent }}" hint-placeholder-val="{{ true }}">
-          <input type="text" name="name" required placeholder="{{ t.contact.namePh }}" data-hover style="padding: 16px 18px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-family: 'Manrope', sans-serif; font-size: 15px; outline: none; transition: border-color .2s;" style-focus="border-color: var(--purple);" />
-          <input type="email" name="email" required placeholder="{{ t.contact.emailPh }}" data-hover style="padding: 16px 18px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-family: 'Manrope', sans-serif; font-size: 15px; outline: none; transition: border-color .2s;" style-focus="border-color: var(--purple);" />
-          <textarea name="message" required rows="5" placeholder="{{ t.contact.msgPh }}" data-hover style="padding: 16px 18px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-family: 'Manrope', sans-serif; font-size: 15px; outline: none; resize: vertical; transition: border-color .2s;" style-focus="border-color: var(--purple);"></textarea>
+          <div aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;"><input type="text" name="website" tabindex="-1" autocomplete="off" /></div>
+          <input type="text" name="name" required maxlength="100" placeholder="{{ t.contact.namePh }}" data-hover style="padding: 16px 18px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-family: 'Manrope', sans-serif; font-size: 15px; outline: none; transition: border-color .2s;" style-focus="border-color: var(--purple);" />
+          <input type="email" name="email" required maxlength="254" placeholder="{{ t.contact.emailPh }}" data-hover style="padding: 16px 18px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-family: 'Manrope', sans-serif; font-size: 15px; outline: none; transition: border-color .2s;" style-focus="border-color: var(--purple);" />
+          <textarea name="message" required maxlength="5000" rows="5" placeholder="{{ t.contact.msgPh }}" data-hover style="padding: 16px 18px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-family: 'Manrope', sans-serif; font-size: 15px; outline: none; resize: vertical; transition: border-color .2s;" style-focus="border-color: var(--purple);"></textarea>
           <label style="display: flex; align-items: flex-start; gap: 10px; font-size: 13px; line-height: 1.5; color: var(--muted); cursor: pointer;">
             <input type="checkbox" required style="margin-top: 3px; accent-color: #34d399; width: 16px; height: 16px;" />
             <span>{{ t.contact.privacy1 }} <a href="datenschutz.dc.html" target="_blank" data-hover style="display: inline-block; color: var(--purple); text-decoration: underline; cursor: pointer; transition: filter .2s, transform .2s;" style-hover="filter: brightness(1.35);">{{ t.contact.privacyLink }}</a> {{ t.contact.privacy2 }}</span>
@@ -272,8 +213,8 @@
   <div style="position: relative; z-index: 1; height: 3px; background: linear-gradient(90deg, var(--purple), var(--green)); box-shadow: 0 0 16px rgba(52,211,153,0.4);"></div>
   <footer style="position: relative; z-index: 1; padding: 44px clamp(20px, 5vw, 64px); max-width: 1280px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 24px; justify-content: space-between; align-items: center;">
     <div>
-      <a href="#top" data-hover style="display: block; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 19px; color: var(--text); text-decoration: none; margin-bottom: 8px; transition: color .2s, transform .2s, text-shadow .2s;" style-hover="color: var(--green); transform: scale(1.05); text-shadow: 0 0 14px rgba(52,211,153,0.5);">Enver Shala</a>
-      <a href="impressum.dc.html" data-hover style="display: inline-block; color: var(--muted); text-decoration: none; font-size: 14px; transition: color .2s, transform .2s, text-shadow .2s;" style-hover="color: var(--text); transform: scale(1.06); text-shadow: 0 0 12px rgba(255,255,255,0.5);">{{ t.footer.legal }}</a>
+      <a href="#top" data-hover style="display: block; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 19px; color: var(--text); text-decoration: none; margin-bottom: 8px; transition: color .2s, text-shadow .2s;" style-hover="color: var(--green); text-shadow: 0 0 14px rgba(52,211,153,0.5);">Enver Shala</a>
+      <a href="impressum.dc.html" data-hover style="display: inline-block; color: var(--muted); text-decoration: none; font-size: 14px; transition: color .2s, text-shadow .2s;" style-hover="color: var(--text); text-shadow: 0 0 12px rgba(255,255,255,0.5);">{{ t.footer.legal }}</a>
     </div>
     <span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--muted);">{{ t.footer.copy }}</span>
     <div style="display: flex; gap: 10px;">
@@ -331,6 +272,7 @@ class Component extends DCLogic {
         heading: 'Portfolio',
         intro: 'Entdecke hier eine Auswahl meiner Arbeiten – interagiere mit den Projekten, um meine Skills in Aktion zu sehen.',
         live: 'Live-Test', code: 'Github',
+        comingSoon: 'Kommt bald', wip: '— in Arbeit —',
         joinD: 'Task-Manager nach dem Kanban-System. Erstelle und organisiere Aufgaben per Drag & Drop, weise Nutzer und Kategorien zu.',
         polloD: 'Jump-and-Run-Spiel auf Basis objektorientierter Programmierung. Hilf Pepe, Münzen und Tabasco-Soße zu finden, um gegen das verrückte Huhn zu kämpfen.',
         pokedexD: 'Basierend auf der PokéAPI – eine einfache Bibliothek, die Pokémon-Informationen bereitstellt und katalogisiert.'
@@ -377,6 +319,7 @@ class Component extends DCLogic {
         heading: 'Portfolio',
         intro: 'Explore a selection of my work here – interact with projects to see my skills in action.',
         live: 'Live test', code: 'Github',
+        comingSoon: 'Coming Soon', wip: '— work in progress —',
         joinD: 'Task manager inspired by the Kanban System. Create and organize tasks using drag and drop functions, assign users and categories.',
         polloD: 'Jump Run game based on object oriented approach. Help Pepe to find coins and tabasco salsa to fight against the crazy hen.',
         pokedexD: 'Based on the PokéAPI a simple library that provides and catalogues pokemon information.'
@@ -426,15 +369,18 @@ class Component extends DCLogic {
   onSubmit = async (e) => {
     e.preventDefault();
     const form = e.target;
-    const name = form.elements['name'].value;
-    const email = form.elements['email'].value;
-    const message = form.elements['message'].value;
+    const name    = form.elements['name'].value.trim();
+    const email   = form.elements['email'].value.trim();
+    const message = form.elements['message'].value.trim();
+    const website = form.elements['website']?.value || '';
+    if (!name || !email || !message) return;
+    if (name.length > 100 || email.length > 254 || message.length > 5000) return;
     this.setState({ sending: true, sendError: false });
     try {
       const res = await fetch('sendMail.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, message })
+        body: JSON.stringify({ name, email, message, website })
       });
       if (res.ok) {
         this.setState({ sent: true, sending: false });
