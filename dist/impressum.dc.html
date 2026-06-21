@@ -64,7 +64,6 @@
     <!-- Section: Contact -->
     <section style="margin-bottom: 48px; padding: 32px; border: 1px solid var(--border); border-radius: 16px; background: var(--surface);">
       <h2 style="margin: 0 0 20px; font-size: 1.1rem; font-weight: 600; color: var(--green); font-family: 'JetBrains Mono', monospace; letter-spacing: 0.04em; text-transform: uppercase;">{{ t.section2.title }}</h2>
-      <p style="margin: 0 0 8px; font-size: 1rem; line-height: 1.7; color: var(--muted);"><span style="color: var(--text); font-weight: 500;">{{ t.section2.phone }}:</span>&nbsp; <a href="tel:017664136199" data-hover style="color: var(--green); text-decoration: none; transition: color .2s, text-shadow .2s;" style-hover="color: var(--text); text-shadow: 0 0 10px rgba(52,211,153,0.4);">017664136199</a></p>
       <p style="margin: 0; font-size: 1rem; line-height: 1.7; color: var(--muted);"><span style="color: var(--text); font-weight: 500;">{{ t.section2.email }}:</span>&nbsp; <a href="mailto:envershala1989@gmail.com" data-hover style="color: var(--green); text-decoration: none; transition: color .2s, text-shadow .2s;" style-hover="color: var(--text); text-shadow: 0 0 10px rgba(52,211,153,0.4);">envershala1989@gmail.com</a></p>
     </section>
 
@@ -95,7 +94,7 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:&quot;100%&quot;}}">
 class Component extends DCLogic {
-  state = { lang: 'de' };
+  state = { lang: 'en' };
 
   cursorRingRef = React.createRef();
 
@@ -109,17 +108,16 @@ class Component extends DCLogic {
       },
       section2: {
         title: 'Kontakt',
-        phone: 'Telefon',
         email: 'E-Mail'
       },
       section3: {
         title: 'Haftungsausschluss',
         privacyHeading: 'Datenschutz',
-        p1: 'Die Nutzung Meiner Webseite ist in der Regel ohne Angabe personenbezogener Daten möglich. Soweit auf Meinen Seiten personenbezogene Daten (beispielsweise Name, Anschrift oder eMail-Adressen) erhoben werden, erfolgt dies, soweit möglich, stets auf freiwilliger Basis. Diese Daten werden ohne Ihre ausdrückliche Zustimmung nicht an Dritte weitergegeben.',
-        p2: 'Ich weisen darauf hin, dass die Datenübertragung im Internet (z.B. bei der Kommunikation per E-Mail) Sicherheitslücken aufweisen kann. Ein lückenloser Schutz der Daten vor dem Zugriff durch Dritte ist nicht möglich.',
-        p3: 'Der Nutzung von im Rahmen der Impressumspflicht veröffentlichten Kontaktdaten durch Dritte zur Übersendung von nicht ausdrücklich angeforderter Werbung und Informationsmaterialien wird hiermit ausdrücklich widersprochen. Die Betreiber der Seiten behalten sich ausdrücklich rechtliche Schritte im Falle der unverlangten Zusendung von Werbeinformationen, etwa durch Spam-Mails, vor.'
+        p1: 'Die Nutzung meiner Webseite ist in der Regel ohne Angabe personenbezogener Daten möglich. Soweit auf meinen Seiten personenbezogene Daten (beispielsweise Name, Anschrift oder eMail-Adressen) erhoben werden, erfolgt dies, soweit möglich, stets auf freiwilliger Basis. Diese Daten werden ohne Ihre ausdrückliche Zustimmung nicht an Dritte weitergegeben.',
+        p2: 'Ich weise darauf hin, dass die Datenübertragung im Internet (z.B. bei der Kommunikation per E-Mail) Sicherheitslücken aufweisen kann. Ein lückenloser Schutz der Daten vor dem Zugriff durch Dritte ist nicht möglich.',
+        p3: 'Der Nutzung von im Rahmen der Impressumspflicht veröffentlichten Kontaktdaten durch Dritte zur Übersendung von nicht ausdrücklich angeforderter Werbung und Informationsmaterialien wird hiermit ausdrücklich widersprochen. Der Betreiber der Seite behält sich ausdrücklich rechtliche Schritte im Falle der unverlangten Zusendung von Werbeinformationen, etwa durch Spam-Mails, vor.'
       },
-      generatorNote: 'Impressum erstellt durch den Impressum Generator der Kanzlei Hasselbach, Rechtsanwälte für Familienrecht'
+      generatorNote: 'Impressum erstellt durch den Impressum-Generator der Kanzlei Hasselbach, Rechtsanwälte für Familienrecht'
     },
     en: {
       nav: { back: 'Back to Portfolio' },
@@ -130,17 +128,16 @@ class Component extends DCLogic {
       },
       section2: {
         title: 'Contact',
-        phone: 'Phone',
         email: 'E-Mail'
       },
       section3: {
         title: 'Disclaimer',
         privacyHeading: 'Privacy Policy',
-        p1: 'The use of My website is generally possible without providing personal data. If personal data (such as name, address, or email addresses) is collected on My pages, this is always done on a voluntary basis whenever possible. These data will not be passed on to third parties without your explicit consent.',
+        p1: 'The use of my website is generally possible without providing personal data. If personal data (such as name, address, or email addresses) is collected on my pages, this is always done on a voluntary basis whenever possible. These data will not be passed on to third parties without your explicit consent.',
         p2: 'I would like to point out that data transmission on the Internet (e.g., when communicating via email) can have security vulnerabilities. A complete protection of data from access by third parties is not possible.',
         p3: 'The use of contact data published within the scope of the legal imprint obligation by third parties for sending unsolicited advertising and information materials is hereby expressly prohibited. The operators of the pages expressly reserve the right to take legal action in the event of the unsolicited sending of advertising information, such as spam emails.'
       },
-      generatorNote: 'Imprint from Impressum Generator the Hasselbach Law Firm, Specialist Lawyers for Family Law'
+      generatorNote: 'Imprint generated by the Impressum Generator of the Hasselbach Law Firm, Specialist Lawyers for Family Law'
     }
   };
 

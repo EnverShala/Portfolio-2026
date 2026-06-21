@@ -211,7 +211,7 @@
           <textarea name="message" required maxlength="5000" rows="5" placeholder="{{ t.contact.msgPh }}" data-hover style="padding: 16px 18px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-family: 'Manrope', sans-serif; font-size: 15px; outline: none; resize: vertical; transition: border-color .2s;" style-focus="border-color: var(--purple);"></textarea>
           <label style="display: flex; align-items: flex-start; gap: 10px; font-size: 13px; line-height: 1.5; color: var(--muted); cursor: pointer;">
             <input type="checkbox" required style="margin-top: 3px; accent-color: #34d399; width: 16px; height: 16px;" />
-            <span>{{ t.contact.privacy1 }} <a href="datenschutz.dc.html" target="_blank" data-hover style="display: inline-block; color: var(--purple); text-decoration: underline; cursor: pointer; transition: filter .2s, transform .2s;" style-hover="filter: brightness(1.35);">{{ t.contact.privacyLink }}</a> {{ t.contact.privacy2 }}</span>
+            <span>{{ t.contact.privacy1 }} <a href="/privacypolicy" data-hover style="display: inline-block; color: var(--purple); text-decoration: underline; cursor: pointer; transition: filter .2s, transform .2s;" style-hover="filter: brightness(1.35);">{{ t.contact.privacyLink }}</a> {{ t.contact.privacy2 }}</span>
           </label>
           <button type="submit" disabled="{{ sending }}" data-hover style="margin-top: 6px; align-self: flex-start; display: inline-flex; align-items: center; gap: 10px; padding: 15px 34px; background: var(--green); color: #08230a; border: none; border-radius: 12px; font-family: 'Manrope', sans-serif; font-weight: 700; font-size: 15px; cursor: pointer; transition: transform .2s, box-shadow .2s, opacity .2s, filter .2s; box-shadow: 0 10px 30px rgba(52,211,153,0.25); opacity: 1;" style-hover="transform: scale(1.04) translateY(-2px); box-shadow: 0 14px 40px rgba(52,211,153,0.4); filter: brightness(1.12);">{{ submitLabel }}</button>
           <sc-if value="{{ sendError }}" hint-placeholder-val="{{ false }}">
@@ -227,7 +227,7 @@
   <footer style="position: relative; z-index: 1; padding: 44px clamp(20px, 5vw, 64px); max-width: 1280px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 24px; justify-content: space-between; align-items: center;">
     <div>
       <a href="#top" data-hover style="display: block; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 19px; color: var(--text); text-decoration: none; margin-bottom: 8px; transition: color .2s, text-shadow .2s;" style-hover="color: var(--green); text-shadow: 0 0 14px rgba(52,211,153,0.5);">Enver Shala</a>
-      <a href="impressum.dc.html" data-hover style="display: inline-block; color: var(--muted); text-decoration: none; font-size: 14px; transition: color .2s, text-shadow .2s;" style-hover="color: var(--text); text-shadow: 0 0 12px rgba(255,255,255,0.5);">{{ t.footer.legal }}</a>
+      <a href="/legalnotice" data-hover style="display: inline-block; color: var(--muted); text-decoration: none; font-size: 14px; transition: color .2s, text-shadow .2s;" style-hover="color: var(--text); text-shadow: 0 0 12px rgba(255,255,255,0.5);">{{ t.footer.legal }}</a>
     </div>
     <span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--muted);">{{ t.footer.copy }}</span>
     <div style="display: flex; gap: 10px;">

@@ -2,8 +2,17 @@ Options -Indexes
 
 DirectoryIndex index.html
 
-# Block direct access to dotfiles (.htaccess, .git, etc.)
-<FilesMatch "^\.">
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+
+    # Clean URLs
+    RewriteRule ^legalnotice$ impressum.dc.html [L]
+    RewriteRule ^privacypolicy$ datenschutz.dc.html [L]
+</IfModule>
+
+# Block direct access to sensitive dotfiles (.htaccess, .env, .git, etc.)
+<FilesMatch "^\.(?!image-slots)">
     Require all denied
 </FilesMatch>
 
