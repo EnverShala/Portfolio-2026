@@ -37,6 +37,16 @@
     #skills .skills-icons { order: 2; align-self: stretch !important; width: 100% !important; }
     #skills .skills-text-bottom { order: 3; }
   }
+  .nav-logo-text { display: inline; }
+  .nav-logo-icon { display: none; }
+  @media (max-width: 497px) {
+    .nav-logo-text { display: none; }
+    .nav-logo-icon { display: block; width: 28px; height: 28px; }
+  }
+  @media (max-width: 413px) {
+    nav a { font-size: 12px !important; }
+    nav button { font-size: 11px !important; padding: 5px 9px !important; }
+  }
 </style>
 </helmet>
 
@@ -57,7 +67,7 @@
 
   <!-- NAV -->
   <nav style="position: fixed; top: 0; left: 0; right: 0; z-index: 150; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px clamp(20px, 5vw, 64px); backdrop-filter: blur(14px); background: rgba(7,10,11,0.80); border-bottom: 1px solid var(--border);">
-    <a href="#top" data-hover style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 19px; letter-spacing: -0.01em; transition: color .2s, text-shadow .2s;" style-hover="color: var(--green); text-shadow: 0 0 14px rgba(52,211,153,0.5);">Enver Shala</a>
+    <a href="#top" data-hover style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 19px; letter-spacing: -0.01em; transition: color .2s, text-shadow .2s;" style-hover="color: var(--green); text-shadow: 0 0 14px rgba(52,211,153,0.5);"><img class="nav-logo-icon" src="./favicon.svg" alt="Enver Shala"><span class="nav-logo-text">Enver Shala</span></a>
     <div style="display: flex; align-items: center; gap: clamp(14px, 2vw, 30px); flex-wrap: wrap; justify-content: flex-end;">
       <a href="#about" data-hover style="text-decoration: none; color: var(--muted); font-size: 14px; font-weight: 500; transition: color .2s, text-shadow .2s;" style-hover="color: var(--text); text-shadow: 0 0 12px rgba(255,255,255,0.5);">{{ t.nav.about }}</a>
       <a href="#skills" data-hover style="text-decoration: none; color: var(--muted); font-size: 14px; font-weight: 500; transition: color .2s, text-shadow .2s;" style-hover="color: var(--text); text-shadow: 0 0 12px rgba(255,255,255,0.5);">{{ t.nav.skills }}</a>
