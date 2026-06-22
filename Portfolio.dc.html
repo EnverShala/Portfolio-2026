@@ -448,6 +448,7 @@ class Component extends DCLogic {
   componentDidMount() {
     this.mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
     this.ring = { x: this.mouse.x, y: this.mouse.y };
+    this.fixHeroHeight();
     this.setupCanvas();
     this.setupCursor();
     this.setupReveal();
@@ -560,6 +561,13 @@ class Component extends DCLogic {
       });
     }, { threshold: 0.1 });
     els.forEach((el) => this._io.observe(el));
+  }
+
+  fixHeroHeight() {
+    const hero = this.heroRef.current; if (!hero) return;
+    const set = () => { hero.style.height = window.innerHeight + 'px'; };
+    set();
+    window.addEventListener('resize', set, { passive: true });
   }
 
   setupParallax() {
