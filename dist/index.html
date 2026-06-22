@@ -27,6 +27,10 @@
   @keyframes ringSpin { to { transform: rotate(360deg); } }
   @media (hover: none) { .cc-cursor { display: none !important; } }
   #top { height: 100vh; height: 100svh; overflow: hidden; }
+  @media (max-width: 768px) {
+    #top { padding-top: 72px !important; padding-bottom: 52px !important; }
+    #top > div { gap: 14px !important; }
+  }
   #about, #skills, #portfolio, #contact { scroll-margin-top: 0; }
   @media (max-width: 868px) {
     #about .about-photo-wrap { display: none !important; }
@@ -79,11 +83,11 @@
   </nav>
 
   <!-- HERO -->
-  <section id="top" data-screen-label="Hero" ref="{{ heroRef }}" style="position: relative; z-index: 1; display: flex; align-items: center; padding: 110px clamp(20px, 5vw, 64px) 90px; max-width: 1280px; margin: 0 auto;">
+  <section id="top" data-screen-label="Hero" ref="{{ heroRef }}" style="position: relative; z-index: 1; display: flex; align-items: center; padding: 110px clamp(20px, 5vw, 64px) 90px; max-width: 1280px; margin: 0 auto; overflow: hidden;">
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: clamp(30px, 5vw, 70px); align-items: center; width: 100%;">
 
       <!-- photo + aurora -->
-      <div style="position: relative; display: flex; justify-content: center; align-items: center; min-height: 360px;">
+      <div style="position: relative; display: flex; justify-content: center; align-items: center; min-height: min(70vw, 300px);">
         <div data-parallax="0.5" style="position: absolute; width: 60%; height: 70%; left: 6%; border-radius: 50%; background: radial-gradient(circle, rgba(var(--purple-rgb),0.55), transparent 65%); filter: blur(36px); animation: floatBlob2 20s ease-in-out infinite;"></div>
         <div data-parallax="0.35" style="position: absolute; width: 66%; height: 78%; right: 2%; border-radius: 50%; background: radial-gradient(circle, rgba(var(--green-rgb),0.5), transparent 62%); filter: blur(34px); animation: floatBlob 17s ease-in-out infinite;"></div>
         <div data-parallax="0.15" style="position: relative; z-index: 2; padding: 6px; border-radius: 50%; background: linear-gradient(135deg, #34d399, #14705a); box-shadow: 0 24px 64px rgba(0,0,0,0.55), 0 0 50px rgba(52,211,153,0.25);">
@@ -566,8 +570,10 @@ class Component extends DCLogic {
   fixHeroHeight() {
     const hero = this.heroRef.current; if (!hero) return;
     const get = () => (window.visualViewport ? window.visualViewport.height : window.innerHeight);
-    hero.style.height = get() + 'px';
-    window.addEventListener('orientationchange', () => setTimeout(() => { hero.style.height = get() + 'px'; }, 300), { passive: true });
+    const set = () => { hero.style.height = get() + 'px'; };
+    set();
+    requestAnimationFrame(() => requestAnimationFrame(set));
+    window.addEventListener('orientationchange', () => setTimeout(set, 300), { passive: true });
   }
 
   setupParallax() {
