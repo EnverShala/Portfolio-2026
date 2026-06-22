@@ -27,8 +27,11 @@
   @keyframes ringSpin { to { transform: rotate(360deg); } }
   @media (hover: none) { .cc-cursor { display: none !important; } }
   #top { height: 100vh; height: 100svh; overflow: hidden; }
+  @media (max-width: 768px) {
+    #top { align-items: flex-start !important; overflow: hidden !important; }
+  }
   @media (max-width: 737px) {
-    #top { align-items: flex-start !important; padding-top: 90px !important; padding-bottom: 70px !important; overflow: hidden !important; }
+    #top { padding-top: 90px !important; padding-bottom: 70px !important; }
     #top > div { gap: 14px !important; }
     #top > div > div:first-child { min-height: 0 !important; }
     #hero-photo { width: min(55vw, 260px) !important; height: min(55vw, 260px) !important; }
