@@ -565,9 +565,9 @@ class Component extends DCLogic {
 
   fixHeroHeight() {
     const hero = this.heroRef.current; if (!hero) return;
-    const set = () => { hero.style.height = window.innerHeight + 'px'; };
-    set();
-    window.addEventListener('resize', set, { passive: true });
+    const get = () => (window.visualViewport ? window.visualViewport.height : window.innerHeight);
+    hero.style.height = get() + 'px';
+    window.addEventListener('orientationchange', () => setTimeout(() => { hero.style.height = get() + 'px'; }, 300), { passive: true });
   }
 
   setupParallax() {
