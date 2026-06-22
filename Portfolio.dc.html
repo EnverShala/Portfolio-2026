@@ -83,7 +83,7 @@
   </nav>
 
   <!-- HERO -->
-  <section id="top" data-screen-label="Hero" ref="{{ heroRef }}" style="position: relative; z-index: 1; display: flex; align-items: center; padding: 110px clamp(20px, 5vw, 64px) 90px; max-width: 1280px; margin: 0 auto; overflow: hidden;">
+  <section id="top" data-screen-label="Hero" ref="{{ heroRef }}" style="position: relative; z-index: 1; height: 100vh; height: 100svh; display: flex; align-items: center; padding: 110px clamp(20px, 5vw, 64px) 90px; max-width: 1280px; margin: 0 auto; overflow: hidden;">
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: clamp(30px, 5vw, 70px); align-items: center; width: 100%;">
 
       <!-- photo + aurora -->
@@ -452,7 +452,6 @@ class Component extends DCLogic {
   componentDidMount() {
     this.mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
     this.ring = { x: this.mouse.x, y: this.mouse.y };
-    this.fixHeroHeight();
     this.setupCanvas();
     this.setupCursor();
     this.setupReveal();
@@ -565,15 +564,6 @@ class Component extends DCLogic {
       });
     }, { threshold: 0.1 });
     els.forEach((el) => this._io.observe(el));
-  }
-
-  fixHeroHeight() {
-    const hero = this.heroRef.current; if (!hero) return;
-    const get = () => (window.visualViewport ? window.visualViewport.height : window.innerHeight);
-    const set = () => { hero.style.height = get() + 'px'; };
-    set();
-    requestAnimationFrame(() => requestAnimationFrame(set));
-    window.addEventListener('orientationchange', () => setTimeout(set, 300), { passive: true });
   }
 
   setupParallax() {
