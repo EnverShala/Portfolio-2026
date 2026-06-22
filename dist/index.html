@@ -67,8 +67,17 @@
     .nav-logo-icon { display: block; width: 28px; height: 28px; }
   }
   @media (max-width: 413px) {
-    nav a { font-size: 12px !important; }
-    nav button { font-size: 11px !important; padding: 5px 9px !important; }
+    .nav-links a { font-size: 12px !important; }
+    .nav-links button { font-size: 11px !important; padding: 5px 9px !important; }
+  }
+  .nav-burger { display: none; }
+  .burger-icon { display: block; }
+  .close-icon { display: none; }
+  nav.menu-open .burger-icon { display: none; }
+  nav.menu-open .close-icon { display: block; }
+  @media (max-width: 372px) {
+    .nav-links { display: none !important; }
+    .nav-burger { display: flex !important; }
   }
 </style>
 </helmet>
@@ -89,14 +98,29 @@
   </div>
 
   <!-- NAV -->
-  <nav style="position: fixed; top: 0; left: 0; right: 0; z-index: 150; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px clamp(20px, 5vw, 64px); backdrop-filter: blur(14px); background: rgba(7,10,11,0.80); border-bottom: 1px solid var(--border);">
-    <a href="#top" data-hover style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 19px; letter-spacing: -0.01em; transition: color .2s, text-shadow .2s;" style-hover="color: var(--green); text-shadow: 0 0 14px rgba(52,211,153,0.5);"><img class="nav-logo-icon" src="./favicon.svg" alt="Enver Shala"><span class="nav-logo-text">Enver Shala</span></a>
-    <div style="display: flex; align-items: center; gap: clamp(14px, 2vw, 30px); flex-wrap: wrap; justify-content: flex-end;">
-      <a href="#about" data-hover style="text-decoration: none; color: var(--muted); font-size: 14px; font-weight: 500; transition: color .2s, text-shadow .2s;" style-hover="color: var(--text); text-shadow: 0 0 12px rgba(255,255,255,0.5);">{{ t.nav.about }}</a>
-      <a href="#skills" data-hover style="text-decoration: none; color: var(--muted); font-size: 14px; font-weight: 500; transition: color .2s, text-shadow .2s;" style-hover="color: var(--text); text-shadow: 0 0 12px rgba(255,255,255,0.5);">{{ t.nav.skills }}</a>
-      <a href="#portfolio" data-hover style="text-decoration: none; color: var(--muted); font-size: 14px; font-weight: 500; transition: color .2s, text-shadow .2s;" style-hover="color: var(--text); text-shadow: 0 0 12px rgba(255,255,255,0.5);">{{ t.nav.portfolio }}</a>
-      <a href="#contact" data-hover style="text-decoration: none; color: var(--muted); font-size: 14px; font-weight: 500; transition: color .2s, text-shadow .2s;" style-hover="color: var(--text); text-shadow: 0 0 12px rgba(255,255,255,0.5);">{{ t.nav.contact }}</a>
-      <button data-hover onClick="{{ toggleLang }}" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border: 1px solid var(--border); background: var(--surface); color: var(--text); border-radius: 9px; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 500; cursor: pointer; transition: border-color .2s, color .2s, transform .2s;" style-hover="border-color: var(--green); color: var(--green); transform: scale(1.06);">{{ langLabel }}</button>
+  <nav id="main-nav" style="position: fixed; top: 0; left: 0; right: 0; z-index: 150; backdrop-filter: blur(14px); background: rgba(7,10,11,0.80); border-bottom: 1px solid var(--border);">
+    <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px clamp(20px, 5vw, 64px);">
+      <a href="#top" data-hover style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 19px; letter-spacing: -0.01em; transition: color .2s, text-shadow .2s;" style-hover="color: var(--green); text-shadow: 0 0 14px rgba(52,211,153,0.5);"><img class="nav-logo-icon" src="./favicon.svg" alt="Enver Shala"><span class="nav-logo-text">Enver Shala</span></a>
+      <div class="nav-links" style="display: flex; align-items: center; gap: clamp(14px, 2vw, 30px); flex-wrap: wrap; justify-content: flex-end;">
+        <a href="#about" data-hover style="text-decoration: none; color: var(--muted); font-size: 14px; font-weight: 500; transition: color .2s, text-shadow .2s;" style-hover="color: var(--text); text-shadow: 0 0 12px rgba(255,255,255,0.5);">{{ t.nav.about }}</a>
+        <a href="#skills" data-hover style="text-decoration: none; color: var(--muted); font-size: 14px; font-weight: 500; transition: color .2s, text-shadow .2s;" style-hover="color: var(--text); text-shadow: 0 0 12px rgba(255,255,255,0.5);">{{ t.nav.skills }}</a>
+        <a href="#portfolio" data-hover style="text-decoration: none; color: var(--muted); font-size: 14px; font-weight: 500; transition: color .2s, text-shadow .2s;" style-hover="color: var(--text); text-shadow: 0 0 12px rgba(255,255,255,0.5);">{{ t.nav.portfolio }}</a>
+        <a href="#contact" data-hover style="text-decoration: none; color: var(--muted); font-size: 14px; font-weight: 500; transition: color .2s, text-shadow .2s;" style-hover="color: var(--text); text-shadow: 0 0 12px rgba(255,255,255,0.5);">{{ t.nav.contact }}</a>
+        <button data-hover onClick="{{ toggleLang }}" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border: 1px solid var(--border); background: var(--surface); color: var(--text); border-radius: 9px; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 500; cursor: pointer; transition: border-color .2s, color .2s, transform .2s;" style-hover="border-color: var(--green); color: var(--green); transform: scale(1.06);">{{ langLabel }}</button>
+      </div>
+      <button class="nav-burger" onClick="{{ toggleMenu }}" aria-label="Menu" style="display: none; align-items: center; justify-content: center; width: 34px; height: 34px; padding: 0; background: none; border: 1px solid var(--border); color: var(--text); border-radius: 8px; cursor: pointer; transition: border-color .2s, color .2s; flex-shrink: 0;">
+        <svg class="burger-icon" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="2" y1="4.5" x2="16" y2="4.5"/><line x1="2" y1="9" x2="16" y2="9"/><line x1="2" y1="13.5" x2="16" y2="13.5"/></svg>
+        <svg class="close-icon" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="3" y1="3" x2="15" y2="15"/><line x1="15" y1="3" x2="3" y2="15"/></svg>
+      </button>
+    </div>
+    <div id="nav-mobile-menu" style="display: none; flex-direction: column; padding: 4px 24px 16px; border-top: 1px solid rgba(255,255,255,0.07);">
+      <a href="#about" data-hover style="display: block; text-decoration: none; color: var(--muted); font-size: 15px; font-weight: 500; padding: 13px 4px; border-bottom: 1px solid rgba(255,255,255,0.05); transition: color .2s, text-shadow .2s;" style-hover="color: var(--text); text-shadow: 0 0 12px rgba(255,255,255,0.5);">{{ t.nav.about }}</a>
+      <a href="#skills" data-hover style="display: block; text-decoration: none; color: var(--muted); font-size: 15px; font-weight: 500; padding: 13px 4px; border-bottom: 1px solid rgba(255,255,255,0.05); transition: color .2s, text-shadow .2s;" style-hover="color: var(--text); text-shadow: 0 0 12px rgba(255,255,255,0.5);">{{ t.nav.skills }}</a>
+      <a href="#portfolio" data-hover style="display: block; text-decoration: none; color: var(--muted); font-size: 15px; font-weight: 500; padding: 13px 4px; border-bottom: 1px solid rgba(255,255,255,0.05); transition: color .2s, text-shadow .2s;" style-hover="color: var(--text); text-shadow: 0 0 12px rgba(255,255,255,0.5);">{{ t.nav.portfolio }}</a>
+      <a href="#contact" data-hover style="display: block; text-decoration: none; color: var(--muted); font-size: 15px; font-weight: 500; padding: 13px 4px; transition: color .2s, text-shadow .2s;" style-hover="color: var(--text); text-shadow: 0 0 12px rgba(255,255,255,0.5);">{{ t.nav.contact }}</a>
+      <div style="margin-top: 14px;">
+        <button onClick="{{ toggleLang }}" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border: 1px solid var(--border); background: var(--surface); color: var(--text); border-radius: 9px; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 500; cursor: pointer; transition: border-color .2s, color .2s;">{{ langLabel }}</button>
+      </div>
     </div>
   </nav>
 
@@ -280,7 +304,7 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:&quot;100%&quot;}}">
 class Component extends DCLogic {
-  state = { lang: 'en', sent: false, sending: false, sendError: false };
+  state = { lang: 'en', sent: false, sending: false, sendError: false, menuOpen: false };
 
   rootRef = React.createRef();
   canvasRef = React.createRef();
@@ -412,6 +436,23 @@ class Component extends DCLogic {
     if (this.roleRef.current) { this.roleRef.current.textContent = ''; this.roleI = 0; this.charI = 0; this.deleting = false; }
   };
 
+  toggleMenu = () => {
+    const open = !this.state.menuOpen;
+    this.setState({ menuOpen: open });
+    const menu = document.getElementById('nav-mobile-menu');
+    const nav = document.getElementById('main-nav');
+    if (menu) menu.style.display = open ? 'flex' : 'none';
+    if (nav) nav.classList.toggle('menu-open', open);
+  };
+
+  closeMenu = () => {
+    this.setState({ menuOpen: false });
+    const menu = document.getElementById('nav-mobile-menu');
+    const nav = document.getElementById('main-nav');
+    if (menu) menu.style.display = 'none';
+    if (nav) nav.classList.remove('menu-open');
+  };
+
   onSubmit = async (e) => {
     e.preventDefault();
     const form = e.target;
@@ -455,6 +496,9 @@ class Component extends DCLogic {
         ? (lang === 'de' ? 'Senden  ...' : 'Sending  ...')
         : this.CONTENT[lang].contact.send + '  →',
       toggleLang: this.toggleLang,
+      toggleMenu: this.toggleMenu,
+      closeMenu: this.closeMenu,
+      menuOpen: this.state.menuOpen,
       onSubmit: this.onSubmit,
       rootRef: this.rootRef,
       canvasRef: this.canvasRef,
@@ -608,6 +652,12 @@ class Component extends DCLogic {
         const id = link.getAttribute('href').slice(1);
         if (!id) return;
         e.preventDefault();
+        const menu = document.getElementById('nav-mobile-menu');
+        if (menu && menu.style.display !== 'none') {
+          menu.style.display = 'none';
+          nav && nav.classList.remove('menu-open');
+          this.setState({ menuOpen: false });
+        }
         if (id === 'top') { window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
         const target = document.getElementById(id);
         if (!target) return;
