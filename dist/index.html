@@ -28,12 +28,13 @@
   @media (hover: none) { .cc-cursor { display: none !important; } }
   #top { height: 100vh; height: 100svh; overflow: hidden; }
   @media (max-width: 768px) {
-    #top { padding-top: 90px !important; padding-bottom: 70px !important; }
+    #top { align-items: flex-start !important; padding-top: 90px !important; padding-bottom: 70px !important; overflow: hidden !important; }
     #top > div { gap: 14px !important; }
+    #top > div > div:first-child { min-height: 0 !important; }
+    #hero-photo { width: min(55vw, 260px) !important; height: min(55vw, 260px) !important; }
   }
   @media (max-width: 540px) {
-    #top { align-items: flex-start !important; padding-top: 72px !important; padding-bottom: 52px !important; }
-    #hero-photo { width: min(55vw, 260px) !important; height: min(55vw, 260px) !important; }
+    #top { padding-top: 72px !important; padding-bottom: 52px !important; }
   }
   #about, #skills, #portfolio, #contact { scroll-margin-top: 0; }
   @media (max-width: 868px) {
