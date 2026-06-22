@@ -26,13 +26,7 @@
   @keyframes bobArrow { 0%,100% { transform: translateY(0); opacity: .5; } 50% { transform: translateY(8px); opacity: 1; } }
   @keyframes ringSpin { to { transform: rotate(360deg); } }
   @media (hover: none) { .cc-cursor { display: none !important; } }
-  #top { height: 100vh; height: 100svh; overflow: hidden; }
-  @media (max-width: 768px) {
-    #top { align-items: flex-start !important; overflow: hidden !important; }
-  }
-  @media (min-width: 600px) and (max-width: 750px) {
-    #top { align-items: center !important; overflow: hidden !important; }
-  }
+  #top { min-height: 100vh; min-height: 100svh; }
   @media (max-width: 737px) {
     #top { padding-top: 90px !important; padding-bottom: 70px !important; }
     #top > div { gap: 14px !important; }
@@ -94,7 +88,7 @@
   </nav>
 
   <!-- HERO -->
-  <section id="top" data-screen-label="Hero" ref="{{ heroRef }}" style="position: relative; z-index: 1; height: 100vh; height: 100svh; display: flex; align-items: center; padding: 110px clamp(20px, 5vw, 64px) 90px; max-width: 1280px; margin: 0 auto; overflow: hidden;">
+  <section id="top" data-screen-label="Hero" ref="{{ heroRef }}" style="position: relative; z-index: 1; min-height: 100vh; min-height: 100svh; display: flex; align-items: center; padding: 110px clamp(20px, 5vw, 64px) 90px; max-width: 1280px; margin: 0 auto;">
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: clamp(30px, 5vw, 70px); align-items: center; width: 100%;">
 
       <!-- photo + aurora -->
