@@ -675,9 +675,10 @@ class Component extends DCLogic {
         if (id === 'top') { window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
         const target = document.getElementById(id);
         if (!target) return;
-        const navH = nav ? nav.getBoundingClientRect().height : 66;
-        const top = target.getBoundingClientRect().top + window.scrollY - navH;
-        window.scrollTo({ top, behavior: 'smooth' });
+        const navH = nav ? nav.getBoundingClientRect().height : 65;
+        const paddingTop = parseInt(window.getComputedStyle(target).paddingTop) || 0;
+        const top = target.getBoundingClientRect().top + window.scrollY - navH + paddingTop - 16;
+        window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
       });
     });
   }
