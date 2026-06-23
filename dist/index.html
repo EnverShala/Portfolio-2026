@@ -26,7 +26,7 @@
 <script src="image-slot.js"></script>
 <style>
   * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; scroll-padding-top: 58px; }
+  html { scroll-behavior: smooth; scroll-padding-top: 66px; }
   body { margin: 0; background: #070a0b; color: #e9efee; font-family: 'Manrope', system-ui, sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; -webkit-text-size-adjust: 100%; }
   ::selection { background: rgba(52,211,153,0.28); color: #fff; }
   ::-webkit-scrollbar { width: 10px; }
@@ -661,6 +661,8 @@ class Component extends DCLogic {
 
   setupNavScroll() {
     const nav = document.querySelector('nav');
+    const navH = nav ? nav.getBoundingClientRect().height : 66;
+    document.documentElement.style.scrollPaddingTop = navH + 'px';
     document.querySelectorAll('a[href^="#"]').forEach(link => {
       link.addEventListener('click', (e) => {
         const id = link.getAttribute('href').slice(1);
