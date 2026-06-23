@@ -986,7 +986,7 @@
     }
     return cur;
   }
-  var BABEL_URL = "https://unpkg.com/@babel/standalone@7.26.4/babel.min.js";
+  var BABEL_URL = "./babel.min.js";
   var GLOBAL_POLL_INTERVAL_MS = 50;
   var GLOBAL_POLL_TIMEOUT_MS = 3e4;
   function createExternalModules(onResolved) {
