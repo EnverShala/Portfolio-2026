@@ -26,7 +26,7 @@
 <script src="image-slot.js"></script>
 <style>
   * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior: smooth; scroll-padding-top: 58px; }
   body { margin: 0; background: #070a0b; color: #e9efee; font-family: 'Manrope', system-ui, sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; -webkit-text-size-adjust: 100%; }
   ::selection { background: rgba(52,211,153,0.28); color: #fff; }
   ::-webkit-scrollbar { width: 10px; }
@@ -675,9 +675,7 @@ class Component extends DCLogic {
         if (id === 'top') { window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
         const target = document.getElementById(id);
         if (!target) return;
-        const navH = nav ? nav.getBoundingClientRect().height : 0;
-        const top = target.getBoundingClientRect().top + window.scrollY - navH;
-        window.scrollTo({ top, behavior: 'smooth' });
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
     });
   }
