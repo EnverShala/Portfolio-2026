@@ -26,7 +26,7 @@
   @keyframes bobArrow { 0%,100% { transform: translateY(0); opacity: .5; } 50% { transform: translateY(8px); opacity: 1; } }
   @keyframes ringSpin { to { transform: rotate(360deg); } }
   @media (hover: none) { .cc-cursor { display: none !important; } }
-  #top { min-height: 100vh; min-height: 100svh; }
+  #top { min-height: 100vh; min-height: 100svh; padding-top: 110px; padding-bottom: 90px; }
   @media (max-width: 765px) {
     #top { align-items: flex-start !important; padding-top: 80px !important; padding-bottom: 50px !important; }
     #top > div { grid-template-columns: 1fr !important; gap: 14px !important; }
@@ -41,8 +41,7 @@
     #top > a { bottom: 50px !important; }
   }
   @media (max-width: 480px) {
-    #top { padding-top: 76px !important; padding-bottom: 36px !important; min-height: 0; }
-    #top > a { display: none !important; }
+    #top { padding-top: 76px; padding-bottom: 54px; min-height: 0; }
   }
   @media (max-width: 372px) {
     #top { padding-top: 96px !important; }
@@ -126,7 +125,7 @@
   </nav>
 
   <!-- HERO -->
-  <section id="top" data-screen-label="Hero" ref="{{ heroRef }}" style="position: relative; z-index: 1; display: flex; align-items: center; padding: 110px clamp(20px, 5vw, 64px) 90px; max-width: 1280px; margin: 0 auto;">
+  <section id="top" data-screen-label="Hero" ref="{{ heroRef }}" style="position: relative; z-index: 1; display: flex; align-items: center; padding-left: clamp(20px, 5vw, 64px); padding-right: clamp(20px, 5vw, 64px); max-width: 1280px; margin: 0 auto;">
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: clamp(30px, 5vw, 70px); align-items: center; width: 100%;">
 
       <!-- photo + aurora -->
