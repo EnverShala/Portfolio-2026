@@ -41,7 +41,7 @@
     #top > a { bottom: 50px !important; }
   }
   @media (max-width: 480px) {
-    #top { padding-top: 76px !important; padding-bottom: 36px !important; min-height: 0 !important; }
+    #top { padding-top: 76px !important; padding-bottom: 36px !important; min-height: 0; }
     #top > a { display: none !important; }
   }
   @media (max-width: 372px) {
@@ -126,7 +126,7 @@
   </nav>
 
   <!-- HERO -->
-  <section id="top" data-screen-label="Hero" ref="{{ heroRef }}" style="position: relative; z-index: 1; min-height: 100vh; min-height: 100svh; display: flex; align-items: center; padding: 110px clamp(20px, 5vw, 64px) 90px; max-width: 1280px; margin: 0 auto;">
+  <section id="top" data-screen-label="Hero" ref="{{ heroRef }}" style="position: relative; z-index: 1; display: flex; align-items: center; padding: 110px clamp(20px, 5vw, 64px) 90px; max-width: 1280px; margin: 0 auto;">
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: clamp(30px, 5vw, 70px); align-items: center; width: 100%;">
 
       <!-- photo + aurora -->
