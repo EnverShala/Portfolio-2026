@@ -1,93 +1,174 @@
 # Coding Conventions
 
-**Analysis Date:** 2026-06-20
+**Analysis Date:** 2026-06-23
 
-## Code Style
+## CSS Approach
 
-- **Indentation:** 2-space indentation throughout all JS files (`image-slot.js`, `support.js`).
-- **Semicolons:** Semicolons are used consistently to terminate statements.
-- **Quotes:** Single quotes used for string literals in JavaScript (`'de'`, `'en'`, `'.image-slots.state.json'`). Double quotes used in HTML attribute values per HTML convention.
-- **Braces:** Opening braces on the same line as the statement; no Allman style.
-- **Line length:** Long lines are accepted — especially in `Portfolio.dc.html` where inline styles can exceed 200 characters per element. No enforced column limit.
-- **Blank lines:** Used sparingly to separate logical blocks within functions; generally compact.
-- **No trailing commas** enforced in object/array literals (mixed usage observed).
-- No formatter config files (`.prettierrc`, `.editorconfig`, `biome.json`) are present.
+**No external stylesheet for component styles.** All layout, typography, color, and spacing for every section is written as inline `style` attributes directly on HTML elements in `Portfolio.dc.html`.
 
-## Naming Patterns
+**Shared/global CSS lives in a `<style>` block** inside the `<helmet>` section of `Portfolio.dc.html` (lines 14–83). This block owns:
+- CSS reset (`*`, `html`, `body`, `::selection`, scrollbar)
+- Keyframe animations (`blink`, `floatBlob`, `floatBlob2`, `bobArrow`, `ringSpin`)
+- All media queries (see Media Query Breakpoints section)
+- Named CSS classes that toggle responsive behavior (`.nav-logo-text`, `.nav-logo-icon`, `.nav-burger`, `.burger-icon`, `.close-icon`, `.nav-links`, `.cc-cursor`)
 
-**Variables & properties:**
-- camelCase throughout: `roleRef`, `cursorRingRef`, `progressRef`, `emailRef`, `saveDirty`, `loadP`, `_onResize`, `_typeTimer`.
-- Private/internal members prefixed with underscore: `this._raf`, `this._craf`, `this._io`, `this._frame`, `this._img`, `this._onMove`, `this._outside`.
-- Boolean-like state fields use full words: `sent`, `loaded`, `saving`, `deleting`.
+**CSS custom properties** are declared as inline vars on the root wrapper `<div>` (line 86 of `Portfolio.dc.html`):
+- `--bg`, `--surface`, `--surface2`, `--border`, `--text`, `--muted`, `--green`, `--green-rgb`, `--purple`, `--purple-rgb`
 
-**Functions & methods:**
-- camelCase: `setupCanvas()`, `setupCursor()`, `setupReveal()`, `setupParallax()`, `setupProgress()`, `startTyping()`, `toggleLang()`, `mailClick()`, `onSubmit()`, `renderVals()`.
-- Arrow functions used for event handlers and callbacks stored as class properties.
+**`image-slot.js` uses Shadow DOM with a concatenated stylesheet string** (lines 163–221). Styles are written as a single concatenated string assigned to `const stylesheet`. Shadow DOM scoping means these rules are fully isolated from the page.
 
-**Classes:**
-- PascalCase: `Component`, `ImageSlot`, `StreamableComponent`, `StreamableLogic`.
+**Hover/focus state CSS** uses the x-dc runtime's `style-hover` and `style-focus` custom attributes rather than CSS pseudo-classes. The runtime injects a generated class into the document `<head>` for each unique value. Example:
+```html
+<a data-hover style="color: var(--muted);" style-hover="color: var(--text); text-shadow: 0 0 12px rgba(255,255,255,0.5);">
+```
 
-**Files:**
-- `kebab-case.js` for scripts: `image-slot.js`, `support.js`.
-- `PascalCase.dc.html` for the Design Component file: `Portfolio.dc.html`.
-- Assets use lowercase with hyphens or natural filenames: `assets/profile.png`.
+**`!important` is used extensively in media queries** to override inline styles, since a `<style>` block cannot beat the specificity of `style=""` attributes without it.
 
-**CSS class names:**
-- `kebab-case`: `.cc-cursor`, `.sc-placeholder`, `.sc-host`, `.sc-interp`, `.sc-missing`, `.sc-for`, `.sc-if`, `.sc-helmet`.
-- Internal shadow DOM classes use short single-word or compound-word names: `.frame`, `.spill`, `.ghost`, `.handle`, `.empty`, `.ring`, `.ctl`, `.cap`, `.sub`, `.err`.
+**`clamp()` for responsive sizing** is the preferred pattern for font sizes, padding, and gaps:
+```html
+style="font-size: clamp(2.6rem, 7vw, 5.2rem); padding: clamp(70px, 11vw, 130px) clamp(20px, 5vw, 64px);"
+```
 
-**Data attributes:**
-- `kebab-case` data attributes for behavior hooks: `data-hover`, `data-reveal`, `data-parallax`, `data-screen-label`, `data-over`, `data-filled`, `data-editable`, `data-reframe`, `data-panning`.
+## Naming Conventions
+
+**JS refs:** camelCase, suffixed with `Ref`
+- `rootRef`, `canvasRef`, `cursorDotRef`, `cursorRingRef`, `roleRef`, `heroRef`, `progressRef`, `emailRef`
+
+**JS state keys:** camelCase
+- `lang`, `sent`, `sending`, `sendError`, `menuOpen`
+
+**JS methods/handlers:** camelCase verbs
+- `toggleLang`, `toggleMenu`, `closeMenu`, `onSubmit`, `mailClick`
+- Setup methods: `setupCanvas`, `setupCursor`, `setupReveal`, `setupParallax`, `setupProgress`, `setupNavScroll`, `startTyping`
+
+**JS internal animation/timer handles:** underscore-prefixed camelCase
+- `this._raf`, `this._craf`, `this._typeTimer`, `this._onResize`, `this._onMove`, `this._onScroll`, `this._onOver`, `this._onOut`, `this._io`
+
+**HTML element IDs:** kebab-case
+- `#top`, `#hero-photo`, `#about`, `#about-photo`, `#skills`, `#portfolio`, `#contact`, `#main-nav`, `#nav-mobile-menu`
+
+**HTML CSS class names:** kebab-case
+- `.cc-cursor`, `.nav-links`, `.nav-burger`, `.nav-logo-text`, `.nav-logo-icon`, `.burger-icon`, `.close-icon`, `.about-photo-wrap`, `.skills-grid`, `.skills-icons`, `.skills-text-top`, `.skills-text-bottom`
+
+**Component class name:** The class is named `Component` (line 307 of `Portfolio.dc.html`), extending `DCLogic` (the x-dc runtime's base class). It is not named `App`.
+
+**Top-level data constants:** `ALLCAPS`
+- `CONTENT` (bilingual string map), `SKILLS` (skills array)
+
+**`image-slot.js` private instance fields:** underscore-prefixed
+- `this._frame`, `this._img`, `this._empty`, `this._cap`, `this._spill`, `this._ghost`, `this._err`, `this._input`, `this._view`, `this._gen`, `this._subFn`, `this._ro`
+
+## JS Style
+
+**Module pattern for `image-slot.js`:** IIFE wrapping the entire file — no `export`, no `import`. The custom element registers itself via `customElements.define` inside the IIFE:
+```js
+(() => {
+  // ... all code ...
+  if (!customElements.get('image-slot')) {
+    customElements.define('image-slot', ImageSlot);
+  }
+})();
+```
+
+**`support.js`:** Also a compiled IIFE (`"use strict"; (() => { ... })();`). Do not edit — it is generated from `dc-runtime/src/*.ts` via `bun run build`.
+
+**Component logic in `Portfolio.dc.html`:** Written as a class body inside `<script type="text/x-dc" data-dc-script>`. The runtime evals it via `new Function(...)`. Class fields use the class-fields proposal syntax — no explicit constructor:
+```js
+class Component extends DCLogic {
+  state = { lang: 'en', sent: false, sending: false, sendError: false, menuOpen: false };
+  rootRef = React.createRef();
+}
+```
+
+**Arrow functions for all event handlers and class methods** — ensures correct `this` binding without `.bind()`:
+```js
+toggleLang = () => { ... };
+onSubmit = async (e) => { ... };
+```
+
+**`async/await` for fetch calls** — used in `onSubmit` for the contact form POST to `sendMail.php`.
+
+**Template expressions use `{{ expr }}` syntax** — resolved by the x-dc runtime. Supports dot-path access, equality operators, and negation:
+```html
+{{ t.nav.about }}
+{{ sending }}
+```
+
+**Conditional rendering:** `<sc-if value="{{ expr }}">` — renders children when truthy.
+
+**List rendering:** `<sc-for list="{{ arr }}" as="item">` — iterates an array.
+
+**`renderVals()` method** returns a flat object that the template renders against. All state, refs, handlers, and computed values must be explicitly returned here to be template-accessible.
+
+**`componentDidMount` / `componentWillUnmount`** lifecycle hooks mirror React class component conventions. Every event listener added in setup methods is stored by reference on `this` and removed in `componentWillUnmount`.
+
+**Email obfuscation pattern** — the address is never written as a plain string; assembled at runtime:
+```js
+['envershala1989', 'gmail.com'].join('@')
+```
+
+**No `console.log` in production code.** Debugging is visual/in-browser.
 
 ## HTML Patterns
 
-- **Document structure:** Single-page portfolio using a `<x-dc>` wrapper (Design Component format), with a `<helmet>` block for head content and a `<script type="text/x-dc">` block for logic — this is the omelette/dc-runtime authoring convention.
-- **Semantic elements:** `<nav>`, `<section>`, `<footer>`, `<form>`, `<h1>`–`<h3>`, `<p>`, `<a>`, `<button>`, `<input>`, `<textarea>`, `<label>` are all used semantically and correctly.
-- **Section IDs:** Sections use `id` attributes for anchor navigation: `#top`, `#about`, `#skills`, `#portfolio`, `#contact`.
-- **Custom elements:** `<image-slot>` (defined in `image-slot.js`) and dc-runtime directives `<sc-for>`, `<sc-if>` are used in the template.
-- **Attribute ordering:** No strict enforced order; generally `id`/`type`/`ref` come first, followed by `style`, then event handlers (`onClick`, `onSubmit`).
-- **Accessibility:** `alt=""` is set on all `<img>` tags inside `<image-slot>`; form inputs use `required` and `placeholder`. `title` attributes are present on icon links (GitHub, LinkedIn). `aria-*` attributes are not used.
-- **Template interpolation:** Mustache-style `{{ expression }}` syntax used for all dynamic content; scoped conditionals use `<sc-if value="{{ ... }}">` and loops use `<sc-for list="{{ ... }}" as="item">`.
-- **Inline styles:** All layout and visual styling is applied via inline `style` attributes directly on elements — there are no external CSS files and no `class`-based styling in `Portfolio.dc.html`. This is intentional for the dc-runtime format.
+**Single source file:** `Portfolio.dc.html` is the sole source of truth. `dist/` is a manually-kept production copy and must be kept in sync manually after edits.
 
-## CSS Patterns
+**Sections are identified by `id` and a `data-screen-label` attribute:**
+```html
+<section id="top" data-screen-label="Hero" ref="{{ heroRef }}">
+<section id="about" data-screen-label="Über mich">
+<section id="skills" data-screen-label="Skills">
+<section id="portfolio" data-screen-label="Portfolio">
+<section id="contact" data-screen-label="Kontakt">
+```
 
-- **Delivery:** All CSS for the portfolio is inline — either in a `<style>` block inside `<helmet>` or as `style="..."` attributes on elements. No external `.css` files exist.
-- **Custom properties (CSS variables):** Extensively used for theming. All color and spacing tokens are defined on the root container `div` via inline `style`:
-  - `--bg`, `--surface`, `--surface2`, `--border`, `--text`, `--muted`, `--green`, `--green-rgb`, `--purple`, `--purple-rgb`.
-- **Keyframe animations:** Defined in the `<style>` block: `blink`, `floatBlob`, `floatBlob2`, `bobArrow`, `ringSpin`.
-- **Responsive design:**
-  - `clamp()` used widely for fluid typography and spacing: `font-size: clamp(2.6rem, 7vw, 5.2rem)`.
-  - `min()` used for capping widths: `min(70vw, 300px)`.
-  - `grid-template-columns: repeat(auto-fit, minmax(..., 1fr))` used for all section layouts — no named breakpoints.
-  - `@media (hover: none)` used once to hide the custom cursor on touch devices.
-- **Transitions:** Short, consistent — `.2s` or `.3s` with `ease` or `cubic-bezier(.2,.7,.2,1)`. Applied inline via `transition:` in `style` attributes.
-- **Shadow DOM CSS** (in `image-slot.js`): Uses `:host`, `::slotted` selectors and part-based styling. CSS is constructed as a template string and injected into the shadow root's `<style>`.
-- **No utility classes, no BEM** — the project does not use a CSS framework or systematic class naming in the main HTML.
+**Reveal animations** are applied via a `data-reveal` attribute on elements that should fade-in on scroll. The `setupReveal()` method picks these up with `querySelectorAll('[data-reveal]')` and attaches an `IntersectionObserver`.
 
-## JavaScript Patterns
+**Parallax layers** use `data-parallax="<depth>"` with a float depth multiplier. The `setupParallax()` method reads this attribute to compute offset on `mousemove`.
 
-- **Module style:** No ES modules (`import`/`export`). All code uses IIFEs (`(() => { ... })()`) or class syntax embedded in dc-runtime's eval pipeline. `support.js` is a compiled, minified IIFE bundle.
-- **Class-based components:** The portfolio logic is a `class Component extends DCLogic` pattern, with lifecycle methods (`componentDidMount`, `componentWillUnmount`) and React-style `setState` via the dc-runtime base class.
-- **State management:** Managed through `this.state` object and `this.setState({ key: value })`, mirroring React class component patterns.
-- **Refs:** `React.createRef()` used for direct DOM access: `this.canvasRef`, `this.roleRef`, `this.emailRef`, etc.
-- **Event handling:** Arrow functions stored as class properties for event handlers (`toggleLang = () => {...}`). Event listeners attached in `componentDidMount` and cleaned up in `componentWillUnmount`, stored as `this._onResize`, `this._onMove`, etc. for removal.
-- **Animation loops:** `requestAnimationFrame` loops stored as `this._raf`, `this._craf` and cancelled on unmount.
-- **Timers:** `setTimeout` used for the typing animation; stored as `this._typeTimer` for cleanup.
-- **Async patterns:** `async/await` used in `image-slot.js` (`_ingest`, `toDataUrl`). Promise chaining used in `support.js`. No `async/await` in the component logic class.
-- **DOM manipulation:** Direct `el.style.*` assignment for dynamic style changes (cursor position, scroll progress, reveal animations). `IntersectionObserver` used for scroll-reveal; `ResizeObserver` used in `image-slot.js`.
-- **Anti-obfuscation of email:** Email is assembled at runtime from parts (`['envershala1989', 'gmail.com'].join('@')`) to prevent scraping.
-- **Content data:** All i18n strings for DE/EN are stored in a `CONTENT` object literal on the class. No external translation files.
+**Hover-interactive elements** carry `data-hover` to trigger custom cursor enlargement:
+```html
+<a data-hover style="..." style-hover="...">
+```
 
-## Comments & Documentation
+**SVG icons are inline** — no icon library. Each icon is a hand-written `<svg>` element directly in the markup.
 
-- **Inline comments:** Used meaningfully throughout `image-slot.js` (the most commented file) to explain non-obvious design decisions, race conditions, and architectural constraints. Example: `// Serialize writes so two near-simultaneous drops on different slots / can't reorder at the backend`.
-- **Block comments for usage docs:** `image-slot.js` starts with a full JSDoc-style `/** ... */` block documenting all attributes, behavior, and usage examples for the `<image-slot>` custom element.
-- **`support.js`:** Contains a generated-file warning at the top (`// GENERATED from dc-runtime/src/*.ts — do not edit`) and internal inline comments explaining runtime decisions (streaming, race conditions, template compilation).
-- **`Portfolio.dc.html`:** Section comments (`<!-- NAV -->`, `<!-- HERO -->`, `<!-- ABOUT -->`, etc.) are present but minimal. Inline logic has no JSDoc.
-- **No JSDoc on the component class** in `Portfolio.dc.html` — method names are self-documenting.
-- **Overall doc coverage:** Good in framework/utility files; minimal in the component logic itself.
+**Honeypot spam field** in the contact form:
+```html
+<div aria-hidden="true" style="position:absolute;left:-9999px;...">
+  <input type="text" name="website" tabindex="-1" autocomplete="off" />
+</div>
+```
+If the `website` field is filled, the `onSubmit` handler silently drops the submission. Same check is expected server-side in `sendMail.php`.
 
-## Summary
+**`image-slot` custom element** is used for profile photos:
+```html
+<image-slot id="hero-photo" src="assets/profile.png" fit="cover" shape="circle"
+  placeholder="Dein Foto hier ablegen"
+  style="display: block; width: min(70vw, 300px); height: min(70vw, 300px);">
+</image-slot>
+```
 
-The codebase is a single-page portfolio using the omelette dc-runtime Design Component format — a React-backed, class-component style system with inline HTML templates. Code quality is high in the infrastructure files (`image-slot.js`, `support.js`) with clear naming, proper cleanup, and meaningful comments. The main portfolio file (`Portfolio.dc.html`) is functional and consistently structured but relies entirely on inline styles with no separation of CSS concerns, which is intentional for the dc-runtime authoring model. No linting or formatting tooling is configured.
+**i18n is handled entirely in JS** via the `CONTENT` object with `de` and `en` keys. All user-visible strings are `{{ t.section.key }}` references. Language state is toggled with `setState({ lang: next })`.
+
+## Media Query Breakpoints
+
+All media queries live in the `<style>` block inside `<helmet>` in `Portfolio.dc.html` (lines 30–82).
+
+| Breakpoint | Applies to | Purpose |
+|---|---|---|
+| `max-width: 868px` | `.about-photo-wrap`, `.skills-icons` | Hide about photo; shrink skills icon grid columns |
+| `max-width: 821px` | `.skills-grid` | Stack skills section to single column with explicit order |
+| `max-width: 765px` | `#top` and children | Stack hero to single column; resize photo; reduce headings |
+| `min-width: 481px` and `max-width: 765px` | `#top > a` (scroll indicator) | Adjust scroll arrow `bottom` offset |
+| `max-width: 497px` | `.nav-logo-text`, `.nav-logo-icon` | Swap full name text for favicon icon in nav |
+| `max-width: 480px` | `#top`, `#about` | Hero full-screen via `min-height: 100svh`; reduce about top padding |
+| `max-width: 413px` | `.nav-links a`, `.nav-links button` | Shrink nav link and button font sizes |
+| `max-width: 372px` | `#top`, nav buttons/links | Tightest mobile: hide nav links, show burger menu; reduce CTA button sizes |
+| `hover: none` | `.cc-cursor` | Hide custom cursor on touch devices |
+
+**`min-height: 100svh`** is preferred over `100vh` on mobile to account for dynamic browser toolbar collapse. `100vh` is retained as a fallback where `svh` is unsupported.
+
+---
+
+*Convention analysis: 2026-06-23*

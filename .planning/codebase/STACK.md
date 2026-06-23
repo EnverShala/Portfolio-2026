@@ -1,107 +1,92 @@
-# Technology Stack
+# Stack
 
 **Analysis Date:** 2026-06-23
 
-## Languages
+## Runtime & Language
 
-**Primary:**
-- HTML5 — three `.dc.html` page files (`Portfolio.dc.html`, `impressum.dc.html`, `datenschutz.dc.html`)
-- JavaScript (ES2020+, class syntax, async/await) — all client logic in `.dc.html` `<script data-dc-script>` blocks and in `support.js` / `image-slot.js`
-- PHP 8+ — server-side contact form handler (`sendMail.php`)
+**Primary language:** HTML5 + CSS3 + vanilla JavaScript (ES2020+)
 
-**Secondary:**
-- CSS — global resets, keyframes, responsive breakpoints in `<helmet><style>` blocks; font declarations in `fonts/fonts.css`; no TypeScript in source files
+**Secondary language:** PHP 8+ — contact form mailer only (`dist/sendMail.php`)
 
-## Runtime
+**Runtime:** Browser (no Node.js, no server-side rendering). PHP runs on the Apache host solely for the `sendMail.php` endpoint.
 
-**Client:**
-- Browser only — no Node.js, no build step required
-- React 18.3.1 — UMD build, loaded from `https://unpkg.com` by `support.js` at boot with SRI hash verification
-
-**Server:**
-- PHP (version unspecified) — required only for `sendMail.php`. Uses `mail()` — host must have an MTA configured.
-- Apache — `.htaccess` present with `mod_headers` and `mod_rewrite` directives
-
-**Package Manager:**
-- None — zero npm dependencies at the project level; no lockfile
+**No package manager.** No `package.json`, `composer.json`, `requirements.txt`, or lockfile exists. All dependencies are either self-hosted files or loaded at runtime from unpkg CDN.
 
 ## Frameworks & Libraries
 
-**Core rendering engine:**
-- `dc-runtime` (pre-compiled into `support.js`) — proprietary Design Component runtime built on React 18. Provides `<x-dc>`, `<sc-for>`, `<sc-if>`, `<helmet>`, `{{ }}` interpolation, and a `DCLogic` base class for component state.
-  - Comment at top of `support.js`: `// GENERATED from dc-runtime/src/*.ts — do not edit. Rebuild with cd dc-runtime && bun run build.`
-  - Source not present in this repo.
+**dc-runtime (custom, self-contained):**
+- Bundled as `support.js` — a single IIFE generated from `dc-runtime/src/*.ts` via `bun run build`
+- Implements the `<x-dc>` declarative component system: parses `.dc.html` templates, compiles `{{ }}` interpolations, handles `<sc-for>`, `<sc-if>`, `<helmet>`, `<x-import>`, and `<dc-import>` tags
+- Boots by dynamically loading React 18 from unpkg, then mounts to `#dc-root`
+- Exposes `DCLogic` / `StreamableLogic` base class for component logic; logic classes use a React class-component lifecycle (`componentDidMount`, `componentDidUpdate`, `componentWillUnmount`, `renderVals`)
+- Source: `support.js` (root) and `dist/support.js` (deployed copy)
 
-**React (CDN, runtime dependency):**
-- React 18.3.1 — `https://unpkg.com/react@18.3.1/umd/react.production.min.js` (SRI verified)
-- ReactDOM 18.3.1 — `https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js` (SRI verified)
+**React 18.3.1 (runtime CDN load, not bundled):**
+- Loaded dynamically by `support.js` from `https://unpkg.com/react@18.3.1/umd/react.production.min.js`
+- SRI hash enforced: `sha384-DGyLxAyjq0f9SPpVevD6IgztCFlnMF6oW/XQGmfe+IsZ8TqEiDrcHkMLKI6fiB/Z`
+- ReactDOM loaded from `https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js`
+- SRI hash enforced: `sha384-gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1`
+- Used via UMD globals (`window.React`, `window.ReactDOM`) — NOT via npm
 
-**Custom Elements:**
-- `<image-slot>` — defined in `image-slot.js`; drag-and-drop photo placeholder with design-tool sidecar persistence
+**@babel/standalone 7.26.4 (conditional CDN load):**
+- Loaded on-demand by `support.js` only when an `<x-import>` tag references a `.jsx` or `.tsx` file
+- URL: `https://unpkg.com/@babel/standalone@7.26.4/babel.min.js`
+- Not loaded for this portfolio (no JSX x-imports in `Portfolio.dc.html`)
+
+**`<image-slot>` custom web component:**
+- Source: `image-slot.js` (root) and `dist/image-slot.js`
+- Vanilla JS, no framework dependency
+- Uses Shadow DOM (`mode: 'open'`), Custom Elements API, ResizeObserver, Pointer Events, Canvas 2D API
+- Persists dropped images as WebP data-URLs in `.image-slots.state.json` sidecar via `window.omelette.writeFile` — only writable inside the Omelette design-tool; read-only on the live site
+- Loaded via `<helmet><script src="image-slot.js"></script></helmet>` inside the dc template
 
 ## Build & Tooling
 
-**Build:** None at the project level. `support.js` is a pre-compiled artifact. Pages are served directly from `.dc.html` source files (or `dist/` copies).
+**No build step for the portfolio itself.** `Portfolio.dc.html` is authored directly; `dist/` files are its deployed copies.
 
-**Task runner:** None
+**dc-runtime build (internal tooling only):**
+- Source: `dc-runtime/src/*.ts` (TypeScript)
+- Build command: `cd dc-runtime && bun run build`
+- Output: `support.js` (self-contained IIFE) — do not edit `support.js` by hand
 
-**Deployment output:** `dist/` directory mirrors the project root with compiled copies of all pages, assets, fonts, and scripts. `dist/index.html` is the served entry point.
+**Apache `.htaccess` (`dist/.htaccess`):**
+- Disables directory listing (`Options -Indexes`)
+- Clean URL rewrites: `/legalnotice` → `impressum.dc.html`, `/privacypolicy` → `datenschutz.dc.html`
+- Blocks access to dotfiles (except `.image-slots.state.json`)
+- Security headers: `X-Content-Type-Options`, `X-Frame-Options: DENY`, `Referrer-Policy`, `Permissions-Policy`, `Content-Security-Policy`
+- CSP allows `script-src 'self' https://unpkg.com 'unsafe-inline' 'unsafe-eval'` — required for React UMD + dc-runtime's `eval`-based logic execution
 
-## Styling
+## Fonts & Assets
 
-**Approach:** Mixed — `<style>` block inside each page's `<helmet>` tag provides global resets, CSS custom properties (design tokens), keyframes, and responsive breakpoints. Element-level layout and decoration use inline `style=""` attributes. No CSS preprocessor, no utility framework, no CSS-in-JS.
+**Self-hosted web fonts (no Google Fonts or other CDN):**
+All font files live in `fonts/` (root, mirrored in `dist/fonts/`) and are declared in `fonts/fonts.css` with `font-display: swap`.
 
-**Fonts:** Self-hosted `.woff2` files in `fonts/` directory, declared in `fonts/fonts.css` with `font-display: swap`. No external CDN for fonts.
-- `Space Grotesk` — weights 400/500/600/700 (headings, nav brand)
-- `Manrope` — weights 400/500/600/700 (body text, form inputs)
-- `JetBrains Mono` — weights 400/500 (monospace labels, tags, social icons)
+| Family | Weights | Files |
+|--------|---------|-------|
+| Manrope | 400, 500, 600, 700 | `Manrope-{weight}-latin.woff2` + `latin-ext.woff2` |
+| Space Grotesk | 400, 500, 600, 700 | `SpaceGrotesk-{weight}-latin.woff2` + `latin-ext.woff2` |
+| JetBrains Mono | 400, 500 | `JetBrainsMono-{weight}-latin.woff2` + `latin-ext.woff2` |
 
-**Design system:** Custom, dark theme (`#070a0b` background, `#34d399` green accent). No third-party design system.
+**Font usage in the portfolio:**
+- `Manrope` — body text, primary UI font (`font-family: 'Manrope', system-ui, sans-serif`)
+- `Space Grotesk` — nav logo, headings
+- `JetBrains Mono` — nav language toggle button, monospace labels
 
-**Design tokens (CSS custom properties):**
-- Defined inline on the root `<div>`: `--bg`, `--surface`, `--surface2`, `--border`, `--text`, `--muted`, `--green`, `--green-rgb`, `--purple`, `--purple-rgb`
+**Static assets:**
+- `assets/profile.png` — hero section profile photo (also at `dist/assets/profile.png`)
+- `uploads/rund.PNG` — secondary image asset (also at `dist/uploads/rund.PNG`)
+- `favicon.svg` — SVG favicon (root and `dist/favicon.svg`)
+- `robots.txt` — search engine directives (root and `dist/robots.txt`)
 
-## Data & State
+## Deployment
 
-**Component state:**
-- `DCLogic`-subclass `this.state` object: `{ lang, sent, sending, sendError, menuOpen }`
-- Mutations via `this.setState()`; no external store
+**Host:** Apache shared hosting at `https://enver-shala.de`
+- PHP mailer runs server-side at `dist/sendMail.php` (same-origin POST endpoint)
+- No CDN/proxy layer by default (`$behindProxy = false`; Cloudflare support coded but disabled)
 
-**Contact form backend:**
-- `sendMail.php` — accepts `POST application/json`, validates input, sends via PHP `mail()` to `envershala1989@gmail.com`
-- Honeypot field (`website`) for spam filtering
-- File-based rate limiting: 3 requests per 10 minutes per IP (temp dir JSON sidecar)
+**Git repository:** `github.com/EnverShala/Portfolio-2026` (branch: `main`)
 
-**Storage:**
-- `image-slot.js` persists dropped images as base64 WebP in `.image-slots.state.json` via `window.omelette.writeFile` (design-tool host only; falls back silently in production)
-- No localStorage, sessionStorage, cookies, or database
-
-**Content:**
-- All copy and translations hardcoded as `CONTENT` object inside `<script data-dc-script>` in each `.dc.html` file
-- Bilingual DE/EN with runtime toggle via `toggleLang()`
-
-## Security
-
-**Server headers (`.htaccess`):**
-- `X-Content-Type-Options: nosniff`
-- `X-Frame-Options: DENY`
-- `Referrer-Policy: strict-origin-when-cross-origin`
-- `Permissions-Policy: camera=(), microphone=(), geolocation=()`
-- `Content-Security-Policy: default-src 'none'; script-src 'self' https://unpkg.com 'unsafe-inline'; ...`
-- Directory listing disabled (`Options -Indexes`)
-- Dotfile access blocked
-
-**`sendMail.php` defenses:**
-- CORS restricted to `https://enver-shala.de` and `https://www.enver-shala.de`
-- Honeypot anti-bot field
-- File-based rate limiting per IP
-- Header injection prevention (CR/LF stripping)
-- Email format validation (`FILTER_VALIDATE_EMAIL`)
-- Length limits on all fields
-
-## Summary
-
-Multi-page static portfolio (three `.dc.html` pages + `dist/` compiled output) served on Apache/PHP hosting. All client rendering is browser-only via the dc-runtime (React 18 from CDN). The contact form has a real PHP backend (`sendMail.php`). Fonts are self-hosted woff2 files. No build tool, no package manager, no JS framework at the project level.
+**Dist root:** `dist/` is the Apache document root. The `dist/` files are the deployed versions of their repo-root counterparts.
 
 ---
 

@@ -1,166 +1,269 @@
-# Concerns & Technical Debt
+# Concerns
 
-**Analysis Date:** 2026-06-20
-
----
-
-## Critical Issues
-
-### All portfolio project links are placeholder `#` hrefs
-Every "Live-Test" and "Github" button in the Portfolio section (`Portfolio.dc.html` lines 174–176, 203–205, 216–218) points to `href="#"`. These are dead links — clicking them scrolls to the top of the page instead of opening the actual projects. This is the most visible broken feature on the live site, affecting Join, El Pollo Loco, and Pokèdex entries.
-
-### GitHub and LinkedIn social links are placeholder `#` hrefs
-The hero section social icons (lines 86–89) and footer social icons (lines 273–276) for GitHub and LinkedIn both use `href="#"`. These links are expected to navigate to real profiles but do nothing.
-
-### Contact form submits nowhere
-`onSubmit` (line 410) calls `e.preventDefault()` and immediately sets `sent: true`. There is no backend, API call, email service (e.g. EmailJS, Formspree), or fetch involved. Submitting the form silently discards the message. The visitor sees a success state but nothing is delivered.
-
-### Privacy policy link is a dead UI element
-The contact form includes a `privacyLink` label ("Datenschutzerklärung" / "privacy policy", line 256) rendered as a `<span>` with green styling, but it is not a link. There is no privacy policy page or document anywhere in the project. The checkbox requires agreeing to a policy that does not exist, which is a legal compliance gap for a German-language site targeting EU visitors (GDPR).
-
-### Footer "Impressum" link is a placeholder `#`
-`t.footer.legal` renders as "Impressum" (line 269) but the `href="#"` means there is no legal notice page. Under German law (§ 5 TMG) a professional/freelancer website offering services must have an accessible Impressum.
-
-### Project screenshots are absent — image-slots show empty placeholders
-`Portfolio.dc.html` declares three `<image-slot>` elements for project screenshots (`proj-join`, `proj-pollo`, `proj-pokedex`) with no `src` attribute (lines 184, 196, 226). The screenshot image files have been deleted from the project. All three project cards render as empty drag-drop placeholders in any non-editor context, leaving the portfolio section visually broken for real visitors.
+**Analysis Date:** 2026-06-23
 
 ---
 
-## Technical Debt
+## High Priority
 
-### All CSS is written as inline `style=""` attributes
-`Portfolio.dc.html` contains zero stylesheet rules for layout or component styles. Every single visual property — grid, flexbox, spacing, typography, color, transitions, hover states — is specified as inline `style` strings directly on HTML elements. This makes global design changes (e.g. adjusting a spacing scale or color token) require touching dozens of scattered attribute values. The `--bg`, `--green`, `--purple` CSS custom properties are defined on the root div (line 33) but re-stated as literal hex values in dozens of places instead of being consumed consistently.
+### Portfolio section is a "Coming Soon" placeholder — no real project cards
 
-### `--purple` CSS variable is assigned the same value as `--green`
-`Portfolio.dc.html` line 33 defines `--purple: #34d399` — identical to `--green: #34d399`. The variable name implies a distinct accent color, but both resolve to the same green. This is either an unfinished design decision (purple was planned, never implemented) or an accidental copy-paste. Anywhere `var(--purple)` is used, it is indistinguishable from `var(--green)`.
+The entire Portfolio section (`Portfolio.dc.html` lines 240–244) renders only two text lines: `{{ t.portfolio.comingSoon }}` and `{{ t.portfolio.wip }}`. No project cards, screenshots, links, or descriptions are shown to visitors. The `CONTENT` object (lines 346–349, 393–397) contains copy for three projects (Join, El Pollo Loco, Pokèdex) and `testi` testimonial data, but none of it is wired to any template element. This is the most visible gap on the live site — the section that should demonstrate Enver's work is empty.
 
-### Testimonial data exists in CONTENT but no testimonial section is rendered
-`CONTENT.de.testi` and `CONTENT.en.testi` (lines 325–328, 370–373) contain a full testimonial quote from "Emre Isik" about working with Enver on the Join project. There is no corresponding `<section>` or element in the HTML template that renders it. This content exists in both languages in the logic class but is completely unused.
-
-### `support.js` is committed as a generated build artifact with a "do not edit" warning
-Line 1 of `support.js` reads: `// GENERATED from dc-runtime/src/*.ts — do not edit. Rebuild with 'cd dc-runtime && bun run build'.` The source TypeScript files and the `dc-runtime/` build directory do not exist in this repository. The bundled runtime (1,513 lines) is committed directly. There is no way to patch or upgrade the runtime without the missing source.
-
-### `image-slot.js` contains editor-only write functionality that silently does nothing in production
-The `ImageSlot` component's "Replace" / "Remove" controls and drag-to-reframe only activate when `window.omelette && window.omelette.writeFile` is truthy (line 596–597). Outside the omelette editor environment this is always falsy — the controls never appear and all persistence writes are silently skipped. The sidecar file `.image-slots.state.json` also does not exist in the repo, so `fetch('.image-slots.state.json')` will 404 silently on every page load.
-
-### The DC component framework requires React loaded from unpkg CDN at runtime
-`support.js` lines 1424–1428 hard-code unpkg.com URLs for React 18.3.1 and ReactDOM 18.3.1 with SRI hashes. The entire page is blank until these CDN requests resolve. If unpkg is unavailable (offline, rate-limited, or blocked) the page fails completely with no fallback.
-
-### `eval` / `new Function` used in the runtime for user logic and external modules
-`support.js` lines 687–694 (`evalDcLogic`) and lines 1025–1032 (external module loader) use `new Function(...)` to evaluate user-provided JavaScript strings at runtime. This is noted with `//! nosemgrep:` suppression comments. While scoped to the DC design tool context, it is a pattern that makes CSP compliance impossible without `unsafe-eval`.
+- Files: `Portfolio.dc.html` lines 240–244, 346–349, 393–397
+- Impact: Visitors see no portfolio work. The section exists only as a heading and placeholder text.
+- Fix approach: Add project card elements to the Portfolio section template, wire `t.portfolio.joinD` / `polloD` / `pokedexD` copy, add `<image-slot>` elements with real `src` screenshots, and link Live-Test / GitHub buttons to actual URLs.
 
 ---
 
-## Missing Features / Gaps
+### No `<title>`, `<meta name="description">`, or Open Graph tags
 
-### No actual email or message delivery on form submit
-The contact form has all the right UI (name, email, message, privacy checkbox, send button, success state) but `onSubmit` (line 410) does nothing except `setState({ sent: true })`. An integration with Formspree, EmailJS, Netlify Forms, or a backend endpoint is needed before the form is functional.
+`Portfolio.dc.html` has only `<meta charset>` and `<meta viewport>` in `<head>`. There is no `<title>` element, so browser tabs show a blank title and search engines have nothing to index. No Open Graph or Twitter Card tags exist, so social link previews are blank.
 
-### No privacy policy or Impressum pages
-Both are linked from the UI (footer nav, contact form checkbox) but no content exists. Required for GDPR compliance and German TMG law on a professional services site.
-
-### No 404 / error page
-The project is a single `.dc.html` file with no routing. Navigating to any non-root URL would return a 404 from whatever server hosts the file. No fallback or error page exists.
-
-### No `<title>` or SEO meta tags
-`Portfolio.dc.html` has `<meta charset>` and `<meta viewport>` but no `<title>`, `<meta name="description">`, Open Graph tags, or canonical URL. The page will appear as an untitled document in browser tabs and search results.
-
-### No favicon
-There is no `<link rel="icon">` declaration and no favicon file in the project root or `assets/` directory.
-
-### Language toggle does not persist across page reloads
-`state.lang` is stored in component memory only (line 283). Reloading the page always resets to `'de'`. There is no `localStorage` read/write in `toggleLang` (line 404–408) or `componentDidMount`.
+- Files: `Portfolio.dc.html` lines 1–8
+- Impact: Invisible to search engines; unprofessional appearance in browser tabs and social sharing.
+- Fix approach: Add `<title>Enver Shala – Frontend Developer</title>` and `<meta name="description">` inside the `<helmet>` block (`Portfolio.dc.html` line 11). Add `og:title`, `og:description`, `og:image` for social previews.
 
 ---
 
-## Performance Concerns
+### `dist/.image-slots.state.json` is untracked and leaks editor state to production
 
-### Animated canvas dot grid runs on the main thread every frame
-`setupCanvas()` (lines 460–503) runs a nested loop over every grid point (step=40px, so ~48×27 ≈ 1,296 points at 1920×1080) on every `requestAnimationFrame`. Each point involves trigonometry, a distance sqrt, and a `ctx.arc()` + `ctx.fill()` call. This is intentionally decorative but will produce measurable CPU usage on lower-end hardware and will drain mobile battery. There is no `prefers-reduced-motion` check.
+`dist/.image-slots.state.json` appears in `git status` as an untracked file. This sidecar is generated by the `image-slot.js` component during editing sessions (storing dropped image data-URLs and crop coordinates). It is not listed in `.gitignore` — only `dist/uploads/*` and `uploads/*` are ignored. If committed or deployed, it embeds base64-encoded image data directly in the repo.
 
-### Two separate `requestAnimationFrame` loops run simultaneously
-`setupCanvas()` starts `this._raf` and `setupCursor()` starts `this._craf` (lines 503, 515). Both run perpetually on every frame. They could be merged into a single loop to halve the RAF callback overhead.
-
-### Three Google Fonts families loaded with full weight ranges
-`Portfolio.dc.html` lines 12–13 load Space Grotesk (400–700), Manrope (400–700), and JetBrains Mono (400–500) from Google Fonts. No `font-display: swap` is specified. All three are render-blocking until the font CSS resolves.
-
-### React and ReactDOM loaded synchronously from CDN before any page content renders
-`support.js` line 1440 sets `s.async = false` on the React script tags. The page is blank until both CDN scripts download, parse, and execute.
-
-### Two large animated radial gradient blobs use `filter: blur()` on `position: fixed` elements
-`Portfolio.dc.html` lines 36–37 apply `filter: blur(46px)` and `filter: blur(54px)` to `position: fixed` full-viewport elements. CSS `filter` on fixed/absolute elements forces GPU compositing of a large area and can cause repaints on low-end devices.
-
-### `scroll` event listener is not passive-flagged on cursor mousemove
-`setupCursor()` attaches `mousemove` (line 508) without `{ passive: true }`. Passive event listeners are required for smooth scrolling on touch devices.
+- Files: `dist/.image-slots.state.json`, `.gitignore`
+- Impact: Base64 image blobs can inflate git history significantly. State from one editing session may override intentional `src` attributes when deployed.
+- Fix approach: Add `dist/.image-slots.state.json` and `.image-slots.state.json` to `.gitignore`.
 
 ---
 
-## Maintainability
+### `sendMail.php` has `$behindProxy = false` — rate limiting uses wrong IP when behind a proxy
 
-### 604-line single-file component with all logic, content, and markup inline
-The entire portfolio — all translations, all skills data, all animation logic, all section HTML — lives in `Portfolio.dc.html`. There are no separate modules, no component decomposition, and no external data files. Adding a new project card, skill, or language requires editing a single 604-line file and locating the right nested position within it.
+`dist/sendMail.php` line 4 sets `$behindProxy = false`. The site is hosted at `enver-shala.de`, which is likely served through Cloudflare or a reverse proxy. With `$behindProxy = false`, `getClientIp()` returns `$_SERVER['REMOTE_ADDR']`, which is the proxy's IP — meaning all visitors share the same rate-limit bucket. Three submissions from any visitor exhausts the limit globally for 10 minutes.
 
-### All translatable content is hardcoded inside the JS class
-`CONTENT` (lines 294–385) is a large nested object literal directly in the component's class body. There is no CMS, no JSON file, no i18n library. Editing copy requires touching the JavaScript class. The two language objects (`de`/`en`) are not validated against each other — a missing key in one language silently renders nothing for that interpolation.
-
-### CSS variable tokens defined on a root `<div>` rather than `:root`
-Design tokens (`--bg`, `--surface`, `--border`, `--green`, etc.) are defined as inline styles on the root `<div>` (line 33), not on `:root` or in a `<style>` block. This means they are scoped to the subtree of that div and inaccessible to any sibling-level CSS rules or the `::before`/`::after` pseudo-elements at the document level.
-
-### `cursorDotRef` is created but never used
-`Portfolio.dc.html` line 287 declares `cursorDotRef = React.createRef()` and it appears in `renderVals()` (line 427). There is no `ref="{{ cursorDotRef }}"` in the HTML template and no usage of `this.cursorDotRef.current` anywhere in the logic. It is dead code.
-
-### Parallax effect only activates on `mousemove` inside the hero section
-`setupParallax()` (lines 552–566) attaches the mousemove listener to `this.heroRef.current`, which is the `<section id="top">` element. The parallax elements are only affected while the pointer is inside the hero. This is the intended behavior, but on mobile (no hover) the parallax initializes and runs listeners that never fire — wasted event registration.
-
-### No error boundary around the entire portfolio
-The DC runtime provides per-component error boundaries (line 771–778 in `support.js`), but a JavaScript exception in `componentDidMount()` (e.g. canvas or IntersectionObserver failure on an older browser) is caught and logged to the console but leaves the affected setup silently incomplete with no visible user feedback.
+- Files: `dist/sendMail.php` lines 4, 10–24, 58–59
+- Impact: A single user can inadvertently block the contact form for all other visitors for 10-minute windows.
+- Fix approach: Set `$behindProxy = true` on the production server if Cloudflare is in use. Verify that `HTTP_CF_CONNECTING_IP` or `HTTP_X_FORWARDED_FOR` is set and trusted.
 
 ---
 
-## Dead Code / Cleanup
+### Language preference is not persisted across page reloads
 
-### `uploads/rund.PNG` — orphaned asset with no reference in any source file
-`uploads/rund.PNG` exists in the repository but is not referenced by any `src`, `href`, or import anywhere in `Portfolio.dc.html`, `image-slot.js`, or `support.js`. It appears to be a leftover file from a previous iteration.
+`state.lang` is initialized to `'en'` (line 308) and toggled in memory only. There is no `localStorage` read in `componentDidMount` and no `localStorage.setItem` in `toggleLang` (line 434). Every page reload resets to English regardless of the user's previous selection.
 
-### `.thumbnail` — binary WebP artifact committed to git
-`.thumbnail` is a 4,480-byte WebP image (320×275px) in the repository root. It is not referenced anywhere in the source and appears to be an editor-generated preview thumbnail. Binary blobs in git root are not meaningful to track and inflate the repository.
-
-### `cursorDotRef` declared and exported but never referenced in the template
-As noted above: `this.cursorDotRef = React.createRef()` is created, added to `renderVals()`, but no element in the HTML has `ref="{{ cursorDotRef }}"`. Cleanup candidate.
-
-### `t.portfolio.code` key defined but never rendered
-`CONTENT.de.portfolio.code` (line 320) and `CONTENT.en.portfolio.code` (line 365) both define `code: 'Github'`. The template renders the Github button text as a hardcoded `Github` string literal rather than `{{ t.portfolio.code }}`. The translation key is unused.
-
-### `testi` translation block (both `de` and `en`) defined but unused
-`CONTENT.de.testi` (lines 325–328) and `CONTENT.en.testi` (lines 370–373) define a complete testimonial block. No element in the template renders `{{ t.testi.quote }}` or `{{ t.testi.author }}`. This is dead content data taking up space in the class definition.
+- Files: `Portfolio.dc.html` lines 308, 434–438, 515–526
+- Impact: Bilingual visitors must re-toggle the language on every visit. German-speaking visitors land on English content.
+- Fix approach: In `componentDidMount`, read `localStorage.getItem('lang')` and call `setState({ lang })`. In `toggleLang`, call `localStorage.setItem('lang', next)` after setting state. Two one-line changes.
 
 ---
 
-## Opportunities
+## Medium Priority
 
-### Add real project URLs to portfolio buttons
-The single highest-impact fix: replace the six `href="#"` values on the Live-Test / Github buttons with actual URLs. No code changes to logic or structure are needed — just attribute values.
+### No automated sync between `Portfolio.dc.html` and `dist/index.html` — manual copy drift risk
 
-### Add static fallback `src` images to project `<image-slot>` elements
-Each project card's `<image-slot>` accepts a `src` attribute as a fallback. Adding real screenshot images to `assets/` and wiring them as `src="assets/join.png"` etc. would make the portfolio visually complete without requiring the omelette editor environment.
+`dist/index.html` is a manual copy of `Portfolio.dc.html`. There is no build script, no Makefile, no npm script, and no CI step that keeps them in sync. Any edit to `Portfolio.dc.html` must be manually replicated to `dist/index.html` and all supporting files (`dist/support.js`, `dist/image-slot.js`, etc.). The same applies to `datenschutz.dc.html`, `impressum.dc.html`, `sendMail.php`, and `robots.txt`.
 
-### Add `localStorage` persistence for language toggle
-A two-line change in `toggleLang` and a one-line read in `componentDidMount` would make the language preference survive page reloads.
-
-### Wire the contact form to Formspree or EmailJS
-Replacing `onSubmit`'s two-line body with a `fetch('https://formspree.io/f/YOUR_ID', {...})` call would make the contact form functional with no backend needed.
-
-### Add `<title>` and `<meta name="description">`
-Adding these to the `<helmet>` block in `Portfolio.dc.html` requires two lines and immediately improves search visibility and browser tab presentation.
-
-### Merge the two `requestAnimationFrame` loops into one
-Combining the canvas draw loop and cursor lerp loop into a single RAF callback reduces scheduling overhead and makes the animation timing consistent.
-
-### Add `prefers-reduced-motion` check to disable canvas animation and CSS keyframes
-A single `window.matchMedia('(prefers-reduced-motion: reduce)')` check in `setupCanvas()` and CSS `@media (prefers-reduced-motion: reduce)` rules for the keyframe animations would make the page accessible to users who have motion sensitivity settings enabled.
+- Files: `Portfolio.dc.html` ↔ `dist/index.html`, and all other `dist/*` copies
+- Impact: Edits made to the source that are not copied will silently not deploy. There is no diff or verification step.
+- Fix approach: Add a minimal deploy script (e.g. `deploy.sh` or a `package.json` `"deploy"` script) that copies changed source files to `dist/` before publishing, or integrate a CI check that diffs source vs dist.
 
 ---
 
-## Summary
+### `--purple` CSS variable is set to the same value as `--green`
 
-The portfolio is visually polished with a coherent dark-green design system and smooth animations, but it is fundamentally incomplete as a working professional portfolio site. The most critical gaps are: all external links (GitHub, LinkedIn, project live demos) are placeholder `href="#"` values; the contact form discards every submission; there is no privacy policy or Impressum despite legally requiring both for a German-market freelancer site; and the portfolio project screenshot images have been deleted, leaving all three project cards showing empty placeholders. The codebase itself is maintainable in the short term — it is a single-file component with straightforward logic — but the all-inline-styles pattern and the monolithic single-file structure will become friction as the portfolio grows.
+`Portfolio.dc.html` line 86 defines `--purple: #34d399` — identical to `--green: #34d399`. The variable name implies a distinct accent color. Every use of `var(--purple)` renders green. This is either an abandoned design decision or a copy-paste error.
+
+- Files: `Portfolio.dc.html` line 86
+- Impact: Visual monotony — all accents are the same green. No secondary color token is actually available.
+- Fix approach: Either assign a real purple value (e.g. `#a78bfa`) to `--purple`, or rename all `var(--purple)` uses to `var(--green)` and remove the dead token.
+
+---
+
+### Animated canvas dot grid has no `prefers-reduced-motion` check
+
+`setupCanvas()` (`Portfolio.dc.html` lines 540–583) runs a nested RAF loop drawing ~1,300 dots with trigonometry every frame. `setupCursor()` runs a second simultaneous RAF loop. Neither checks `window.matchMedia('(prefers-reduced-motion: reduce)')`. Similarly, the CSS keyframe animations (`floatBlob`, `floatBlob2`, `bobArrow`, `blink`) have no `@media (prefers-reduced-motion: reduce)` override.
+
+- Files: `Portfolio.dc.html` lines 23–27 (keyframes), 540–583 (canvas), 586–608 (cursor)
+- Impact: Accessibility failure for users with vestibular disorders or motion sensitivity. Also drains battery on mobile.
+- Fix approach: Wrap `setupCanvas()` start in `if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches)`. Add `@media (prefers-reduced-motion: reduce) { * { animation: none !important; } }` to the global style block.
+
+---
+
+### Two parallel `requestAnimationFrame` loops run on every frame indefinitely
+
+`setupCanvas()` starts `this._raf` and `setupCursor()` starts `this._craf`. Both run perpetually. The canvas loop does heavy per-frame computation (nested loops, trig, per-dot fills). Having two separate RAF callbacks means two scheduler ticks per frame instead of one.
+
+- Files: `Portfolio.dc.html` lines 581–583, 590–595
+- Impact: Unnecessary main-thread scheduling overhead. On slower devices this contributes to jank.
+- Fix approach: Merge both loops into a single `requestAnimationFrame` callback. Run canvas draw and cursor lerp in the same tick.
+
+---
+
+### `support.js` is a committed build artifact with no source in the repository
+
+Line 1 of `support.js` reads: `// GENERATED from dc-runtime/src/*.ts — do not edit. Rebuild with 'cd dc-runtime && bun run build'.` The `dc-runtime/` source directory does not exist in this repository. The 1,513-line bundled runtime is the only version of the code. There is no way to patch bugs, update React, or modify runtime behavior without the missing TypeScript source.
+
+- Files: `support.js` line 1, `dist/support.js`
+- Impact: Runtime is frozen at its committed version. Security or compatibility fixes require replacing the entire file from an external source.
+- Fix approach: Either commit the `dc-runtime/src/` TypeScript source alongside the bundle, or document the external repo/version where the source lives so the file can be regenerated.
+
+---
+
+### `image-slot.js` editor-only sidecar write is silently a no-op in production
+
+`image-slot.js` lines 111–117: `save()` gates all writes on `window.omelette && window.omelette.writeFile`. In production (no omelette runtime), this is always falsy — no writes occur. The component still calls `fetch('.image-slots.state.json')` on every page load (line 79), which silently 404s. The `Replace` / `Remove` controls in the UI never appear to production visitors.
+
+- Files: `image-slot.js` lines 111–117, 79, 597–600
+- Impact: Visitors see static images from `src=` attributes only. No error — behaviour is correct — but the 404 fetch is unnecessary noise in the network tab on production.
+- Fix approach: The sidecar fetch could be skipped when `window.omelette` is absent. Low risk to leave as-is since errors are silently swallowed.
+
+---
+
+### React and ReactDOM loaded synchronously from unpkg CDN with no local fallback
+
+`support.js` lines 1424–1444 dynamically insert `<script>` tags for React 18.3.1 and ReactDOM 18.3.1 from `unpkg.com` with `s.async = false`. The entire page renders nothing until both CDN scripts download and execute. If unpkg is unavailable, the page shows a blank screen.
+
+- Files: `support.js` lines 1424–1444
+- Impact: Hard CDN dependency. Page fails completely if CDN is unreachable (offline, blocked, rate-limited). First-paint is delayed by two serial CDN fetches.
+- Fix approach: Self-host React and ReactDOM UMD bundles in `dist/` (or root) and update the URLs. Eliminates the CDN dependency and improves first-paint on repeat visits.
+
+---
+
+### All CSS is inline `style=""` attributes — no stylesheet classes for layout
+
+Every visual property in `Portfolio.dc.html` (grid, flex, spacing, typography, color, transitions, hover) is specified as inline `style` strings. The `<style>` block in `<helmet>` contains only global resets, breakpoint overrides, and animation keyframes — no layout classes. Making a global spacing or color change requires editing dozens of scattered inline attribute values.
+
+- Files: `Portfolio.dc.html` (throughout)
+- Impact: High friction for design changes. CSS linting tools cannot analyze inline styles. Shared patterns cannot be extracted or deduplicated.
+- Fix approach: For greenfield additions (portfolio cards, new sections), use CSS classes defined in the `<helmet>` style block. Existing sections do not need to be refactored unless being modified for another reason.
+
+---
+
+### `cursorDotRef` is declared and exported but never used in the template
+
+`Portfolio.dc.html` line 312: `cursorDotRef = React.createRef()`. It is added to `renderVals()` (line 505) but no element in the HTML template has `ref="{{ cursorDotRef }}"`. `this.cursorDotRef.current` is never accessed anywhere in the logic class.
+
+- Files: `Portfolio.dc.html` lines 312, 505
+- Impact: Dead code. Minor cognitive noise but no functional impact.
+- Fix approach: Delete the `cursorDotRef` declaration and its entry in `renderVals()`.
+
+---
+
+### `testi` translation blocks defined in `CONTENT` but no template section renders them
+
+`Portfolio.dc.html` lines 352–354 and 399–401 define a full testimonial quote from "Emre Isik" in both `de` and `en`. No element in the template renders `{{ t.testi.quote }}` or `{{ t.testi.author }}`. The data is unreachable.
+
+- Files: `Portfolio.dc.html` lines 352–354, 399–401
+- Impact: Dead content. The testimonial was clearly planned but never implemented.
+- Fix approach: Either add a testimonial section to the template, or remove the `testi` keys from both `CONTENT` objects to keep the data model clean.
+
+---
+
+### `t.portfolio.code` translation key defined but hardcoded in the template
+
+`CONTENT.de.portfolio.code = 'Github'` (line 320) and `CONTENT.en.portfolio.code = 'Github'` (line 365) are defined but never used. Currently the Portfolio section only shows the "Coming Soon" placeholder so neither key is rendered — but if/when project cards are added, the code key will need to be wired rather than hardcoded.
+
+- Files: `Portfolio.dc.html` lines 320, 365
+- Impact: Minor inconsistency. Translation key exists for a string that is currently hardcoded in the data (no visible template usage).
+- Fix approach: When project cards are added, use `{{ t.portfolio.code }}` for the GitHub button label and remove the dead key if not needed.
+
+---
+
+## Low Priority / Nice to Have
+
+### CSS design tokens defined on a root `<div>` rather than `:root`
+
+`Portfolio.dc.html` line 86 defines `--bg`, `--surface`, `--border`, `--green`, `--purple`, etc. as inline styles on the root `<div>`, not on `:root` or in a `<style>` block. They are scoped to that subtree only and are inaccessible to sibling-level CSS or document-level pseudo-elements.
+
+- Files: `Portfolio.dc.html` line 86
+- Fix approach: Move CSS custom property definitions to a `:root { }` rule in the `<helmet>` style block. Remove them from the inline style on the root div.
+
+---
+
+### Honeypot field in contact form is inside `<sc-if value="{{ notSent }}">` — conditionally rendered
+
+The honeypot `<input type="text" name="website">` (`Portfolio.dc.html` line 266) is inside the `<sc-if value="{{ notSent }}">` block. While this is correct (the form is hidden after submission), a sophisticated bot that fetches the HTML before the React render may not see the honeypot at all since it is inside a conditional React tree. This is a theoretical gap, not a confirmed bypass.
+
+- Files: `Portfolio.dc.html` line 266, `dist/sendMail.php` lines 110–115
+- Fix approach: Low risk given rate limiting. No action required unless spam becomes a real problem.
+
+---
+
+### Scroll-to-section uses `nav.getBoundingClientRect().height` at click time — not reactive
+
+`setupNavScroll()` (`Portfolio.dc.html` lines 649–669) captures `navH` from `getBoundingClientRect().height` at the moment of each click. If the nav height changes (e.g. mobile menu opens and changes layout), the offset could be stale. This is an edge case with no confirmed broken behaviour.
+
+- Files: `Portfolio.dc.html` lines 649–669
+- Fix approach: No action needed unless scroll-to-section precision becomes a reported issue.
+
+---
+
+### `uploads/` directory exists at root level alongside `dist/uploads/`
+
+Both root `uploads/` and `dist/uploads/` are in `.gitignore`. This dual-directory structure suggests that user uploads may go to either location depending on execution context. PHP `mail()` in `sendMail.php` does not write to `uploads/`, so no files are currently written there — the directory appears to be a legacy scaffold.
+
+- Files: `.gitignore` lines 8–10, root `uploads/`, `dist/uploads/`
+- Fix approach: If `uploads/` at root is unused, remove it and its `.gitignore` entry.
+
+---
+
+### `@keyframes ringSpin` is defined but never applied to any element
+
+`Portfolio.dc.html` line 27 defines `@keyframes ringSpin { to { transform: rotate(360deg); } }`. No element in the template uses `animation: ringSpin`. This appears to be a leftover from an earlier design iteration.
+
+- Files: `Portfolio.dc.html` line 27
+- Fix approach: Remove the unused keyframe definition.
+
+---
+
+### CSS breakpoints are numerous and use magic pixel values with no documented rationale
+
+The `<helmet>` style block contains breakpoints at `372px`, `413px`, `480px`, `481px`, `497px`, `765px`, `821px`, and `868px`. Each targets a different layout adjustment. There is no comment explaining which device or layout issue each breakpoint addresses. The `@media (min-width: 481px) and (max-width: 765px)` range overlaps with the `@media (max-width: 765px)` rule above it.
+
+- Files: `Portfolio.dc.html` lines 30–82
+- Fix approach: Add inline comments (e.g. `/* iPhone SE portrait */`) for each breakpoint. Consider consolidating the closely spaced `372px`/`413px` breakpoints into fewer, documented tiers.
+
+---
+
+## Recently Fixed
+
+### Hero section vertical centering on mobile (≤480px and 481–765px)
+
+Several commits (`e1a27a2`, `16b292f`, `5f92381`) iterated on `#top` padding and `align-items` to eliminate a bottom gap on small screens. The fix landed as `padding-bottom: 0 !important` and `align-items: center !important` on `@media (max-width: 765px)` and `@media (max-width: 480px)`. The scroll indicator position on 481–765px was also adjusted (`bottom: 50px`).
+
+- Fixed in: `Portfolio.dc.html` lines 30–46
+- Status: Resolved as of 2026-06-23.
+
+### `image-slot.js` `.ring` element showing dashed border on production
+
+The `.ring` CSS rule now includes `:host(:not([data-editable])) .ring { display: none }` (`image-slot.js` line 207). This hides the dashed drag-drop ring in production (where `window.omelette` is absent), which was previously visible as an unwanted decoration on the profile photo slots.
+
+- Fixed in: `image-slot.js` line 207
+- Status: Resolved. `.ring` is hidden whenever `data-editable` attribute is absent.
+
+### `image-slot.js` `touch-action:none` blocking mobile page scroll
+
+`image-slot.js` lines 171–172 now apply `touch-action: pan-y` to `.frame img` (allowing vertical scroll) and `touch-action: none` only to `.frame img` inside `:host([data-reframe])` (the active crop-editing state). Previously `touch-action: none` was applied unconditionally, which blocked native scroll on mobile when the user tried to scroll past a profile photo.
+
+- Fixed in: `image-slot.js` lines 171–172
+- Status: Resolved. Mobile scroll no longer hijacked by image-slot elements.
+
+### GitHub and LinkedIn social links now point to real profile URLs
+
+Both the hero section and footer social icons use `href="https://github.com/EnverShala"` and `href="https://www.linkedin.com/in/enver-shala-developer/"` with `rel="noopener noreferrer"`. These were previously `href="#"` placeholders.
+
+- Fixed in: `Portfolio.dc.html` lines 154, 160, 292, 298
+- Status: Resolved.
+
+### Contact form now wired to `sendMail.php` with honeypot, rate limiting, and input validation
+
+`onSubmit` (`Portfolio.dc.html` lines 457–481) performs a real `fetch('sendMail.php', { method: 'POST', ... })`. `dist/sendMail.php` implements: IP-based rate limiting (3 requests / 10 min), honeypot detection, JSON input validation, field length limits matching the frontend, email format validation, header injection prevention, CORS restriction to `enver-shala.de`, and security headers.
+
+- Fixed in: `Portfolio.dc.html` lines 457–481, `dist/sendMail.php`
+- Status: Resolved. The form sends email via PHP `mail()`.
+
+### Impressum and Datenschutz pages now exist
+
+`dist/impressum.dc.html` and `dist/datenschutz.dc.html` are present in the dist directory. The footer Impressum link and the contact form privacy policy link now navigate to real pages rather than dead `href="#"` placeholders.
+
+- Fixed in: `dist/impressum.dc.html`, `dist/datenschutz.dc.html`
+- Status: Resolved.

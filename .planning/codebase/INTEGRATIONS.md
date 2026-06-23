@@ -1,66 +1,71 @@
-# External Integrations
+# Integrations
 
-**Analysis Date:** 2026-06-20
+**Analysis Date:** 2026-06-23
 
-## APIs & External Services
+## External Services
 
-**Contact form:**
-- No backend API. The form submit handler (`onSubmit`) calls `e.preventDefault()` and sets `sent: true` — it does NOT actually send data anywhere. There is no email API, no form service (e.g. Formspree, EmailJS), and no server endpoint.
-- Email link is constructed client-side: `window.location.href = 'mailto:' + ['envershala1989', 'gmail.com'].join('@')` — triggers the user's local mail client.
+**GitHub (`github.com/EnverShala`):**
+- Linked from the portfolio hero and about sections as a social profile link
+- Target: `https://github.com/EnverShala` (opens in new tab, `rel="noopener noreferrer"`)
+- No API calls — static hyperlink only
 
-**No analytics, no tracking, no auth services detected.**
+**LinkedIn (`linkedin.com/in/enver-shala-developer`):**
+- Linked from the about section as a social profile link
+- Target: `https://www.linkedin.com/in/enver-shala-developer/` (opens in new tab, `rel="noopener noreferrer"`)
+- No API calls — static hyperlink only
 
-## CDN / Asset Sources
+**Email (Gmail, obfuscated):**
+- Contact address `envershala1989@gmail.com` is assembled at runtime in JavaScript to avoid scraping:
+  `window.location.href = 'mailto:' + ['envershala1989', 'gmail.com'].join('@')`
+- The same address is the recipient in `dist/sendMail.php` (`$recipient = 'envershala1989@gmail.com'`)
+- PHP mailer From address: `portfolio-no-reply@enver-shala.de`
 
-**React (loaded by `support.js` at runtime):**
+## APIs & Backends
+
+**Contact form — PHP mailer (`dist/sendMail.php`):**
+- Accepts `POST application/json` with `{ name, email, message, website }` (website is honeypot)
+- Sends plain-text email via PHP's native `mail()` function (no SMTP library, no Mailgun/SendGrid)
+- Rate limiting: 3 requests per 10 minutes per IP, file-based (no database required), stored in `sys_get_temp_dir()`
+- CORS restricted to `['https://enver-shala.de', 'https://www.enver-shala.de']`
+- Returns `{ success: true }` or `{ error: "..." }` JSON
+- No external mail service dependency — relies on the hosting provider's `sendmail`/MTA
+
+**No other backend API.** The site is otherwise fully static.
+
+## Third-party Scripts
+
+**React 18.3.1 (loaded at runtime from unpkg CDN):**
 - `https://unpkg.com/react@18.3.1/umd/react.production.min.js`
   - SRI: `sha384-DGyLxAyjq0f9SPpVevD6IgztCFlnMF6oW/XQGmfe+IsZ8TqEiDrcHkMLKI6fiB/Z`
 - `https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js`
   - SRI: `sha384-gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1`
-- Both loaded with `crossOrigin="anonymous"` and `async=false` by the dc-runtime boot sequence inside `support.js`
+- Loaded dynamically by `support.js` before `init()` runs. SRI enforced via `script.integrity` attribute — the browser will refuse to execute if the hash does not match.
 
-**Babel (conditionally loaded by `support.js` for x-import JSX modules):**
+**@babel/standalone 7.26.4 (conditional, not loaded in production portfolio):**
 - `https://unpkg.com/@babel/standalone@7.26.4/babel.min.js`
-- Only loaded if an `<x-import>` tag referencing a `.jsx` or `.tsx` file is used. Not used in the current portfolio template.
+- Only fetched when `support.js` encounters an `<x-import>` pointing to a `.jsx` or `.tsx` file. No such imports exist in `Portfolio.dc.html`, so Babel is never loaded on the live site.
 
-**Google Fonts:**
-- Preconnect: `https://fonts.googleapis.com`, `https://fonts.gstatic.com` (crossorigin)
-- Stylesheet: `https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap`
-- Declared in `Portfolio.dc.html` inside `<helmet>` (injected into `<head>` at runtime)
+**No analytics, tracking, or monitoring scripts.** No Google Analytics, no Hotjar, no Sentry, no tag managers.
 
-**Local assets:**
-- `assets/profile.png` — profile photo, served locally. Used by `<image-slot id="hero-photo">` and `<image-slot id="about-photo">`.
+## Hosting & CDN
 
-## Third-party Scripts
+**Hosting provider:** Apache shared host
+- Domain: `enver-shala.de` (and `www.enver-shala.de`)
+- Document root: `dist/` directory contents
+- PHP available server-side for `sendMail.php`
+- No reverse proxy or CDN layer in front (Cloudflare support is coded but disabled — `$behindProxy = false`)
 
-**`support.js` (local, but internally loads from CDN):**
-- This is the dc-runtime bundle, served locally from the project root.
-- At runtime it fetches React and ReactDOM from unpkg (see above).
-- Also conditionally fetches Babel standalone from unpkg if JSX x-imports are used.
+**Font delivery:** Self-hosted (no CDN). All `.woff2` files are served from `dist/fonts/` on the same Apache host.
 
-**`image-slot.js` (local):**
-- Pure vanilla JS custom element. No third-party scripts loaded.
+**Image delivery:** Self-hosted. Profile photo (`dist/assets/profile.png`) and other images (`dist/uploads/rund.PNG`) are served from the same host.
 
-**No other third-party scripts (no analytics snippet, no chat widget, no cookie banner, no social SDK).**
+**unpkg.com (CDN for React only):**
+- Used exclusively to load React 18 UMD bundles at page boot
+- Governed by the CSP allowlist: `script-src 'self' https://unpkg.com ...`
+- If unpkg is unavailable, `support.js` will throw and the page will not render
 
-## Environment / Config
-
-**No environment variables.** The project has no `.env` file, no config file, and no feature flags system.
-
-**Runtime config surface:**
-- `window.omelette` — optional host bridge provided by the omelette design tool environment. When present, enables `writeFile` (persisting `.image-slots.state.json`) and marks image slots as editable. When absent (plain browser), slots are read-only and sidecar writes are silently skipped.
-- `window.React` / `window.ReactDOM` — expected on `window` after unpkg scripts load; dc-runtime throws if they are missing.
-- `window.Babel` — expected if JSX x-imports are used; loaded on demand.
-
-**Sidecar state file:**
-- `.image-slots.state.json` — written to project root by `image-slot.js`. Stores base64 WebP data URLs and crop/pan/zoom state per image slot id. Not a config file; generated at runtime by the design tool.
-
-**No secrets, no API keys, no auth tokens in any project file.**
-
-## Summary
-
-The portfolio has two external CDN dependencies that load at runtime: Google Fonts (for typography) and unpkg (for React 18 UMD bundles loaded by the dc-runtime). All other functionality — layout, animations, language toggle, contact form — is self-contained with no backend, no analytics, and no third-party service integrations. The contact form does not submit data; it opens the user's mail client via a `mailto:` link.
+**GitHub:** Repository hosting only (`github.com/EnverShala/Portfolio-2026`). Not used as a CDN or Pages host.
 
 ---
 
-*Integration audit: 2026-06-20*
+*Integration audit: 2026-06-23*

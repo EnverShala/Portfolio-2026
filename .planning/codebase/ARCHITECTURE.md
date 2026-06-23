@@ -3,160 +3,236 @@
 
 **Analysis Date:** 2026-06-23
 
-## Pattern
+## System Overview
 
-**Multi-page static site** rendered by the DC (Design Component) runtime — a bespoke, browser-side framework bundled in `support.js`. Each page is a single `.dc.html` file parsed and executed entirely on the client. No SSR, no routing library. Navigation between pages uses normal `<a href>` links; within a page, anchor-based scroll navigation. A PHP script (`sendMail.php`) handles contact form submission server-side.
+```text
+┌─────────────────────────────────────────────────────────────────────┐
+│                     Browser (no server rendering)                    │
+│                                                                      │
+│  Portfolio.dc.html  ──►  support.js (dc-runtime)  ──►  React 18    │
+│  (source template)         parses x-dc, compiles     (UMD, unpkg)  │
+│                            template → React VDOM                    │
+└──────────────────────────────┬──────────────────────────────────────┘
+                               │  mounts into #dc-root
+           ┌───────────────────▼───────────────────┐
+           │           StreamableComponent          │
+           │  (React class, hosts DCLogic instance) │
+           │                                        │
+           │  logic.renderVals()  ──►  template()   │
+           │  (Component extends DCLogic)            │
+           └──────────┬────────────────┬────────────┘
+                      │                │
+          ┌───────────▼──┐    ┌────────▼──────────────┐
+          │  image-slot  │    │  Canvas particle sys   │
+          │  (Shadow DOM │    │  Parallax / reveal /   │
+          │   web cmpt)  │    │  typing / scroll prog  │
+          └──────────────┘    └───────────────────────┘
+                                         │
+                              ┌──────────▼──────────┐
+                              │    sendMail.php      │
+                              │  (PHP, rate-limited) │
+                              └─────────────────────┘
+```
 
-## Entry Points
+## Component Model (x-dc)
 
-| File | Role |
-|---|---|
-| `Portfolio.dc.html` | Main portfolio page. HTML template (`<x-dc>`), inline CSS (`<helmet><style>`), bilingual content (`CONTENT`), all interactive logic (`class Component extends DCLogic`). |
-| `impressum.dc.html` | Legal notice page (Impressum). Same DC runtime shell; minimal JS (lang toggle only). |
-| `datenschutz.dc.html` | Privacy policy page (Datenschutz). Same DC runtime shell; minimal JS (lang toggle only). |
-| `support.js` (loaded first, `<head>`) | DC runtime bootstrap — loads React 18 from unpkg, calls `init()` which mounts the component tree into `#dc-root`. |
-| `image-slot.js` (loaded from `<helmet>`) | Self-contained Web Component (`<image-slot>`) injected into `<head>` by the helmet manager at runtime. |
-| `sendMail.php` | PHP endpoint for contact form POST. Validates, rate-limits, and calls `mail()`. |
-| `dist/index.html` | Compiled/deployed copy of the main portfolio page, served from the `dist/` directory. |
+The `x-dc` declarative component system is the core abstraction. All application code lives inside a single `<x-dc>` element in `Portfolio.dc.html`.
+
+**How it works:**
+
+1. `support.js` runs immediately on page load. It hides the raw `<x-dc>` element, then asynchronously loads React 18 UMD from unpkg.
+2. Once React is ready, `boot()` in `support.js` (`src/boot.ts`) calls `parseDcDocument()` to extract:
+   - The HTML template (everything inside `<x-dc>`)
+   - The JS logic class (the `<script type="text/x-dc" data-dc-script>` block at the bottom of `Portfolio.dc.html`)
+3. The template is compiled into a React render function via `compileTemplate()` (`src/compile.ts`). This converts `{{ expr }}` interpolations and directives (`<sc-for>`, `<sc-if>`) into React element builders.
+4. The JS block is `eval`'d via `new Function(...)` (`src/logic.ts:evalDcLogic`), producing a `Component` class that extends `DCLogic` (alias `StreamableLogic`).
+5. `StreamableComponent` (React class in `src/component.ts`) wraps the logic class: it calls `logic.renderVals()` to get the values dictionary, then passes it to the compiled template render function.
+6. React renders the result into a `<div id="dc-root">` that replaces the original `<x-dc>` element.
+
+**Template directives:**
+
+| Syntax | Behaviour |
+|--------|-----------|
+| `{{ expr }}` | Interpolated expression — resolved via `resolve()` against `renderVals()` output |
+| `ref="{{ refName }}"` | Passes a React ref object; the logic class declares e.g. `canvasRef = React.createRef()` |
+| `<sc-for list="{{ expr }}" as="sk">` | Loops over an array; each iteration gets a child scope with `sk` and `$index` |
+| `<sc-if value="{{ expr }}">` | Conditional render; `hint-placeholder-val` controls streaming placeholder |
+| `<helmet>` | Moves children (link, style, script) into `<head>` at mount |
+| `data-hover` / `style-hover="..."` | Adds a generated pseudo-class via `createPseudoSheet()` |
+| `style-focus="..."` | Same, for `:focus` pseudo-class |
+| `data-parallax="0.5"` | Mouse-parallax depth factor — handled by `setupParallax()` in the Component class |
+| `data-reveal` | Scroll-reveal target — initially hidden, revealed by IntersectionObserver in `setupReveal()` |
+| `onClick="{{ handler }}"` | Event handler bound from `renderVals()` |
+
+**Logic class lifecycle** (mirrors React component lifecycle):
+
+```javascript
+class Component extends DCLogic {
+  state = { lang: 'en', sent: false, sending: false, sendError: false, menuOpen: false };
+  canvasRef = React.createRef();  // refs declared as class fields
+
+  renderVals() { return { t: this.CONTENT[this.state.lang], ... }; }
+  componentDidMount() { /* setup canvas, cursor, parallax, reveal, etc. */ }
+  componentWillUnmount() { /* cancel RAF loops, remove listeners */ }
+}
+```
+
+`setState()` on `DCLogic` delegates to the wrapper `StreamableComponent`, triggering a React re-render → `renderVals()` called again → template re-renders with new values.
+
+## Rendering Pipeline
+
+```
+1. Page load
+   support.js inline IIFE runs
+     hideRawTemplate() — injects x-dc{display:none} to prevent FOUC
+     loadReactUmd()    — fetches React + ReactDOM from unpkg (SRI-pinned)
+
+2. React loaded → init()
+   createRuntime(document)
+     createRegistry()        — component name → {tpl, Logic, subs, ...}
+     createPseudoSheet()     — injected <style> for :hover/:focus rules
+     createHelmetManager()   — deduplicates head injections
+     createExternalModules() — x-import loader (not used in this project)
+   __dcBoot() (or DOMContentLoaded)
+
+3. boot(runtime, document)
+   parseDcDocument() — extracts template HTML + JS class text
+   adoptParsed()
+     updateHtml()  — compileTemplate() → r.tpl (React render fn)
+     updateJs()    — evalDcLogic()     → r.Logic (Component class)
+   dc.replaceWith(hostEl#dc-root)
+   ReactDOM.createRoot(hostEl).render(<StandaloneRoot>)
+
+4. Per render cycle (React reconciliation)
+   StreamableComponent.render()
+     __reconcileLogic()   — hot-swaps Logic class if registry updated
+     logic.renderVals()   — returns flat vals dict
+     r.tpl(vals, this)    — runs compiled template builders → React vdom
+
+5. componentDidMount (after first paint)
+   setupCanvas()     — requestAnimationFrame particle loop
+   setupCursor()     — requestAnimationFrame cursor glow loop
+   setupReveal()     — IntersectionObserver on [data-reveal] elements
+   setupParallax()   — mousemove on heroRef → CSS transform on [data-parallax]
+   setupProgress()   — scroll listener → progressRef width
+   setupNavScroll()  — smooth scroll on all a[href^="#"]
+   startTyping()     — setTimeout-based typewriter on roleRef
+```
+
+## Key Subsystems
+
+### Canvas Particle System (`setupCanvas`, `Portfolio.dc.html` lines 540-584)
+- Full-viewport `<canvas>` fixed behind all content (z-index 0), referenced via `canvasRef`
+- RAF loop draws a grid of dots at 40px intervals across the viewport
+- Each dot drifts using two sine waves (`time + position`) for a "living grid" effect
+- Dots within 200px of the mouse cursor glow green; others are dim grey
+- DPR-aware (`devicePixelRatio`, capped at 2) for retina sharpness
+- Resize handler re-sizes canvas buffer; handle stored as `this._onResize`
+
+### Custom Cursor (`setupCursor`, `Portfolio.dc.html` lines 586-609)
+- A large radial-gradient `<div>` referenced via `cursorRingRef` follows the mouse at 18% lerp
+- Expands from 240px to 300px over `[data-hover]` elements
+- Hidden on touch devices via `@media (hover: none) { .cc-cursor { display: none } }`
+
+### Scroll Reveal (`setupReveal`, `Portfolio.dc.html` lines 611-630)
+- `IntersectionObserver` (threshold 0.1) on every `[data-reveal]` element in the component tree
+- Initial state: `opacity:0; transform:translateY(28px); transition: 0.7s cubic-bezier(.2,.7,.2,1)`
+- Staggered `transitionDelay` — `(i % 4) * 0.07s` per element
+- Unobserves after first reveal (one-shot animation)
+
+### Parallax (`setupParallax`, `Portfolio.dc.html` lines 632-647)
+- Scoped to `#top` hero section only (via `heroRef`)
+- `mousemove` translates `[data-parallax]` elements by `depth * offset * -20px`
+- `data-parallax` depth values used: `0.15`, `0.2`, `0.25`, `0.3`, `0.35`, `0.5`
+
+### Typewriter (`startTyping`, `Portfolio.dc.html` lines 684-703)
+- Cycles through `CONTENT[lang].hero.roles` array into `roleRef`
+- Type 85ms/char → pause 1600ms → delete 40ms/char → pause 240ms → next word
+- Resets on language toggle (counters zeroed, `roleRef.current.textContent` cleared)
+- `setTimeout` chain (not `setInterval`); handle stored as `this._typeTimer`
+
+### Contact Form (`onSubmit`, `Portfolio.dc.html` lines 457-481)
+- `fetch('sendMail.php', { method: 'POST', body: JSON.stringify({name, email, message, website}) })`
+- Honeypot field `name="website"` (aria-hidden, off-screen) for bot filtering
+- Client-side length limits: name=100, email=254, message=5000 chars
+- State machine: default → `sending:true` → `sent:true` or `sendError:true`
+
+### Language Toggle (`toggleLang`, `Portfolio.dc.html` lines 434-438)
+- `state.lang` toggles between `'de'` and `'en'`
+- `CONTENT` object holds both locales inline in the JS class (`Portfolio.dc.html` lines 319-414)
+- `renderVals()` returns `t: this.CONTENT[lang]` — all `{{ t.* }}` bindings re-render automatically
+
+### `image-slot` Web Component (`image-slot.js`)
+- Shadow DOM custom element — fully encapsulated, no light-DOM CSS bleed
+- Drag-and-drop + click-to-browse for PNG/JPEG/WebP/AVIF
+- Encodes via `createImageBitmap` → canvas → `toDataURL('image/webp', 0.85)`, capped at 1200px longest side
+- Reframe mode (double-click on `fit=cover` slots): pointer-capture pan + corner-drag aspect-locked scale
+- Shared singleton store: all `<image-slot>` instances share a `slots` object loaded from `dist/.image-slots.state.json` via `fetch()`; writes go through `window.omelette.writeFile` (design-tool bridge — read-only in production)
+- `id` attribute is the persistence key
+- Used in `Portfolio.dc.html` as `#hero-photo` and `#about-photo`, both with `src="assets/profile.png"` as fallback
 
 ## Data Flow
 
+### Language Switch
 ```
-Browser loads [page].dc.html
-  → support.js runs synchronously in <head>
-      → hides raw <x-dc> block (display:none)
-      → loads React + ReactDOM from unpkg (async, SRI-verified)
-      → on React load: createRuntime() → parseDcDocument()
-          → extracts <x-dc> inner HTML as template string
-          → extracts <script data-dc-script> as JS source
-          → compileTemplate(html) → React render function
-          → evalDcLogic(js) → DCLogic subclass (Component)
-          → ReactDOM.createRoot(#dc-root).render(...)
-              → Component.componentDidMount()  [Portfolio.dc.html only]
-                  → setupCanvas()     — animated dot grid on <canvas>
-                  → setupCursor()     — glow ring follows mouse
-                  → setupReveal()     — IntersectionObserver scroll reveals
-                  → setupParallax()   — hero layer depth on mousemove
-                  → setupProgress()   — scroll % bar at page top
-                  → setupNavScroll()  — smooth scroll + mobile menu close
-                  → startTyping()     — typewriter role titles
-                  → emailRef hydration (obfuscated mailto assembly)
-
-State mutations (Component.state):
-  { lang: 'en'|'de', sent, sending, sendError, menuOpen }
-  → setState() → React re-render → template re-evaluated with renderVals()
-  → {{ t.* }} interpolations update (bilingual content swap)
-  → {{ sent }} / {{ notSent }} toggle contact form vs. success message
-  → {{ menuOpen }} / toggleMenu() drives mobile burger nav
-
-Contact form submit flow:
-  User submits form
-  → onSubmit (async) → fetch('sendMail.php', { method: 'POST', body: JSON })
-  → sendMail.php: rate check → honeypot check → validate → mail() → 200/400/429/500
-  → success: setState({ sent: true })  |  error: setState({ sendError: true })
-
-Page-to-page navigation:
-  Portfolio.dc.html  ←→  /legalnotice  (→ impressum.dc.html or dist copy)
-  Portfolio.dc.html  ←→  /privacypolicy (→ datenschutz.dc.html or dist copy)
+User clicks lang button
+  → onClick="{{ toggleLang }}"
+  → Component.toggleLang()
+  → this.setState({ lang: 'en' })
+  → DCLogic.setState() → StreamableComponent.__setLogicState()
+  → React re-render → renderVals() returns new t object
+  → All {{ t.* }} bindings update
+  → Typewriter resets on roleRef
 ```
 
-**State management:** Single `Component.state` object per page. No external store. Mutations go through `this.setState()` which delegates to React's `forceUpdate`.
-
-## Key Modules / Components
-
-| Module | File | Responsibility |
-|---|---|---|
-| DC Runtime | `support.js` | Framework bootstrap: loads React, parses `.dc.html` files, compiles HTML templates into React render functions, evaluates `DCLogic` JS classes, manages component registry, provides `<sc-for>`, `<sc-if>`, `<helmet>`, `<x-import>` directives. Do not edit — generated artifact. |
-| Portfolio Component | `Portfolio.dc.html` — `<script data-dc-script>` | Main page component: bilingual `CONTENT` map, `SKILLS` array, all DOM refs, every interactive behaviour (canvas, cursor, reveal, parallax, scroll progress, nav scroll, typewriter, contact form, lang toggle, mobile menu). |
-| Impressum Component | `impressum.dc.html` — `<script data-dc-script>` | Minimal: lang toggle + bilingual legal text rendering only. |
-| Datenschutz Component | `datenschutz.dc.html` — `<script data-dc-script>` | Minimal: lang toggle + bilingual privacy policy text rendering only. |
-| ImageSlot Web Component | `image-slot.js` | Custom element `<image-slot>`: drop-zone for user photos, persistent crop/reframe UI, sidecar JSON state, used for `hero-photo`, `about-photo`. |
-| Contact Backend | `sendMail.php` | PHP POST endpoint: CORS, rate limiting, honeypot, input validation, `mail()` dispatch to `envershala1989@gmail.com`. |
-| Template / Sections | `Portfolio.dc.html` — `<x-dc>` block | Declarative HTML for Hero, About, Skills, Portfolio (coming-soon placeholder), Contact, Footer. Uses `{{ expr }}` interpolation, `<sc-for>`, `<sc-if>`, `data-hover`, `data-reveal`, `data-parallax` attributes. |
-
-## Rendering Model
-
-**Client-side only.** No SSR.
-
-1. Browser receives a static `.dc.html` file.
-2. `support.js` runs synchronously in `<head>`, hides the raw `<x-dc>` template.
-3. React 18 UMD is fetched from `unpkg.com` (CDN, SRI-verified, not bundled).
-4. `image-slot.js` is injected into `<head>` by the helmet manager.
-5. DC runtime compiles the template HTML into a React render function and evaluates the component logic class.
-6. `ReactDOM.createRoot` mounts the component into `<div id="dc-root">`.
-7. All subsequent updates are pure React re-renders driven by `setState`.
-
-Fonts (Space Grotesk, Manrope, JetBrains Mono) are served locally from `fonts/` via `fonts/fonts.css` (all weights as `.woff2`, `font-display: swap`). No external CDN for fonts.
-
-## Page Structure
-
-Each `.dc.html` page follows this shell pattern:
-
-```html
-<head>
-  <meta charset / viewport>
-  <link rel="icon" href="./favicon.svg">         <!-- SVG favicon -->
-  <script src="./support.js"></script>             <!-- DC runtime -->
-</head>
-<body>
-  <x-dc>
-    <helmet>
-      <link rel="stylesheet" href="./fonts/fonts.css">  <!-- self-hosted fonts -->
-      <script src="image-slot.js"></script>              <!-- Portfolio only -->
-      <style>/* resets, tokens, keyframes, breakpoints */</style>
-    </helmet>
-    <!-- declarative HTML template with {{ expr }}, data-* attributes -->
-    <script type="text/x-dc" data-dc-script>
-      class Component extends DCLogic { /* state + logic */ }
-    </script>
-  </x-dc>
-</body>
+### Contact Form Submission
+```
+User submits form
+  → onSubmit="{{ onSubmit }}"
+  → Component.onSubmit(e)
+  → setState({ sending: true })   — button shows "Sending..."
+  → fetch('sendMail.php', POST)
+  → res.ok  → setState({ sent: true })       — success block renders
+  → !res.ok → setState({ sendError: true })  — error paragraph appears
 ```
 
-## Sections (Portfolio.dc.html)
+### Image Drop
+```
+User drops file onto <image-slot>
+  → handleEvent('drop') in ImageSlot
+  → _ingest(file)
+  → toDataUrl(file, clientWidth)   — async canvas encode
+  → setSlot(id, { u, s:1, x:0, y:0 })
+  → subs.forEach(fn)               — all ImageSlot instances re-render
+  → if window.omelette.writeFile → save() — writes .image-slots.state.json
+```
 
-| Section | ID | Notes |
-|---|---|---|
-| Hero | `#top` | Photo (`<image-slot>`), typewriter roles, CTA, social links (GitHub, email, LinkedIn) |
-| About | `#about` | Intro text, three bullet cards, photo slot (hidden ≤868px) |
-| Skills | `#skills` | Skill tile grid (15 items via `<sc-for>`), two text columns |
-| Portfolio | `#portfolio` | Currently shows "Coming Soon / Work in Progress" placeholder — no project cards |
-| Contact | `#contact` | Form → `sendMail.php`; success/error state; privacy policy link → `/privacypolicy` |
-| Footer | — | Name, Impressum link → `/legalnotice`, copyright, social icons |
+### Scroll Progress
+```
+window 'scroll' event (passive listener)
+  → Component._onScroll()
+  → pct = scrollY / (scrollHeight - innerHeight) * 100
+  → progressRef.current.style.width = pct + '%'
+  (Direct DOM mutation — bypasses React state deliberately)
+```
 
-## Architectural Constraints
+## Patterns & Decisions
 
-- **No build step:** Changes to `Portfolio.dc.html` are live immediately; `dist/` must be manually synced.
-- **CDN dependency:** Page is blank until React 18 loads from `unpkg.com`. No offline fallback.
-- **`eval` / `new Function`:** `support.js` uses `new Function(...)` to evaluate user component code at runtime (`evalDcLogic`, external module loader). Makes `unsafe-eval` in CSP mandatory.
-- **Global state:** Single `Component.state` per page; no shared state between pages.
-- **PHP mail():** `sendMail.php` relies on the server's configured MTA. No SMTP credentials in code.
-- **Threading:** Browser single-threaded. Two concurrent RAF loops (`_raf` canvas, `_craf` cursor lerp).
+**No bundler, no build step for application source.** `Portfolio.dc.html` is edited directly. `support.js` is pre-built from `dc-runtime/src/*.ts` (note at top of file), but the TypeScript source is not in this repo — only the compiled output is present.
 
-## Anti-Patterns
+**React as invisible runtime.** React 18 is loaded from CDN (unpkg, SRI-pinned with `sha384-*` integrity attributes). The `Component` class only uses `React.createRef()` — never `import React` or JSX. React rendering is managed entirely by the dc-runtime layer.
 
-### Inline styles for all element-level CSS
-**What happens:** Every spacing, color, and layout property is in `style=""` attributes directly on elements.
-**Why it's wrong:** Global design changes (spacing, color tokens) require touching dozens of scattered attributes. CSS custom properties are defined on a root `<div>` instead of `:root`, scoping them away from `::before`/`::after`.
-**Do this instead:** Move layout and component styles into named classes in the `<helmet><style>` block; reference `var(--green)` etc. consistently instead of hardcoded hex values.
+**Direct DOM mutations for 60fps paths.** The canvas RAF loop, cursor lerp loop, scroll progress bar, parallax transforms, and typewriter all mutate DOM directly via `el.style.*`. Never route these through `setState()`.
 
-### `default-src 'none'` + `'unsafe-inline'` CSP conflict
-**What happens:** `.htaccess` CSP sets `default-src 'none'` then adds `'unsafe-inline'` to `script-src` and `style-src` because the dc-runtime and all styles require it.
-**Why it's wrong:** `unsafe-inline` in `script-src` negates most XSS protection from CSP; required by the dc-runtime's `new Function` eval path.
-**Do this instead:** No straightforward fix without replacing the dc-runtime. Document as a known constraint.
+**Refs as imperative escape hatches.** `canvasRef`, `cursorRingRef`, `progressRef`, `heroRef`, `roleRef` are React refs passed through the template via `ref="{{ xyzRef }}"` so `componentDidMount` can attach imperative subsystems to real DOM nodes.
 
-## Error Handling
+**Inline bilingual content model.** Both DE and EN locales are hardcoded in the `CONTENT` object inside the JS class (`Portfolio.dc.html` lines 319-414). No i18n library or external JSON.
 
-**Strategy:** Silent degradation on the client. `support.js` wraps each component in an error boundary (lines 771–778) that logs to console but shows no user-facing message if `componentDidMount` throws.
+**CSP with `unsafe-eval`.** `dist/.htaccess` sets a Content-Security-Policy that includes `unsafe-eval` — required because dc-runtime uses `new Function()` to eval the JS logic block, and optionally uses Babel standalone for JSX transforms via x-import.
 
-**Contact form:** `onSubmit` catches `fetch` errors and sets `sendError: true`, which renders `{{ t.contact.sendError }}` inline below the submit button.
+**Anti-pattern — do not bypass the lifecycle.** All event listeners and RAF loops must store handles on `this._*` and be cleaned up in `componentWillUnmount`. The existing cleanup is comprehensive — match it for any new subsystem added.
 
-## Cross-Cutting Concerns
-
-**Logging:** `console.error` only; no analytics or error tracking service.
-**Validation:** Dual-layer — JS frontend (`required`, `maxlength`, `FILTER_VALIDATE_EMAIL` mirrored in HTML attributes) and PHP backend (`sendMail.php` re-validates all fields server-side).
-**Authentication:** None.
-**i18n:** Runtime DE/EN toggle via `CONTENT[lang]` object; default lang is `'en'` (changed from `'de'` in an earlier revision). No persistence across reloads.
+**Anti-pattern — do not route high-frequency visual updates through setState.** The canvas, cursor, and progress bar deliberately bypass React. Adding `setState` calls inside RAF callbacks or scroll handlers would cause React to re-render the full template on every frame.
 
 ---
 
