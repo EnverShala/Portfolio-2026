@@ -14,7 +14,7 @@
 <style>
   * { box-sizing: border-box; }
   html { scroll-behavior: smooth; }
-  body { margin: 0; background: #070a0b; color: #e9efee; font-family: 'Manrope', system-ui, sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+  body { margin: 0; background: #070a0b; color: #e9efee; font-family: 'Manrope', system-ui, sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; -webkit-text-size-adjust: 100%; }
   ::selection { background: rgba(52,211,153,0.28); color: #fff; }
   ::-webkit-scrollbar { width: 10px; }
   ::-webkit-scrollbar-track { background: #070a0b; }
@@ -41,7 +41,9 @@
     #top > a { bottom: 50px !important; }
   }
   @media (max-width: 480px) {
-    #top { min-height: 100svh; }
+    #top { min-height: 100svh; padding-bottom: 0 !important; }
+    #top > a { display: none !important; }
+    #about { padding-top: 44px !important; }
   }
   @media (max-width: 372px) {
     #top { padding-top: 96px !important; }
