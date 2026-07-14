@@ -186,10 +186,6 @@
 
   <!-- ABOUT -->
   <section id="about" data-screen-label="Über mich" style="position: relative; z-index: 1; padding: clamp(70px, 11vw, 130px) clamp(20px, 5vw, 64px); max-width: 1280px; margin: 0 auto; scroll-margin-top: 0;">
-    <div data-reveal style="display: flex; align-items: center; gap: 14px; margin-bottom: 14px;">
-      <span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--green);">01</span>
-      <span style="flex: 1; max-width: 80px; height: 1px; background: var(--border);"></span>
-    </div>
     <h2 data-reveal style="margin: 0 0 50px; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: clamp(2.4rem, 6vw, 4rem); line-height: 1; letter-spacing: -0.02em; color: var(--text);">{{ t.about.heading }}</h2>
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr)); gap: clamp(40px, 6vw, 70px); align-items: center;">
       <div>
@@ -228,10 +224,6 @@
         </sc-for>
       </div>
       <div class="skills-text-top">
-        <div data-reveal style="display: flex; align-items: center; gap: 14px; margin-bottom: 14px;">
-          <span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--green);">02</span>
-          <span style="flex: 1; max-width: 80px; height: 1px; background: var(--border);"></span>
-        </div>
         <h2 data-reveal style="margin: 0 0 22px; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: clamp(2.2rem, 5vw, 3.4rem); line-height: 1; letter-spacing: -0.02em; color: var(--text);">{{ t.skills.heading }}</h2>
         <p data-reveal style="margin: 0; max-width: 420px; font-size: 1.02rem; line-height: 1.7; color: var(--muted);">{{ t.skills.p1 }}</p>
       </div>
@@ -441,6 +433,8 @@ class Component extends DCLogic {
     { mark: '✦', name: 'Claude' },
     { mark: '↻', name: 'Scrum' },
     { mark: '◆', name: 'Material Design' },
+    { mark: 'Py', name: 'Python' },
+    { mark: 'Dk', name: 'Docker' },
     { mark: '∞', name: 'Continually learning' }
   ];
 
