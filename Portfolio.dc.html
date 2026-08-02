@@ -64,6 +64,7 @@
     #top > div > div:last-child > div:nth-child(5) a svg { width: 15px !important; height: 15px !important; }
   }
   #about, #skills, #portfolio, #certificates, #contact { scroll-margin-top: 0; }
+  #contact form button[type="submit"]:disabled { opacity: .45; cursor: not-allowed; box-shadow: none; transform: none !important; filter: none !important; }
   @media (max-width: 868px) {
     #about .about-photo-wrap { display: none !important; }
     #skills .skills-icons { grid-template-columns: repeat(auto-fill, 76px) !important; gap: 10px !important; }
@@ -344,14 +345,23 @@
         </sc-if>
         <sc-if value="{{ notSent }}" hint-placeholder-val="{{ true }}">
           <div aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;"><input type="text" name="website" tabindex="-1" autocomplete="off" /></div>
-          <input type="text" name="name" required maxlength="100" placeholder="{{ t.contact.namePh }}" data-hover style="padding: 16px 18px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-family: 'Manrope', sans-serif; font-size: 15px; outline: none; transition: border-color .2s;" style-focus="border-color: var(--purple);" />
-          <input type="email" name="email" required maxlength="254" placeholder="{{ t.contact.emailPh }}" data-hover style="padding: 16px 18px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-family: 'Manrope', sans-serif; font-size: 15px; outline: none; transition: border-color .2s;" style-focus="border-color: var(--purple);" />
-          <textarea name="message" required maxlength="5000" rows="5" placeholder="{{ t.contact.msgPh }}" data-hover style="padding: 16px 18px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-family: 'Manrope', sans-serif; font-size: 15px; outline: none; resize: vertical; transition: border-color .2s;" style-focus="border-color: var(--purple);"></textarea>
+          <input type="text" name="name" required maxlength="100" placeholder="{{ t.contact.namePh }}" onInput="{{ onFieldInput }}" onBlur="{{ onFieldBlur }}" data-hover style="padding: 16px 18px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-family: 'Manrope', sans-serif; font-size: 15px; outline: none; transition: border-color .2s;" style-focus="border-color: var(--purple);" />
+          <sc-if value="{{ nameErr }}" hint-placeholder-val="{{ false }}">
+            <p style="margin: -10px 0 0 4px; font-size: 13px; color: #f87171;">{{ t.contact.errName }}</p>
+          </sc-if>
+          <input type="email" name="email" required maxlength="254" placeholder="{{ t.contact.emailPh }}" onInput="{{ onFieldInput }}" onBlur="{{ onFieldBlur }}" data-hover style="padding: 16px 18px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-family: 'Manrope', sans-serif; font-size: 15px; outline: none; transition: border-color .2s;" style-focus="border-color: var(--purple);" />
+          <sc-if value="{{ emailErr }}" hint-placeholder-val="{{ false }}">
+            <p style="margin: -10px 0 0 4px; font-size: 13px; color: #f87171;">{{ t.contact.errEmail }}</p>
+          </sc-if>
+          <textarea name="message" required maxlength="5000" rows="5" placeholder="{{ t.contact.msgPh }}" onInput="{{ onFieldInput }}" onBlur="{{ onFieldBlur }}" data-hover style="padding: 16px 18px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-family: 'Manrope', sans-serif; font-size: 15px; outline: none; resize: vertical; transition: border-color .2s;" style-focus="border-color: var(--purple);"></textarea>
+          <sc-if value="{{ msgErr }}" hint-placeholder-val="{{ false }}">
+            <p style="margin: -10px 0 0 4px; font-size: 13px; color: #f87171;">{{ t.contact.errMsg }}</p>
+          </sc-if>
           <label style="display: flex; align-items: flex-start; gap: 10px; font-size: 13px; line-height: 1.5; color: var(--muted); cursor: pointer;">
-            <input type="checkbox" required style="margin-top: 3px; accent-color: #34d399; width: 16px; height: 16px;" />
+            <input type="checkbox" name="privacy" required onChange="{{ onFieldInput }}" style="margin-top: 3px; accent-color: #34d399; width: 16px; height: 16px;" />
             <span>{{ t.contact.privacy1 }} <a href="/privacypolicy" data-hover style="display: inline-block; color: var(--purple); text-decoration: underline; cursor: pointer; transition: filter .2s, transform .2s;" style-hover="filter: brightness(1.35);">{{ t.contact.privacyLink }}</a> {{ t.contact.privacy2 }}</span>
           </label>
-          <button type="submit" disabled="{{ sending }}" data-hover style="margin-top: 6px; align-self: flex-start; display: inline-flex; align-items: center; gap: 10px; padding: 15px 34px; background: var(--green); color: #08230a; border: none; border-radius: 12px; font-family: 'Manrope', sans-serif; font-weight: 700; font-size: 15px; cursor: pointer; transition: transform .2s, box-shadow .2s, opacity .2s, filter .2s; box-shadow: 0 10px 30px rgba(52,211,153,0.25); opacity: 1;" style-hover="transform: scale(1.04) translateY(-2px); box-shadow: 0 14px 40px rgba(52,211,153,0.4); filter: brightness(1.12);">{{ submitLabel }}</button>
+          <button type="submit" disabled="{{ submitDisabled }}" data-hover style="margin-top: 6px; align-self: flex-start; display: inline-flex; align-items: center; gap: 10px; padding: 15px 34px; background: var(--green); color: #08230a; border: none; border-radius: 12px; font-family: 'Manrope', sans-serif; font-weight: 700; font-size: 15px; cursor: pointer; transition: transform .2s, box-shadow .2s, opacity .2s, filter .2s; box-shadow: 0 10px 30px rgba(52,211,153,0.25); opacity: 1;" style-hover="transform: scale(1.04) translateY(-2px); box-shadow: 0 14px 40px rgba(52,211,153,0.4); filter: brightness(1.12);">{{ submitLabel }}</button>
           <sc-if value="{{ sendError }}" hint-placeholder-val="{{ false }}">
             <p style="margin: 0; font-size: 14px; color: #f87171;">{{ t.contact.sendError }}</p>
           </sc-if>
@@ -385,7 +395,7 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:&quot;100%&quot;}}">
 class Component extends DCLogic {
-  state = { lang: 'en', sent: false, sending: false, sendError: false, menuOpen: false };
+  state = { lang: 'en', sent: false, sending: false, sendError: false, menuOpen: false, form: { name: '', email: '', message: '', privacy: false }, touched: {} };
 
   rootRef = React.createRef();
   canvasRef = React.createRef();
@@ -444,7 +454,10 @@ class Component extends DCLogic {
         namePh: 'Dein Name', emailPh: 'Deine E-Mail', msgPh: 'Deine Nachricht',
         privacy1: 'Ich habe die', privacyLink: 'Datenschutzerklärung', privacy2: 'gelesen und stimme der Verarbeitung meiner Daten zu.',
         send: 'Senden', sent: 'Danke! Ich melde mich bald bei dir.',
-        sendError: 'Etwas ist schiefgelaufen. Bitte versuche es erneut.'
+        sendError: 'Etwas ist schiefgelaufen. Bitte versuche es erneut.',
+        errName: 'Bitte gib deinen Namen an (mindestens 2 Buchstaben).',
+        errEmail: 'Bitte gib eine gültige E-Mail-Adresse an.',
+        errMsg: 'Bitte gib eine Nachricht ein.'
       },
       footer: { legal: 'Impressum', copy: '© Enver Shala 2026' }
     },
@@ -495,7 +508,10 @@ class Component extends DCLogic {
         namePh: 'Your name', emailPh: 'Your email', msgPh: 'Your message',
         privacy1: "I've read the", privacyLink: 'privacy policy', privacy2: 'and agree to the processing of my data as outlined.',
         send: 'Send', sent: 'Thanks! I will be in touch soon.',
-        sendError: 'Something went wrong. Please try again.'
+        sendError: 'Something went wrong. Please try again.',
+        errName: 'Please enter your name (at least 2 letters).',
+        errEmail: 'Please enter a valid email address.',
+        errMsg: 'Please enter a message.'
       },
       footer: { legal: 'Legal Notice', copy: '© Enver Shala 2026' }
     }
@@ -580,7 +596,8 @@ class Component extends DCLogic {
     const email   = form.elements['email'].value.trim();
     const message = form.elements['message'].value.trim();
     const website = form.elements['website']?.value || '';
-    if (!name || !email || !message) return;
+    if (!this.nameValid(name) || !this.emailValid(email) || !this.msgValid(message)) return;
+    if (!this.state.form.privacy) return;
     if (name.length > 100 || email.length > 254 || message.length > 5000) return;
     this.setState({ sending: true, sendError: false });
     try {
@@ -601,9 +618,45 @@ class Component extends DCLogic {
 
   mailClick = (e) => { e.preventDefault(); window.location.href = 'mailto:' + ['envershala1989', 'gmail.com'].join('@'); };
 
+  nameValid = (v) => v.trim().length >= 2 && (v.match(/\p{L}/gu) || []).length >= 2;
+
+  emailValid = (v) => {
+    const s = v.trim();
+    if (s.length < 6 || s.length > 254) return false;
+    if ((s.match(/@/g) || []).length !== 1) return false;
+    if (s.includes('..')) return false;
+    return /^[A-Za-z0-9](?:[A-Za-z0-9._%+-]*[A-Za-z0-9])?@[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?(?:\.[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?)*\.[A-Za-z]{2,}$/.test(s);
+  };
+
+  msgValid = (v) => v.trim().length >= 1;
+
+  onFieldInput = (e) => {
+    const el = e.target;
+    if (!el.name || el.name === 'website') return;
+    const val = el.type === 'checkbox' ? el.checked : el.value;
+    this.setState({ form: { ...this.state.form, [el.name]: val } });
+  };
+
+  onFieldBlur = (e) => {
+    const n = e.target.name;
+    if (!n || n === 'website') return;
+    this.setState({ touched: { ...this.state.touched, [n]: true } });
+  };
+
   renderVals() {
     const lang = this.state.lang;
+    const f = this.state.form, tt = this.state.touched;
+    const nameOk = this.nameValid(f.name);
+    const emailOk = this.emailValid(f.email);
+    const msgOk = this.msgValid(f.message);
+    const formValid = nameOk && emailOk && msgOk && f.privacy;
     return {
+      nameErr: !!tt.name && !nameOk,
+      emailErr: !!tt.email && !emailOk,
+      msgErr: !!tt.message && !msgOk,
+      submitDisabled: this.state.sending || !formValid,
+      onFieldInput: this.onFieldInput,
+      onFieldBlur: this.onFieldBlur,
       mailClick: this.mailClick,
       t: this.CONTENT[lang],
       skills: this.SKILLS,
