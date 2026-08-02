@@ -655,7 +655,7 @@ class Component extends DCLogic {
     const n = el.name;
     if (!n || n === 'website') return;
     const patch = { touched: { ...this.state.touched, [n]: true } };
-    if (el.type !== 'checkbox' && el.value !== '' && el.value.trim() === '') {
+    if (el.type !== 'checkbox' && el.value.trim() === '') {
       el.value = '';
       patch.form = { ...this.state.form, [n]: '' };
     }
