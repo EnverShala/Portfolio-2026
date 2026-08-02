@@ -39,5 +39,6 @@ All items in `.planning/codebase/CONCERNS.md` are intentionally deferred. Addres
 | 260620-q01 | Fix navbar scroll navigation | 2026-06-20 | [260620-q01-navbar-scroll-fix](.planning/quick/260620-q01-navbar-scroll-fix/) |
 | 260620-q04 | Create translatable Imprint/Impressum page | 2026-06-20 | [260620-q04-impressum-page](.planning/quick/260620-q04-impressum-page/) |
 | 260620-q05 | Create translatable Privacy Policy page + wire contact link | 2026-06-20 | [260620-q05-datenschutz-page](.planning/quick/260620-q05-datenschutz-page/) |
+| 260802-410 | Add skills C#, DSGVO, ISO 27001, BSI IT GSP + hero rotator AI & Automation with DE localization | 2026-08-02 | [260802-410-add-skills-c-dsgvo-iso-27001-bsi-it-gsp-](.planning/quick/260802-410-add-skills-c-dsgvo-iso-27001-bsi-it-gsp-/) |
 
-Last activity: 2026-06-20 - Completed quick task 260620-q05: Create translatable Privacy Policy page
+Last activity: 2026-08-02 - Completed quick task 260802-410: Add skills C#, DSGVO, ISO 27001, BSI IT GSP + localized hero role rotator
