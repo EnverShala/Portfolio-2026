@@ -38,6 +38,7 @@
   @keyframes floatBlob2 { 0%,100% { transform: translate(0,0) scale(1.06); } 50% { transform: translate(-44px,34px) scale(0.96); } }
   @keyframes bobArrow { 0%,100% { transform: translateY(0); opacity: .5; } 50% { transform: translateY(8px); opacity: 1; } }
   @keyframes ringSpin { to { transform: rotate(360deg); } }
+  @keyframes privacyBlink { 0%, 10%, 20%, 100% { color: var(--muted); text-shadow: none; } 5%, 15% { color: #f87171; text-shadow: 0 0 12px rgba(248,113,113,0.5); } }
   @media (hover: none) { .cc-cursor { display: none !important; } }
   #top { min-height: 100vh; min-height: 100svh; padding-top: 110px; padding-bottom: 90px; }
   @media (max-width: 765px) {
@@ -359,11 +360,13 @@
           </sc-if>
           <label style="display: flex; align-items: flex-start; gap: 10px; font-size: 13px; line-height: 1.5; color: var(--muted); cursor: pointer;">
             <input type="checkbox" name="privacy" required onChange="{{ onFieldInput }}" style="margin-top: 3px; accent-color: #34d399; width: 16px; height: 16px;" />
-            <span>{{ t.contact.privacy1 }} <a href="/privacypolicy" data-hover style="display: inline-block; color: var(--purple); text-decoration: underline; cursor: pointer; transition: filter .2s, transform .2s;" style-hover="filter: brightness(1.35);">{{ t.contact.privacyLink }}</a> {{ t.contact.privacy2 }}</span>
+            <sc-if value="{{ privacyErr }}" hint-placeholder-val="{{ false }}">
+              <span style="animation: privacyBlink 2.8s ease-in-out infinite;">{{ t.contact.privacy1 }} <a href="/privacypolicy" data-hover style="display: inline-block; color: var(--purple); text-decoration: underline; cursor: pointer; transition: filter .2s, transform .2s;" style-hover="filter: brightness(1.35);">{{ t.contact.privacyLink }}</a> {{ t.contact.privacy2 }}</span>
+            </sc-if>
+            <sc-if value="{{ !privacyErr }}" hint-placeholder-val="{{ true }}">
+              <span>{{ t.contact.privacy1 }} <a href="/privacypolicy" data-hover style="display: inline-block; color: var(--purple); text-decoration: underline; cursor: pointer; transition: filter .2s, transform .2s;" style-hover="filter: brightness(1.35);">{{ t.contact.privacyLink }}</a> {{ t.contact.privacy2 }}</span>
+            </sc-if>
           </label>
-          <sc-if value="{{ privacyErr }}" hint-placeholder-val="{{ false }}">
-            <p style="margin: -10px 0 0 4px; font-size: 13px; color: #f87171;">{{ t.contact.errPrivacy }}</p>
-          </sc-if>
           <button type="submit" disabled="{{ submitDisabled }}" data-hover style="margin-top: 6px; align-self: flex-start; display: inline-flex; align-items: center; gap: 10px; padding: 15px 34px; background: var(--green); color: #08230a; border: none; border-radius: 12px; font-family: 'Manrope', sans-serif; font-weight: 700; font-size: 15px; cursor: pointer; transition: transform .2s, box-shadow .2s, opacity .2s, filter .2s; box-shadow: 0 10px 30px rgba(52,211,153,0.25); opacity: 1;" style-hover="transform: scale(1.04) translateY(-2px); box-shadow: 0 14px 40px rgba(52,211,153,0.4); filter: brightness(1.12);">{{ submitLabel }}</button>
           <sc-if value="{{ sendError }}" hint-placeholder-val="{{ false }}">
             <p style="margin: 0; font-size: 14px; color: #f87171;">{{ t.contact.sendError }}</p>
@@ -460,8 +463,7 @@ class Component extends DCLogic {
         sendError: 'Etwas ist schiefgelaufen. Bitte versuche es erneut.',
         errName: 'Bitte gib deinen Namen an (mindestens 2 Buchstaben).',
         errEmail: 'Bitte gib eine gültige E-Mail-Adresse an.',
-        errMsg: 'Bitte gib eine Nachricht ein.',
-        errPrivacy: 'Bitte bestätige noch die Datenschutzerklärung.'
+        errMsg: 'Bitte gib eine Nachricht ein.'
       },
       footer: { legal: 'Impressum', copy: '© Enver Shala 2026' }
     },
@@ -515,8 +517,7 @@ class Component extends DCLogic {
         sendError: 'Something went wrong. Please try again.',
         errName: 'Please enter your name (at least 2 letters).',
         errEmail: 'Please enter a valid email address.',
-        errMsg: 'Please enter a message.',
-        errPrivacy: 'Please confirm the privacy policy to continue.'
+        errMsg: 'Please enter a message.'
       },
       footer: { legal: 'Legal Notice', copy: '© Enver Shala 2026' }
     }
