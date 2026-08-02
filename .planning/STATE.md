@@ -41,5 +41,6 @@ All items in `.planning/codebase/CONCERNS.md` are intentionally deferred. Addres
 | 260620-q05 | Create translatable Privacy Policy page + wire contact link | 2026-06-20 | [260620-q05-datenschutz-page](.planning/quick/260620-q05-datenschutz-page/) |
 | 260802-410 | Add skills C#, DSGVO, ISO 27001, BSI IT GSP + hero rotator AI & Automation with DE localization | 2026-08-02 | [260802-410-add-skills-c-dsgvo-iso-27001-bsi-it-gsp-](.planning/quick/260802-410-add-skills-c-dsgvo-iso-27001-bsi-it-gsp-/) |
 | 260802-4dz | Add AI/Automation skills, drop Frontend hero role, Software Developer intro, skills copy, contact CTA | 2026-08-02 | [260802-4dz-add-ai-and-automation-skills-remove-fron](.planning/quick/260802-4dz-add-ai-and-automation-skills-remove-fron/) |
+| 260802-rq4 | Add SQL/NoSQL/Security Officer skills, ISO 27001 seal glyph, retitle tab to Software Developer | 2026-08-02 | [260802-rq4-add-skills-sql-nosql-security-officer-re](.planning/quick/260802-rq4-add-skills-sql-nosql-security-officer-re/) |
 
-Last activity: 2026-08-02 - Completed quick task 260802-4dz: AI/Automation skills + hero/about/skills/contact copy updates
+Last activity: 2026-08-02 - Completed quick task 260802-rq4: SQL/NoSQL/Security Officer skills + ISO 27001 seal + Software Developer tab title
