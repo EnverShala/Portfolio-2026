@@ -234,6 +234,9 @@
                 </g>
               </svg>
             </sc-if>
+            <sc-if value="{{ sk.icon == 'big' }}">
+              <span style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.35rem; line-height: 1; color: var(--green);">{{ sk.mark }}</span>
+            </sc-if>
             <sc-if value="{{ !sk.icon }}">
               <span style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.05rem; color: var(--green);">{{ sk.mark }}</span>
             </sc-if>
@@ -446,7 +449,7 @@ class Component extends DCLogic {
     { mark: 'N', name: 'Next.js' },
     { mark: '◭', name: 'Firebase' },
     { mark: '◈', name: 'Sanity CMS' },
-    { mark: '⎇', name: 'GIT' },
+    { mark: '⎇', name: 'GIT', icon: 'big' },
     { mark: '{ }', name: 'Rest-Api' },
     { mark: '✦', name: 'Claude' },
     { mark: '↻', name: 'Scrum' },
@@ -454,12 +457,12 @@ class Component extends DCLogic {
     { mark: 'Py', name: 'Python' },
     { mark: 'Dk', name: 'Docker' },
     { mark: 'C#', name: 'C#' },
-    { mark: '§', name: 'DSGVO' },
+    { mark: '§', name: 'DSGVO', icon: 'big' },
     { mark: 'ISO', name: 'ISO 27001' },
     { mark: 'BSI', name: 'BSI IT GSP' },
     { mark: 'AI', name: 'AI', icon: 'net' },
-    { mark: '⚙', name: 'Automation' },
-    { mark: '∞', name: 'Continually learning' }
+    { mark: '⚙', name: 'Automation', icon: 'big' },
+    { mark: '∞', name: 'Continually learning', icon: 'big' }
   ];
 
   toggleLang = () => {
