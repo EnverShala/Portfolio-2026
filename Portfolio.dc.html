@@ -218,7 +218,25 @@
       <div class="skills-icons" data-reveal style="display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 14px; grid-column: 1; grid-row: 1 / 3; align-self: center;">
         <sc-for list="{{ skills }}" as="sk" hint-placeholder-count="14">
           <div data-hover style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; aspect-ratio: 1; border: 1px solid var(--border); border-radius: 16px; background: var(--surface); transition: border-color .3s, transform .3s, background .3s;" style-hover="border-color: rgba(var(--green-rgb),0.5); transform: translateY(-4px); background: rgba(var(--green-rgb),0.04);">
-            <span style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.05rem; color: var(--green);">{{ sk.mark }}</span>
+            <sc-if value="{{ sk.icon == 'net' }}">
+              <svg viewBox="0 0 24 24" width="21" height="21" aria-hidden="true" style="display: block; color: var(--green);">
+                <g stroke="currentColor" fill="none" style="stroke-width: 1.2; opacity: 0.8;">
+                  <path d="M12 4 4.4 9.5 7.3 18.5 16.7 18.5 19.6 9.5 Z"></path>
+                  <path d="M12 12 12 4 M12 12 4.4 9.5 M12 12 7.3 18.5 M12 12 16.7 18.5 M12 12 19.6 9.5"></path>
+                </g>
+                <g fill="currentColor">
+                  <circle cx="12" cy="12" r="2.1"></circle>
+                  <circle cx="12" cy="4" r="1.6"></circle>
+                  <circle cx="4.4" cy="9.5" r="1.6"></circle>
+                  <circle cx="7.3" cy="18.5" r="1.6"></circle>
+                  <circle cx="16.7" cy="18.5" r="1.6"></circle>
+                  <circle cx="19.6" cy="9.5" r="1.6"></circle>
+                </g>
+              </svg>
+            </sc-if>
+            <sc-if value="{{ !sk.icon }}">
+              <span style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.05rem; color: var(--green);">{{ sk.mark }}</span>
+            </sc-if>
             <span style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--muted); text-align: center; letter-spacing: 0.02em; padding: 0 4px;">{{ sk.name }}</span>
           </div>
         </sc-for>
@@ -439,7 +457,7 @@ class Component extends DCLogic {
     { mark: '§', name: 'DSGVO' },
     { mark: 'ISO', name: 'ISO 27001' },
     { mark: 'BSI', name: 'BSI IT GSP' },
-    { mark: 'AI', name: 'AI' },
+    { mark: 'AI', name: 'AI', icon: 'net' },
     { mark: '⚙', name: 'Automation' },
     { mark: '∞', name: 'Continually learning' }
   ];
