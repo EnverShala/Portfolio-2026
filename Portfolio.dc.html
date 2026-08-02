@@ -651,9 +651,15 @@ class Component extends DCLogic {
   };
 
   onFieldBlur = (e) => {
-    const n = e.target.name;
+    const el = e.target;
+    const n = el.name;
     if (!n || n === 'website') return;
-    this.setState({ touched: { ...this.state.touched, [n]: true } });
+    const patch = { touched: { ...this.state.touched, [n]: true } };
+    if (el.type !== 'checkbox' && el.value !== '' && el.value.trim() === '') {
+      el.value = '';
+      patch.form = { ...this.state.form, [n]: '' };
+    }
+    this.setState(patch);
   };
 
   renderVals() {
