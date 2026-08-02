@@ -659,9 +659,9 @@ class Component extends DCLogic {
     const msgOk = this.msgValid(f.message);
     const formValid = nameOk && emailOk && msgOk && f.privacy;
     return {
-      nameErr: !!tt.name && !nameOk,
-      emailErr: !!tt.email && !emailOk,
-      msgErr: !!tt.message && !msgOk,
+      nameErr: !!tt.name && f.name.trim() !== '' && !nameOk,
+      emailErr: !!tt.email && f.email.trim() !== '' && !emailOk,
+      msgErr: !!tt.message && f.message.trim() !== '' && !msgOk,
       privacyErr: nameOk && emailOk && msgOk && !f.privacy,
       submitDisabled: this.state.sending || !formValid,
       onFieldInput: this.onFieldInput,
