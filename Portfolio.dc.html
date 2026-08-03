@@ -878,8 +878,9 @@ class Component extends DCLogic {
     this._onOutside = (e) => {
       const menu = document.getElementById('nav-mobile-menu');
       if (!menu || menu.style.display === 'none') return;
-      const nav = document.getElementById('main-nav');
-      if (nav && nav.contains(e.target)) return;
+      if (menu.contains(e.target)) return;
+      const burger = document.querySelector('#main-nav .nav-burger');
+      if (burger && burger.contains(e.target)) return;
       this.closeMenu();
     };
     document.addEventListener('pointerdown', this._onOutside);
