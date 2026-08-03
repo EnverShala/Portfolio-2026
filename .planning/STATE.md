@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-last_updated: "2026-06-23T00:29:11.548Z"
-last_activity: "2026-06-20 - Completed quick task 260620-q05: Create translatable Privacy Policy page"
+last_updated: "2026-08-03T00:25:19.575Z"
+last_activity: "2026-08-03 - Completed quick task 260803-344: Burger menu outside-click close + About/Automation icon color fixes"
 ---
 
 # Project State
@@ -42,5 +42,6 @@ All items in `.planning/codebase/CONCERNS.md` are intentionally deferred. Addres
 | 260802-410 | Add skills C#, DSGVO, ISO 27001, BSI IT GSP + hero rotator AI & Automation with DE localization | 2026-08-02 | [260802-410-add-skills-c-dsgvo-iso-27001-bsi-it-gsp-](.planning/quick/260802-410-add-skills-c-dsgvo-iso-27001-bsi-it-gsp-/) |
 | 260802-4dz | Add AI/Automation skills, drop Frontend hero role, Software Developer intro, skills copy, contact CTA | 2026-08-02 | [260802-4dz-add-ai-and-automation-skills-remove-fron](.planning/quick/260802-4dz-add-ai-and-automation-skills-remove-fron/) |
 | 260802-rq4 | Add SQL/NoSQL/Security Officer skills, ISO 27001 seal glyph, retitle tab to Software Developer | 2026-08-02 | [260802-rq4-add-skills-sql-nosql-security-officer-re](.planning/quick/260802-rq4-add-skills-sql-nosql-security-officer-re/) |
+| 260803-344 | Close mobile burger menu on outside tap; fix About middle icon and Automation gear to render solid green via inline SVG | 2026-08-03 | [260803-344-burgermenu-bei-klick-ausserhalb-schliess](.planning/quick/260803-344-burgermenu-bei-klick-ausserhalb-schliess/) |
 
-Last activity: 2026-08-02 - Completed quick task 260802-rq4: SQL/NoSQL/Security Officer skills + ISO 27001 seal + Software Developer tab title
+Last activity: 2026-08-03 - Completed quick task 260803-344: Burger menu outside-click close + About/Automation icon color fixes
