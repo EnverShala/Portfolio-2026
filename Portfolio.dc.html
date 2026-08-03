@@ -714,6 +714,7 @@ class Component extends DCLogic {
     this.setupParallax();
     this.setupProgress();
     this.setupNavScroll();
+    this.setupOutsideClick();
     this.startTyping();
     if (this.emailRef.current) this.emailRef.current.textContent = ['envershala1989', 'gmail.com'].join('@');
   }
@@ -727,6 +728,7 @@ class Component extends DCLogic {
     if (this._onScroll) window.removeEventListener('scroll', this._onScroll);
     if (this._onOver) document.removeEventListener('mouseover', this._onOver);
     if (this._onOut) document.removeEventListener('mouseout', this._onOut);
+    if (this._onOutside) document.removeEventListener('pointerdown', this._onOutside);
     if (this._io) this._io.disconnect();
   }
 
@@ -861,6 +863,17 @@ class Component extends DCLogic {
         window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
       });
     });
+  }
+
+  setupOutsideClick() {
+    this._onOutside = (e) => {
+      const menu = document.getElementById('nav-mobile-menu');
+      if (!menu || menu.style.display === 'none') return;
+      const nav = document.getElementById('main-nav');
+      if (nav && nav.contains(e.target)) return;
+      this.closeMenu();
+    };
+    document.addEventListener('pointerdown', this._onOutside);
   }
 
   setupProgress() {
