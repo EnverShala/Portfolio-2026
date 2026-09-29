@@ -69,6 +69,20 @@
     #top > div > div:last-child > div:nth-child(5) a svg { width: 15px !important; height: 15px !important; }
   }
   #about, #skills, #portfolio, #certificates, #contact { scroll-margin-top: 0; }
+  @media (min-width: 900px) { #portfolio .proj-rev .proj-gallery { order: -1; } }
+  /* portfolio lightbox (appended to body, so colours are literal instead of root vars) */
+  #portfolio image-slot[src]:not([data-editable]) { cursor: zoom-in; }
+  .lb { position: fixed; inset: 0; z-index: 9990; display: flex; align-items: center; justify-content: center; padding: 56px 64px; background: rgba(4,6,7,0.92); backdrop-filter: blur(6px); opacity: 0; visibility: hidden; transition: opacity .25s ease, visibility .25s; }
+  .lb.lb-open { opacity: 1; visibility: visible; }
+  .lb-img { max-width: 100%; max-height: 100%; border-radius: 12px; border: 1px solid rgba(255,255,255,0.09); box-shadow: 0 30px 80px rgba(0,0,0,0.6); }
+  .lb-btn { position: absolute; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; padding: 0; border: 1px solid rgba(255,255,255,0.09); border-radius: 50%; background: rgba(255,255,255,0.04); color: #e9efee; font-size: 26px; line-height: 1; cursor: pointer; transition: border-color .2s, color .2s; }
+  .lb-btn:hover { border-color: #34d399; color: #34d399; }
+  .lb-close { top: 16px; right: 16px; }
+  .lb-prev { left: 12px; top: 50%; transform: translateY(-50%); }
+  .lb-next { right: 12px; top: 50%; transform: translateY(-50%); }
+  .lb-count { position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%); font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.06em; color: #8a9794; }
+  .lb.lb-single .lb-prev, .lb.lb-single .lb-next, .lb.lb-single .lb-count { display: none; }
+  @media (max-width: 600px) { .lb { padding: 64px 12px; } .lb-prev, .lb-next { top: auto; bottom: 8px; transform: none; } }
   #contact form button[type="submit"]:disabled { opacity: .45 !important; cursor: not-allowed; box-shadow: none !important; transform: none !important; filter: none !important; }
   @media (max-width: 868px) {
     #about .about-photo-wrap { display: none !important; }
@@ -106,7 +120,7 @@
   <canvas ref="{{ canvasRef }}" style="position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none;"></canvas>
 
   <!-- custom cursor -->
-  <div class="cc-cursor" ref="{{ cursorRingRef }}" style="position: fixed; top: 0; left: 0; width: 240px; height: 240px; border-radius: 50%; background: radial-gradient(circle, rgba(52,211,153,0.16), rgba(52,211,153,0.06) 40%, transparent 70%); transform: translate(-50%,-50%); pointer-events: none; z-index: 9999; transition: opacity .3s ease, width .3s ease, height .3s ease; mix-blend-mode: screen; opacity: 0.9;"></div>
+  <div class="cc-cursor" ref="{{ cursorRingRef }}" style="position: fixed; top: 0; left: 0; width: 240px; height: 240px; border-radius: 50%; background: radial-gradient(circle, rgba(52,211,153,0.05), rgba(52,211,153,0.02) 40%, transparent 70%); transform: translate(-50%,-50%); pointer-events: none; z-index: 9999; transition: opacity .3s ease, width .3s ease, height .3s ease; mix-blend-mode: screen; opacity: 0.9;"></div>
 
   <!-- scroll progress -->
   <div style="position: fixed; top: 0; left: 0; right: 0; height: 2px; z-index: 200; background: transparent;">
@@ -285,10 +299,58 @@
       <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: clamp(2.4rem, 6vw, 4rem); line-height: 1; letter-spacing: -0.02em; color: var(--text);">{{ t.portfolio.heading }}</h2>
       <span style="flex: 1; max-width: 120px; height: 1px; background: linear-gradient(90deg, var(--purple), transparent);"></span>
     </div>
-    <div data-reveal style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: clamp(60px, 10vw, 120px) 20px; text-align: center; gap: 20px;">
-      <p style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: clamp(2.4rem, 7vw, 5rem); line-height: 1.1; letter-spacing: -0.03em; color: var(--text);">{{ t.portfolio.comingSoon }}</p>
-      <p style="margin: 0; font-family: 'JetBrains Mono', monospace; font-size: clamp(1rem, 2.5vw, 1.4rem); letter-spacing: 0.06em; color: var(--green);">{{ t.portfolio.wip }}</p>
-    </div>
+    <p data-reveal style="margin: 0 auto; max-width: 560px; font-size: 1.02rem; line-height: 1.7; color: var(--muted); text-align: center;">{{ t.portfolio.intro }}</p>
+    <!-- PROJECT 1: VIZPATCH -->
+    <article data-reveal class="proj" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: clamp(30px, 5vw, 60px); align-items: center; margin-top: clamp(60px, 9vw, 100px);">
+      <div class="proj-text">
+        <h3 style="margin: 0 0 8px; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: clamp(1.7rem, 4vw, 2.4rem); color: var(--text);">{{ t.portfolio.p1Title }}</h3>
+        <p style="margin: 0 0 18px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--green); letter-spacing: 0.02em;"><span style="white-space: nowrap;">Python ·</span> <span style="white-space: nowrap;">FastAPI ·</span> <span style="white-space: nowrap;">Claude API ·</span> <span style="white-space: nowrap;">IMAP/SMTP ·</span> <span style="white-space: nowrap;">SQLite ·</span> <span style="white-space: nowrap;">HTMX ·</span> <span style="white-space: nowrap;">C#/.NET ·</span> <span style="white-space: nowrap;">Docker</span></p>
+        <p style="margin: 0; max-width: 460px; font-size: 1rem; line-height: 1.7; color: var(--muted);">{{ t.portfolio.p1D }}</p>
+      </div>
+      <div class="proj-gallery" style="display: flex; flex-direction: column; gap: 12px;">
+        <div data-hover style="border: 1px solid var(--border); border-radius: 16px; overflow: hidden; background: var(--surface2); transition: border-color .3s, transform .3s; box-shadow: 0 20px 50px rgba(0,0,0,0.35);" style-hover="border-color: rgba(var(--green-rgb),0.5); transform: translateY(-5px);">
+          <div style="padding: 10px 16px; border-bottom: 1px solid var(--border); font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.04em; color: var(--muted);">vizpatch</div>
+          <div style="aspect-ratio: 1600/835;"><image-slot id="proj1-img1" src="assets/vizpatch-outlook.png" shape="rect" fit="cover" placeholder="Hauptscreenshot" style="display: block; width: 100%; height: 100%;"></image-slot></div>
+        </div>
+        <div style="display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 12px;">
+          <div data-hover style="border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--surface2); transition: border-color .3s, transform .3s;" style-hover="border-color: rgba(var(--green-rgb),0.5); transform: translateY(-3px);">
+            <div style="aspect-ratio: 403/805;"><image-slot id="proj1-img2" src="assets/vizpatch-chat-1.png" shape="rect" fit="cover" placeholder="Screenshot 2" style="display: block; width: 100%; height: 100%;"></image-slot></div>
+          </div>
+          <div data-hover style="border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--surface2); transition: border-color .3s, transform .3s;" style-hover="border-color: rgba(var(--green-rgb),0.5); transform: translateY(-3px);">
+            <div style="aspect-ratio: 403/805;"><image-slot id="proj1-img3" src="assets/vizpatch-chat-2.png" shape="rect" fit="cover" placeholder="Screenshot 3" style="display: block; width: 100%; height: 100%;"></image-slot></div>
+          </div>
+          <div data-hover style="border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--surface2); transition: border-color .3s, transform .3s;" style-hover="border-color: rgba(var(--green-rgb),0.5); transform: translateY(-3px);">
+            <div style="aspect-ratio: 403/805;"><image-slot id="proj1-img4" src="assets/vizpatch-chat-3.png" shape="rect" fit="cover" placeholder="Screenshot 4" style="display: block; width: 100%; height: 100%;"></image-slot></div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- PROJECT 2: VIZLOCK -->
+    <article data-reveal class="proj proj-rev" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: clamp(30px, 5vw, 60px); align-items: center; margin-top: clamp(60px, 9vw, 100px);">
+      <div class="proj-text">
+        <h3 style="margin: 0 0 8px; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: clamp(1.7rem, 4vw, 2.4rem); color: var(--text);">{{ t.portfolio.p2Title }}</h3>
+        <p style="margin: 0 0 18px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--green); letter-spacing: 0.02em;"><span style="white-space: nowrap;">C# ·</span> <span style="white-space: nowrap;">.NET 10 ·</span> <span style="white-space: nowrap;">NativeAOT ·</span> <span style="white-space: nowrap;">Win32 API ·</span> <span style="white-space: nowrap;">AES-256-GCM ·</span> <span style="white-space: nowrap;">PBKDF2 ·</span> <span style="white-space: nowrap;">xUnit ·</span> <span style="white-space: nowrap;">PowerShell</span></p>
+        <p style="margin: 0; max-width: 460px; font-size: 1rem; line-height: 1.7; color: var(--muted);">{{ t.portfolio.p2D }}</p>
+      </div>
+      <div class="proj-gallery" style="display: flex; flex-direction: column; gap: 12px;">
+        <div data-hover style="border: 1px solid var(--border); border-radius: 16px; overflow: hidden; background: var(--surface2); transition: border-color .3s, transform .3s; box-shadow: 0 20px 50px rgba(0,0,0,0.35);" style-hover="border-color: rgba(var(--green-rgb),0.5); transform: translateY(-5px);">
+          <div style="padding: 10px 16px; border-bottom: 1px solid var(--border); font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.04em; color: var(--muted);">vizlock</div>
+          <div style="aspect-ratio: 16/10;"><image-slot id="proj2-img1" shape="rect" fit="cover" placeholder="Hauptscreenshot" style="display: block; width: 100%; height: 100%;"></image-slot></div>
+        </div>
+        <div style="display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 12px;">
+          <div data-hover style="border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--surface2); transition: border-color .3s, transform .3s;" style-hover="border-color: rgba(var(--green-rgb),0.5); transform: translateY(-3px);">
+            <div style="aspect-ratio: 16/10;"><image-slot id="proj2-img2" shape="rect" fit="cover" placeholder="Screenshot 2" style="display: block; width: 100%; height: 100%;"></image-slot></div>
+          </div>
+          <div data-hover style="border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--surface2); transition: border-color .3s, transform .3s;" style-hover="border-color: rgba(var(--green-rgb),0.5); transform: translateY(-3px);">
+            <div style="aspect-ratio: 16/10;"><image-slot id="proj2-img3" shape="rect" fit="cover" placeholder="Screenshot 3" style="display: block; width: 100%; height: 100%;"></image-slot></div>
+          </div>
+          <div data-hover style="border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--surface2); transition: border-color .3s, transform .3s;" style-hover="border-color: rgba(var(--green-rgb),0.5); transform: translateY(-3px);">
+            <div style="aspect-ratio: 16/10;"><image-slot id="proj2-img4" shape="rect" fit="cover" placeholder="Screenshot 4" style="display: block; width: 100%; height: 100%;"></image-slot></div>
+          </div>
+        </div>
+      </div>
+    </article>
   </section>
 
   <!-- CERTIFICATES -->
@@ -447,16 +509,13 @@ class Component extends DCLogic {
       },
       portfolio: {
         heading: 'Portfolio',
-        intro: 'Entdecke hier eine Auswahl meiner Arbeiten – interagiere mit den Projekten, um meine Skills in Aktion zu sehen.',
+        intro: 'Eine Auswahl an Software, die ich beruflich für Kunden entwickelt habe.',
         live: 'Live-Test', code: 'Github',
         comingSoon: 'Kommt bald', wip: '— in Arbeit —',
-        joinD: 'Task-Manager nach dem Kanban-System. Erstelle und organisiere Aufgaben per Drag & Drop, weise Nutzer und Kategorien zu.',
-        polloD: 'Jump-and-Run-Spiel auf Basis objektorientierter Programmierung. Hilf Pepe, Münzen und Tabasco-Soße zu finden, um gegen das verrückte Huhn zu kämpfen.',
-        pokedexD: 'Basierend auf der PokéAPI – eine einfache Bibliothek, die Pokémon-Informationen bereitstellt und katalogisiert.'
-      },
-      testi: {
-        quote: 'Ich habe lange mit Enver am Join-Projekt gearbeitet. Er war im Grunde der JS-Experte im Team. Er hat eine extrem strukturierte, sympathische und freundliche Art – das war von den ersten Minuten an spürbar. So schnell er war, so fokussiert und zielstrebig war er auch. Er bot stets seine Hilfe an, erklärte und teilte seinen extrem guten JS-Code mit uns. Die Zusammenarbeit mit Enver hat mir wirklich Spaß gemacht. Er ist jemand, den man immer in einem Gruppenprojekt dabei haben möchte.',
-        author: 'Emre Isik'
+        p1Title: 'Vizpatch', p1Tag: 'KI-E-Mail-Assistent – direkt in Outlook.',
+        p1D: "Vizpatch ist ein selbst entwickelter KI-E-Mail-Assistent, der eingehende Mails automatisch einordnet, in Ordner sortiert und für Anfragen fertige Antwortentwürfe ablegt – auf Basis von hinterlegtem Fachwissen, eigenen Textvorlagen und im Schreibstil des Nutzers. Über einen Chat direkt in Outlook lässt sich das ganze Postfach in natürlicher Sprache bedienen: Mails suchen, zusammenfassen und löschen, beim Schreiben helfen, Entwürfe mit Anhängen erstellen, Mails senden und weiterleiten, Ordner verwalten, Newsletter abbestellen und Anhänge oder Scans auswerten. Vizpatch läuft auf dem Server des Kunden und pseudonymisiert sensible Daten wie E-Mail-Adressen, Telefonnummern, IBANs und Kreditkartennummern vor der Weitergabe an das LLM (Art. 32 DSGVO). Versendet wird nur nach Freigabe, und jede Aktion lässt sich rückgängig machen.",
+        p2Title: 'Vizlock', p2Tag: 'Verschlüsselungstool für Windows – per Rechtsklick im Explorer, komplett offline.',
+        p2D: "Vizlock ist ein Windows-Tool zur Verschlüsselung sensibler Daten, das ich für die Vizionists entwickelt habe. Mitarbeiter verschlüsseln damit per Rechtsklick im Explorer einzelne Dateien oder beliebig tief verschachtelte Ordner mit einem Passwort, ganz ohne Server, Cloud oder Netzwerkverbindung. Die verschlüsselten Dateien verraten weder Inhalt noch Dateinamen, Ordnerstruktur oder Dateigröße. Beim Entschlüsseln kommen die Daten bit-identisch zurück, samt Struktur und Zeitstempeln. Verschlüsselte Dateien und Ordner lassen sich außerdem direkt in Vizlock öffnen: Per Doppelklick wird eine Datei geöffnet, bearbeitet und gespeichert, ohne dass man für einen kurzen Blick oder eine kleine Änderung jedes Mal entschlüsseln, wieder verschlüsseln und das Passwort erneut eingeben muss. Manipulationen am Chiffrat werden zuverlässig erkannt, und Originale werden erst gelöscht, nachdem das verschlüsselte Ergebnis gesichert und geprüft ist. Das Tool setzt Art. 32 DSGVO auf Endgeräten und Netzlaufwerken technisch um."
       },
       certs: {
         heading: 'Zertifikate',
@@ -501,16 +560,13 @@ class Component extends DCLogic {
       },
       portfolio: {
         heading: 'Portfolio',
-        intro: 'Explore a selection of my work here – interact with projects to see my skills in action.',
+        intro: 'A selection of software I have developed professionally for clients.',
         live: 'Live test', code: 'Github',
         comingSoon: 'Coming Soon', wip: '— work in progress —',
-        joinD: 'Task manager inspired by the Kanban System. Create and organize tasks using drag and drop functions, assign users and categories.',
-        polloD: 'Jump Run game based on object oriented approach. Help Pepe to find coins and tabasco salsa to fight against the crazy hen.',
-        pokedexD: 'Based on the PokéAPI a simple library that provides and catalogues pokemon information.'
-      },
-      testi: {
-        quote: "I worked with Enver for a long time on the Join project. He was essentially the JS expert on the team. He has an extremely structured, personable, and kind demeanor. That was noticeable from the very first minutes. As quick as he was, he was also focused and determined. He always offered his help and explained and shared his extremely good JS code with us. I really enjoyed working with Enver. He's someone you would always want in a group project.",
-        author: 'Emre Isik'
+        p1Title: 'Vizpatch', p1Tag: 'AI email assistant – right inside Outlook.',
+        p1D: "Vizpatch is a self-developed AI email assistant that automatically categorises incoming mail, sorts it into folders and saves ready-made reply drafts for requests – based on stored expertise, custom text templates and in the user's writing style. Through a chat directly in Outlook, the entire mailbox can be operated in natural language: searching, summarising and deleting mails, helping with writing, creating drafts with attachments, sending and forwarding mails, managing folders, unsubscribing from newsletters and analysing attachments or scans. Vizpatch runs on the client's server and pseudonymises sensitive data such as email addresses, phone numbers, IBANs and credit card numbers before passing it to the LLM (Art. 32 GDPR). Mails are only sent after approval, and every action can be undone.",
+        p2Title: 'Vizlock', p2Tag: 'Encryption tool for Windows – right-click in Explorer, fully offline.',
+        p2D: "Vizlock is a Windows tool for encrypting sensitive data that I developed for Vizionists. With it, employees encrypt individual files or arbitrarily deeply nested folders with a password via right-click in Explorer, entirely without a server, cloud or network connection. The encrypted files reveal neither content nor file names, folder structure or file size. On decryption, the data comes back bit-identical, including structure and timestamps. Encrypted files and folders can also be opened directly in Vizlock: a double-click opens a file to view, edit and save it, without having to decrypt, re-encrypt and re-enter the password every time you want to take a quick look or make a small change. Tampering with the ciphertext is reliably detected, and originals are only deleted once the encrypted result has been saved and verified. The tool technically implements Art. 32 GDPR on endpoints and network drives."
       },
       certs: {
         heading: 'Certificates',
@@ -715,6 +771,7 @@ class Component extends DCLogic {
     this.mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
     this.ring = { x: this.mouse.x, y: this.mouse.y };
     this.setupCanvas();
+    this.setupLightbox();
     this.setupCursor();
     this.setupReveal();
     this.setupParallax();
@@ -736,49 +793,191 @@ class Component extends DCLogic {
     if (this._onOut) document.removeEventListener('mouseout', this._onOut);
     if (this._onOutside) document.removeEventListener('pointerdown', this._onOutside);
     if (this._io) this._io.disconnect();
+    if (this._onLbClick && this.rootRef.current) this.rootRef.current.removeEventListener('click', this._onLbClick);
+    if (this._onLbKey) document.removeEventListener('keydown', this._onLbKey);
+    if (this._lb) this._lb.remove();
+  }
+
+  setupLightbox() {
+    // portfolio screenshots open large on click; arrows step through the images of the same project
+    const root = this.rootRef.current; if (!root) return;
+    const box = document.createElement('div');
+    box.className = 'lb';
+    box.setAttribute('role', 'dialog');
+    box.setAttribute('aria-modal', 'true');
+    box.innerHTML = '<img class="lb-img" alt="">'
+      + '<button type="button" class="lb-btn lb-close" aria-label="Schließen">×</button>'
+      + '<button type="button" class="lb-btn lb-prev" aria-label="Vorheriges Bild">‹</button>'
+      + '<button type="button" class="lb-btn lb-next" aria-label="Nächstes Bild">›</button>'
+      + '<span class="lb-count"></span>';
+    document.body.appendChild(box);
+    const img = box.querySelector('.lb-img'), count = box.querySelector('.lb-count');
+    let list = [], idx = 0;
+    // the slot's own <img> also covers pictures dropped in via the design tool, not only the src attribute
+    const srcOf = (slot) => {
+      const inner = slot.shadowRoot && slot.shadowRoot.querySelector('.frame img');
+      return (inner && inner.currentSrc) || slot.getAttribute('src') || '';
+    };
+    const show = (i) => {
+      idx = (i + list.length) % list.length;
+      img.src = list[idx];
+      count.textContent = (idx + 1) + ' / ' + list.length;
+      box.classList.toggle('lb-single', list.length < 2);
+    };
+    const close = () => {
+      box.classList.remove('lb-open');
+      document.documentElement.style.overflow = '';
+    };
+    this._onLbClick = (e) => {
+      const slot = e.target.closest && e.target.closest('#portfolio image-slot');
+      // empty slots and the design tool's editable slots keep their own click behaviour
+      if (!slot || !srcOf(slot) || slot.hasAttribute('data-editable')) return;
+      const slots = [...slot.closest('article').querySelectorAll('image-slot')].filter(srcOf);
+      list = slots.map(srcOf);
+      show(slots.indexOf(slot));
+      box.classList.add('lb-open');
+      document.documentElement.style.overflow = 'hidden';
+    };
+    root.addEventListener('click', this._onLbClick);
+    box.addEventListener('click', (e) => {
+      if (e.target.closest('.lb-prev')) show(idx - 1);
+      else if (e.target.closest('.lb-next')) show(idx + 1);
+      else if (e.target !== img) close();
+    });
+    this._onLbKey = (e) => {
+      if (!box.classList.contains('lb-open')) return;
+      if (e.key === 'Escape') close();
+      else if (e.key === 'ArrowLeft') show(idx - 1);
+      else if (e.key === 'ArrowRight') show(idx + 1);
+    };
+    document.addEventListener('keydown', this._onLbKey);
+    this._lb = box;
   }
 
   setupCanvas() {
     const canvas = this.canvasRef.current; if (!canvas) return;
     const ctx = canvas.getContext('2d');
-    let dpr = Math.min(window.devicePixelRatio || 1, 2);
-    let w, h;
+    // glyph matrix background (port of MagicUI GlyphMatrix) with green glyphs around the cursor
+    const glyphs = '0101<>/*+{}()[]=&§';
+    const cellSize = 28, fontSize = 16, mutationRate = 0.025, interval = 180, fadeBottom = 0.6, radius = 130, baseOpacity = 0.35;
+    // skill names occasionally fade in across a few cells, readable mostly under the cursor light
+    const words = this.SKILLS.map((s) => s.name).filter((n) => n.length <= 12);
+    const maxWords = 6, wordChance = 0.12, wordLifeMin = 6000, wordLifeMax = 10000, wordFade = 900, wordAlpha = 0.4;
+    const font = fontSize + "px 'JetBrains Mono', ui-monospace, monospace";
+    const pick = () => glyphs[Math.floor(Math.random() * glyphs.length)];
+    // static glyph layer is redrawn only on mutation ticks and blitted every frame
+    const base = document.createElement('canvas');
+    const bctx = base.getContext('2d');
+    let dpr, w, h, cols = 0, rows = 0, allocRows = 0, cells = [], alphas = [], covered = new Uint8Array(0), active = [], last = 0;
+    const envelope = (wd, now) => Math.max(0, Math.min(1, (now - wd.born) / wordFade, (wd.born + wd.life - now) / wordFade));
+    const drawBase = (now) => {
+      bctx.clearRect(0, 0, w, h);
+      bctx.font = font; bctx.textBaseline = 'top'; bctx.fillStyle = 'rgb(138,151,148)';
+      for (let y = 0; y < rows; y++) {
+        const fade = 1 - (y / rows) * fadeBottom;
+        for (let x = 0; x < cols; x++) {
+          const i = y * cols + x;
+          if (covered[i]) continue;
+          bctx.globalAlpha = alphas[i] * fade * baseOpacity;
+          bctx.fillText(cells[i], x * cellSize, y * cellSize);
+        }
+      }
+      for (const wd of active) {
+        bctx.globalAlpha = wordAlpha * (1 - (wd.y / rows) * fadeBottom) * baseOpacity * envelope(wd, now);
+        bctx.fillText(wd.text, wd.x * cellSize, wd.y * cellSize);
+      }
+      bctx.globalAlpha = 1;
+    };
+    const spawnWord = (now) => {
+      const text = words[Math.floor(Math.random() * words.length)];
+      if (active.some((wd) => wd.text === text)) return;
+      bctx.font = font;
+      const span = Math.ceil(bctx.measureText(text).width / cellSize);
+      if (span >= cols) return;
+      const x = Math.floor(Math.random() * (cols - span + 1)), y = Math.floor(Math.random() * rows);
+      for (let k = 0; k < span; k++) if (covered[y * cols + x + k]) return;
+      for (let k = 0; k < span; k++) covered[y * cols + x + k] = 1;
+      active.push({ text, x, y, span, born: now, life: wordLifeMin + Math.random() * (wordLifeMax - wordLifeMin) });
+    };
+    const expireWords = (now) => {
+      active = active.filter((wd) => {
+        if (now < wd.born + wd.life) return true;
+        for (let k = 0; k < wd.span; k++) {
+          const i = wd.y * cols + wd.x + k;
+          covered[i] = 0; cells[i] = pick();
+        }
+        return false;
+      });
+    };
     const resize = () => {
       dpr = Math.min(window.devicePixelRatio || 1, 2);
       w = window.innerWidth; h = window.innerHeight;
-      canvas.width = w * dpr; canvas.height = h * dpr;
+      canvas.width = base.width = w * dpr; canvas.height = base.height = h * dpr;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      bctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const c = Math.ceil(w / cellSize), r = Math.ceil(h / cellSize);
+      // keep the grid when only the mobile URL bar changes the height
+      if (c !== cols || r > allocRows) {
+        cols = c; allocRows = r;
+        cells = Array.from({ length: c * r }, pick);
+        alphas = Array.from({ length: c * r }, () => 0.05 + Math.random() * 0.35);
+        covered = new Uint8Array(c * r); active = [];
+      }
+      rows = r;
+      drawBase(performance.now());
     };
     resize();
     this._onResize = resize;
     window.addEventListener('resize', resize);
-    const step = 40;
     const draw = (time) => {
+      if (time - last >= interval) {
+        last = time;
+        expireWords(time);
+        if (active.length < maxWords && Math.random() < wordChance) spawnWord(time);
+        const total = cols * rows;
+        const mutations = Math.max(1, Math.floor(total * mutationRate));
+        for (let n = 0; n < mutations; n++) {
+          const i = Math.floor(Math.random() * total);
+          if (covered[i]) continue;
+          cells[i] = pick();
+          alphas[i] = 0.05 + Math.random() * 0.45;
+        }
+        drawBase(time);
+      }
       ctx.clearRect(0, 0, w, h);
-      const t = time * 0.0011;
-      for (let x = step; x < w; x += step) {
-        for (let y = step; y < h; y += step) {
-          // gentle travelling-wave drift so the whole grid feels alive
-          const wave = Math.sin(t + x * 0.015 + y * 0.022);
-          const wave2 = Math.cos(t * 0.8 + x * 0.02 - y * 0.012);
-          const ox = wave * 4;
-          const oy = wave2 * 4;
-          const px = x + ox, py = y + oy;
-          const dx = px - this.mouse.x, dy = py - this.mouse.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          const near = Math.max(0, 1 - dist / 200);
-          const pulse = 0.12 + 0.09 * (0.5 + 0.5 * wave);
-          const r = 1 + near * 1.9 + (0.5 + 0.5 * wave2) * 0.5;
-          if (near > 0.02) {
-            ctx.fillStyle = 'rgba(52,211,153,' + (pulse + near * 0.7).toFixed(3) + ')';
-          } else {
-            ctx.fillStyle = 'rgba(138,151,148,' + (pulse * 0.45).toFixed(3) + ')';
-          }
-          ctx.beginPath();
-          ctx.arc(px, py, r, 0, Math.PI * 2);
-          ctx.fill();
+      ctx.drawImage(base, 0, 0, w, h);
+      const mx = this.mouse.x, my = this.mouse.y;
+      const x0 = Math.max(0, Math.floor((mx - radius) / cellSize)), x1 = Math.min(cols - 1, Math.floor((mx + radius) / cellSize));
+      const y0 = Math.max(0, Math.floor((my - radius) / cellSize)), y1 = Math.min(rows - 1, Math.floor((my + radius) / cellSize));
+      ctx.font = font; ctx.textBaseline = 'top'; ctx.fillStyle = 'rgb(52,211,153)';
+      for (let y = y0; y <= y1; y++) {
+        const fade = 1 - (y / rows) * fadeBottom;
+        for (let x = x0; x <= x1; x++) {
+          const dx = x * cellSize + cellSize / 2 - mx, dy = y * cellSize + cellSize / 2 - my;
+          const near = Math.max(0, 1 - Math.sqrt(dx * dx + dy * dy) / radius);
+          if (near <= 0.02) continue;
+          const i = y * cols + x;
+          if (covered[i]) continue;
+          ctx.clearRect(x * cellSize, y * cellSize, cellSize, cellSize);
+          ctx.globalAlpha = Math.min(1, alphas[i] * fade * 0.6 + near * 0.4);
+          ctx.fillText(cells[i], x * cellSize, y * cellSize);
         }
       }
+      // words get the same light as a radial gradient so it falls off across the letters
+      if (active.length) {
+        const light = ctx.createRadialGradient(mx, my, 0, mx, my, radius);
+        light.addColorStop(0, 'rgba(52,211,153,0.6)');
+        light.addColorStop(1, 'rgba(52,211,153,0)');
+        ctx.fillStyle = light;
+        for (const wd of active) {
+          const left = wd.x * cellSize, top = wd.y * cellSize, right = left + wd.span * cellSize, bottom = top + cellSize;
+          const dx = Math.max(left - mx, 0, mx - right), dy = Math.max(top - my, 0, my - bottom);
+          if (dx * dx + dy * dy >= radius * radius) continue;
+          ctx.globalAlpha = envelope(wd, time);
+          ctx.fillText(wd.text, left, top);
+        }
+      }
+      ctx.globalAlpha = 1;
       this._raf = requestAnimationFrame(draw);
     };
     this._raf = requestAnimationFrame(draw);
