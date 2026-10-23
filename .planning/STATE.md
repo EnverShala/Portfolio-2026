@@ -43,5 +43,6 @@ All items in `.planning/codebase/CONCERNS.md` are intentionally deferred. Addres
 | 260802-4dz | Add AI/Automation skills, drop Frontend hero role, Software Developer intro, skills copy, contact CTA | 2026-08-02 | [260802-4dz-add-ai-and-automation-skills-remove-fron](.planning/quick/260802-4dz-add-ai-and-automation-skills-remove-fron/) |
 | 260802-rq4 | Add SQL/NoSQL/Security Officer skills, ISO 27001 seal glyph, retitle tab to Software Developer | 2026-08-02 | [260802-rq4-add-skills-sql-nosql-security-officer-re](.planning/quick/260802-rq4-add-skills-sql-nosql-security-officer-re/) |
 | 260803-344 | Close mobile burger menu on outside tap; fix About middle icon and Automation gear to render solid green via inline SVG | 2026-08-03 | [260803-344-burgermenu-bei-klick-ausserhalb-schliess](.planning/quick/260803-344-burgermenu-bei-klick-ausserhalb-schliess/) |
+| 261023-ukz | German as default language; inline SVG flag (UK/DE) next to target language in toggle buttons (2a28fa5) | 2026-10-23 | [261023-ukz-deutsch-als-standardsprache-im-portfolio](.planning/quick/261023-ukz-deutsch-als-standardsprache-im-portfolio/) |
 
-Last activity: 2026-08-03 - Completed quick task 260803-344: Burger menu outside-click close + About/Automation icon color fixes
+Last activity: 2026-10-23 - Completed quick task 261023-ukz: German default language + flag icons in language toggle
