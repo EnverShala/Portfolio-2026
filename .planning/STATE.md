@@ -44,5 +44,6 @@ All items in `.planning/codebase/CONCERNS.md` are intentionally deferred. Addres
 | 260802-rq4 | Add SQL/NoSQL/Security Officer skills, ISO 27001 seal glyph, retitle tab to Software Developer | 2026-08-02 | [260802-rq4-add-skills-sql-nosql-security-officer-re](.planning/quick/260802-rq4-add-skills-sql-nosql-security-officer-re/) |
 | 260803-344 | Close mobile burger menu on outside tap; fix About middle icon and Automation gear to render solid green via inline SVG | 2026-08-03 | [260803-344-burgermenu-bei-klick-ausserhalb-schliess](.planning/quick/260803-344-burgermenu-bei-klick-ausserhalb-schliess/) |
 | 261023-ukz | German as default language; inline SVG flag (UK/DE) next to target language in toggle buttons (2a28fa5) | 2026-10-23 | [261023-ukz-deutsch-als-standardsprache-im-portfolio](.planning/quick/261023-ukz-deutsch-als-standardsprache-im-portfolio/) |
+| 261101-vk0 | Add 3rd portfolio project: pediatric practice website with online booking, 5 WebP screenshots, DE/EN (5ea1547) | 2026-11-01 | [261101-vk0-add-3rd-portfolio-project-pediatric-prac](.planning/quick/261101-vk0-add-3rd-portfolio-project-pediatric-prac/) |
 
-Last activity: 2026-10-23 - Completed quick task 261023-ukz: German default language + flag icons in language toggle
+Last activity: 2026-11-01 - Completed quick task 261101-vk0: 3rd portfolio project (Praxis-Website)
