@@ -37,7 +37,7 @@ jobs:
     name: dist/ ist aktuell
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: dist/index.html == Portfolio.dc.html
         run: |
@@ -57,7 +57,7 @@ jobs:
     env:
       FTP_SERVER: ${{ secrets.FTP_SERVER }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Secrets fehlen – Deploy übersprungen
         if: env.FTP_SERVER == ''
