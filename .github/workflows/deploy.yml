@@ -1,8 +1,10 @@
 # Deploy des Portfolios auf enver-shala.de (All-Inkl, Apache-Shared-Hosting)
 #
 # Ablauf bei jedem Push auf main (oder manuell über "Run workflow"):
-#   1. check  – dist/index.html muss 1:1 Portfolio.dc.html entsprechen,
-#               sonst würde eine veraltete Seite ausgeliefert.
+#   1. check  – der statische SEO-Inhalt in Portfolio.dc.html muss aktuell sein
+#               und dist/index.html 1:1 Portfolio.dc.html entsprechen
+#               (node tools/build.mjs --check), sonst würde eine veraltete
+#               Seite ausgeliefert.
 #   2. deploy – lädt dist/ per FTPS (FTP mit TLS) hoch. Übertragen werden nur
 #               Dateien, die sich seit dem letzten Deploy geändert haben
 #               (Sync-Datei .ftp-deploy-sync-state.json auf dem Server).
@@ -39,13 +41,12 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      - name: dist/index.html == Portfolio.dc.html
-        run: |
-          if ! diff -q <(tr -d '\r' < Portfolio.dc.html) <(tr -d '\r' < dist/index.html) > /dev/null; then
-            echo "::error::dist/index.html weicht von Portfolio.dc.html ab. Bitte 'cp Portfolio.dc.html dist/index.html' ausführen."
-            exit 1
-          fi
-          echo "dist/index.html ist aktuell."
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+
+      - name: Statischer Inhalt + dist/index.html aktuell
+        run: node tools/build.mjs --check
 
   deploy:
     name: Upload per FTPS

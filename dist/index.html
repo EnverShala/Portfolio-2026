@@ -18,8 +18,136 @@
 <meta name="twitter:image" content="https://enver-shala.de/assets/profile.png">
 <link rel="icon" type="image/svg+xml" href="./favicon.svg">
 <script src="./support.js"></script>
+<script>document.documentElement.classList.add('dc-js');</script>
+<style>
+  /* Statischer Inhalt für Crawler und Besucher ohne JavaScript (siehe tools/build.mjs) */
+  .dc-js #static-content { display: none; }
+  html:not(.dc-js) x-dc { display: none; }
+  #static-content { max-width: 760px; margin: 0 auto; padding: 40px 20px 60px; color: #e9efee; background: #070a0b; font-family: system-ui, sans-serif; font-size: 16px; line-height: 1.65; }
+  #static-content a { color: #34d399; }
+  #static-content h1, #static-content h2, #static-content h3 { line-height: 1.2; }
+  #static-content nav ul { display: flex; flex-wrap: wrap; gap: 6px 18px; padding: 0; list-style: none; }
+  #static-content #s-skills ul { display: flex; flex-wrap: wrap; gap: 8px; padding: 0; list-style: none; }
+  #static-content #s-skills li { padding: 3px 10px; border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; font-size: 14px; }
+</style>
 </head>
 <body>
+<!-- STATIC-CONTENT:START (generiert von tools/build.mjs, nicht von Hand bearbeiten) -->
+<div id="static-content">
+<header>
+<p><a href="#top">Enver Shala</a></p>
+<nav aria-label="Hauptnavigation"><ul>
+<li><a href="#s-about">Über mich</a></li>
+<li><a href="#s-skills">Skills</a></li>
+<li><a href="#s-portfolio">Portfolio</a></li>
+<li><a href="#s-certificates">Zertifikate</a></li>
+<li><a href="#s-contact">Kontakt</a></li>
+</ul></nav>
+</header>
+<main>
+<section id="s-top">
+<h1>Enver Shala</h1>
+<p>Ich bin Fullstack-Entwickler · KI &amp; Automatisierung · Problemlöser</p>
+</section>
+<section id="s-about">
+<h2>Über mich</h2>
+<p>In der Softwareentwicklung geht es für mich nicht nur ums reine Codeschreiben, sondern um kreatives Problemlösen. Als Softwareentwickler verbinde ich effiziente Umsetzung mit modernsten KI-Entwicklungsmethoden.</p>
+<h3>KISS &amp; Clean Code (Keep It Simple, Stupid)</h3>
+<p>Guter Code zeichnet sich nicht durch Komplexität aus, sondern dadurch, dass er verlässlich funktioniert. Ich vermeide unnötiges Over-Engineering und baue schlanke, performante Anwendungen, die dauerhaft wartbar und skalierbar bleiben.</p>
+<h3>Sicherheit &amp; Datenschutz an erster Stelle</h3>
+<p>Ob Verschlüsselung oder DSGVO: Performance hat keinen Wert ohne Schutz. Die Sicherheit sensibler Daten hat in meinen Projekten oberste Priorität.</p>
+<h3>KI-Empowered &amp; Einarbeitungsstark (Agentic Coding)</h3>
+<p>Durch den gezielten Einsatz moderner KI-Tools, Agentic Coding und strukturiertes Codebase Mapping analysiere und verstehe ich komplexe Repositories in kürzester Zeit. Das ermöglicht mir eine extrem schnelle Einarbeitung und hocheffiziente Entwicklung.</p>
+</section>
+<section id="s-skills">
+<h2>Meine Skills</h2>
+<p>Ich habe Erfahrung darin gesammelt, Projekte mit verschiedenen Technologien und Konzepten zu bauen.</p>
+<ul>
+<li>AI</li>
+<li>Automation</li>
+<li>Agentic Coding</li>
+<li>Codebase Mapping</li>
+<li>Claude</li>
+<li>MCP</li>
+<li>Python</li>
+<li>FastAPI</li>
+<li>C#</li>
+<li>.NET</li>
+<li>TypeScript</li>
+<li>JavaScript</li>
+<li>React</li>
+<li>Angular</li>
+<li>Next.js</li>
+<li>HTML</li>
+<li>CSS</li>
+<li>SQL</li>
+<li>MongoDB</li>
+<li>Rest-Api</li>
+<li>Docker</li>
+<li>CI/CD</li>
+<li>GitHub Actions</li>
+<li>GIT</li>
+<li>PowerShell</li>
+<li>Firebase</li>
+<li>Headless CMS</li>
+<li>Scrum</li>
+<li>DSGVO</li>
+<li>ISO 27001</li>
+<li>ISMS</li>
+<li>BSI IT GSP</li>
+<li>Security Officer</li>
+<li>Continually learning</li>
+</ul>
+<p>Suchst du einen anderen Skill? Melde dich gern. Ich freue mich darauf, mein bisheriges Wissen zu erweitern.</p>
+</section>
+<section id="s-portfolio">
+<h2>Portfolio</h2>
+<p>Eine Auswahl an Software, die ich beruflich für Kunden entwickelt habe.</p>
+<article>
+<h3>Vizpatch</h3>
+<p><strong>KI-E-Mail-Assistent – in Outlook und per App.</strong></p>
+<p>Technologien: Python · FastAPI · Anthropic SDK · Claude API · OpenAI / Gemini · LLM Tool Calling · MCP · IMAP/SMTP · SQLite · HTMX · C#/.NET · Docker Compose · pytest</p>
+<p>Vizpatch ist ein KI-E-Mail-Assistent, der eingehende Mails einordnet, sie in Ordner sortieren kann und für Anfragen fertige Antwortentwürfe ablegt. Die Entwürfe stützen sich auf hinterlegtes Fachwissen und eigene Textvorlagen und treffen den Schreibstil des Nutzers. Über einen Chat direkt in Outlook steuert man das gesamte Postfach in natürlicher Sprache: Vizpatch sucht Mails, fasst sie zusammen, löscht, sendet und leitet sie weiter, hilft beim Schreiben, erstellt Entwürfe mit Anhängen, verwaltet Ordner, kann Newsletter abbestellen und wertet Anhänge oder Scans aus. Dahinter stehen 42 Werkzeuge, die das Sprachmodell per Tool Calling aufruft; als Modell sind Claude, GPT oder Gemini wählbar. Neben dem Outlook-Add-in lässt sich Vizpatch auch per Smartphone-App steuern – über einen eigenen MCP-Server, der direkt ans Backend angebunden ist und ganz ohne Outlook auskommt. Vizpatch läuft per Docker Compose auf dem Server des Kunden. Bevor Daten an das LLM gehen, werden sensible Angaben wie E-Mail-Adressen, Telefonnummern, IBANs und Kreditkartennummern pseudonymisiert (Art. 32 DSGVO). Mails gehen erst nach Freigabe raus, beinahe jede Aktion lässt sich rückgängig machen, und über 2.300 automatisierte Tests sichern das Verhalten ab.</p>
+</article>
+<article>
+<h3>Vizlock</h3>
+<p><strong>Verschlüsselungstool für Windows – per Rechtsklick im Explorer, komplett offline.</strong></p>
+<p>Technologien: C# · .NET 10 · NativeAOT · Win32 API · AES-256-GCM · PBKDF2 · xUnit · GitHub Actions · PowerShell</p>
+<p>Vizlock ist ein Windows-Tool zur Verschlüsselung sensibler Daten. Per Rechtsklick im Explorer verschlüsseln Mitarbeiter einzelne Dateien oder beliebig tief verschachtelte Ordner mit einem Passwort – ganz ohne Server, Cloud oder Netzwerkverbindung. Die verschlüsselten Dateien verraten weder Inhalt noch Dateinamen, Ordnerstruktur oder Dateigröße. Beim Entschlüsseln kommen die Daten bit-identisch zurück, samt Struktur und Zeitstempeln. Verschlüsselte Dateien und Ordner lassen sich außerdem direkt nutzen: Ein Doppelklick in Vizlock genügt, um eine Datei im Standardprogramm für ihre Dateiendung zu öffnen, zu bearbeiten und zu speichern. Für einen kurzen Blick oder eine kleine Änderung muss man also nicht jedes Mal entschlüsseln, neu verschlüsseln und das Passwort erneut eingeben. Manipulationen am Chiffrat werden zuverlässig erkannt, und Originale werden erst gelöscht, wenn das verschlüsselte Ergebnis gesichert und geprüft ist. So setzt das Tool Art. 32 DSGVO auf Endgeräten technisch um. Abgesichert wird das durch acht Release-Gates in GitHub Actions, die nicht nur Unit-Tests ausführen, sondern das ausgelieferte NativeAOT-Binary selbst prüfen: Wiederherstellbarkeit, Absturzsicherheit, Fuzzing, Explorer-Integration und Installer-Integrität, jeweils mit Gegenproben.</p>
+</article>
+<article>
+<h3>Praxis-Website</h3>
+<p><strong>Website für eine Kinderarztpraxis – mit eigener Online-Terminbuchung.</strong></p>
+<p>Technologien: Next.js 15 · React 19 · TypeScript · Tailwind CSS · Sanity CMS · Playwright · Lighthouse</p>
+<p>Für eine Kinder- und Jugendarztpraxis habe ich eine schnelle, barrierefreie Website mit eigener Online-Terminbuchung konzipiert, gestaltet und entwickelt. Eltern fragen über einen Kalender einen Wunschtermin an, der Wochenenden, Praxisurlaube und vergangene Zeiten automatisch sperrt. Die Praxis bestätigt oder lehnt per Ein-Klick-Link ab – die Links sind mit HMAC-SHA256 signiert und nicht fälschbar. Eltern und Praxis werden automatisch per E-Mail informiert. Alle Inhalte, Sprechzeiten, Praxisurlaube und Terminanfragen pflegt die Praxis selbst im eingebetteten Sanity Studio. Ergebnis: Lighthouse 100 in allen vier Kategorien (Desktop), 0 WCAG-Verstöße laut axe-core und dank selbst gehosteter Schriften und Karte keine Cookies, kein Tracking und kein Cookie-Banner (DSGVO) – Besucher landen ohne Umweg direkt auf der Seite.</p>
+</article>
+</section>
+<section id="s-certificates">
+<h2>Zertifikate</h2>
+<p>Abgeschlossene Weiterbildungen und bestandene Prüfungen – ausgestellt von IHK-Instituten und zertifizierten Bildungsträgern.</p>
+<ul>
+<li><strong>Softwareentwickler (IHK) – Schwerpunkt Frontend</strong> – IHK-Bildungsinstitut Hellweg-Sauerland (2026 · IHK-Zertifikatstest bestanden)</li>
+<li><strong>Datenschutzbeauftragter (IHK)</strong> – IHK Akademie München und Oberbayern (2023 · BDSG &amp; DSGVO)</li>
+<li><strong>IT-Sicherheitsbeauftragter (IT-SIBE) gemäß ISO 27001</strong> – BREDEX GmbH (2023 · DEKRA-Kooperationspartner · Bitkom-Mitglied)</li>
+<li><strong>BSI-IT-Grundschutz-Praktiker</strong> – BREDEX GmbH · Prüfung nach BSI-Vorgaben (2023 · DEKRA-Kooperationspartner · Bitkom-Mitglied)</li>
+<li><strong>IT-Fachkraft für Systemadministration &amp; IT-Sicherheit</strong> – CloudCommand (2024 · 2.300 UE Vollzeit · AZAV-zugelassener Bildungsträger)</li>
+<li><strong>Softwareentwickler – Frontend-Webentwicklung</strong> – Developer Akademie München (2025 · 18 Module · 12+ Projekte · TÜV-Rheinland-zertifizierter Bildungsträger (AZAV))</li>
+</ul>
+</section>
+<section id="s-contact">
+<h2>Kontakt</h2>
+<p>Ein Problem zu lösen? Kontaktiere mich über dieses Formular – ich freue mich, von dir zu hören, deine Ideen kennenzulernen und mit meiner Arbeit zu deinen Projekten beizutragen.</p>
+<ul>
+<li><a href="https://github.com/EnverShala">GitHub</a></li>
+<li><a href="https://www.linkedin.com/in/enver-shala-developer/">LinkedIn</a></li>
+</ul>
+</section>
+</main>
+<footer>
+<p><a href="/legalnotice">Impressum</a> · <a href="/privacypolicy">Datenschutz</a> · © Enver Shala 2026</p>
+</footer>
+</div>
+<!-- STATIC-CONTENT:END -->
 <x-dc>
 <helmet>
 <link rel="stylesheet" href="./fonts/fonts.css">
@@ -300,6 +428,22 @@
                 </g>
               </svg>
             </sc-if>
+            <sc-if value="{{ sk.icon == 'gha' }}">
+              <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" style="display: block; color: var(--green);">
+                <g stroke="currentColor" fill="none" style="stroke-width: 1.2; stroke-linecap: round; stroke-linejoin: round; opacity: 0.8;">
+                  <path d="M8.6 5.5 14.3 5.5"></path>
+                  <path d="M5.5 8.6 5.5 15.3 C5.5 16.6 6.4 17.5 7.7 17.5 L11.4 17.5"></path>
+                </g>
+                <g stroke="currentColor" fill="none" style="stroke-width: 1.3; stroke-linejoin: round;">
+                  <rect x="2.4" y="2.4" width="6.2" height="6.2" rx="1.6"></rect>
+                  <circle cx="16.6" cy="17.5" r="5"></circle>
+                </g>
+                <g fill="currentColor">
+                  <circle cx="16.3" cy="5.5" r="1.7"></circle>
+                  <path d="M15.1 15.1 18.9 17.5 15.1 19.9 Z"></path>
+                </g>
+              </svg>
+            </sc-if>
             <sc-if value="{{ sk.icon == 'big' }}">
               <span style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.35rem; line-height: 1; color: var(--green);">{{ sk.mark }}</span>
             </sc-if>
@@ -334,7 +478,7 @@
     <article data-reveal class="proj" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: clamp(30px, 5vw, 60px); align-items: center; margin-top: clamp(60px, 9vw, 100px);">
       <div class="proj-text">
         <h3 style="margin: 0 0 8px; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: clamp(1.7rem, 4vw, 2.4rem); color: var(--text);">{{ t.portfolio.p1Title }}</h3>
-        <p style="margin: 0 0 18px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--green); letter-spacing: 0.02em;"><span style="white-space: nowrap;">Python ·</span> <span style="white-space: nowrap;">FastAPI ·</span> <span style="white-space: nowrap;">Anthropic SDK ·</span> <span style="white-space: nowrap;">Claude API ·</span> <span style="white-space: nowrap;">OpenAI / Gemini ·</span> <span style="white-space: nowrap;">LLM Tool Calling ·</span> <span style="white-space: nowrap;">IMAP/SMTP ·</span> <span style="white-space: nowrap;">SQLite ·</span> <span style="white-space: nowrap;">HTMX ·</span> <span style="white-space: nowrap;">C#/.NET ·</span> <span style="white-space: nowrap;">Docker Compose ·</span> <span style="white-space: nowrap;">pytest</span></p>
+        <p style="margin: 0 0 18px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--green); letter-spacing: 0.02em;"><span style="white-space: nowrap;">Python ·</span> <span style="white-space: nowrap;">FastAPI ·</span> <span style="white-space: nowrap;">Anthropic SDK ·</span> <span style="white-space: nowrap;">Claude API ·</span> <span style="white-space: nowrap;">OpenAI / Gemini ·</span> <span style="white-space: nowrap;">LLM Tool Calling ·</span> <span style="white-space: nowrap;">MCP ·</span> <span style="white-space: nowrap;">IMAP/SMTP ·</span> <span style="white-space: nowrap;">SQLite ·</span> <span style="white-space: nowrap;">HTMX ·</span> <span style="white-space: nowrap;">C#/.NET ·</span> <span style="white-space: nowrap;">Docker Compose ·</span> <span style="white-space: nowrap;">pytest</span></p>
         <p style="margin: 0; max-width: 460px; font-size: 1rem; line-height: 1.7; color: var(--muted);">{{ t.portfolio.p1D }}</p>
       </div>
       <div class="proj-gallery" style="display: flex; flex-direction: column; gap: 12px;">
@@ -578,8 +722,8 @@ class Component extends DCLogic {
         intro: 'Eine Auswahl an Software, die ich beruflich für Kunden entwickelt habe.',
         live: 'Live-Test', code: 'Github',
         comingSoon: 'Kommt bald', wip: '— in Arbeit —',
-        p1Title: 'Vizpatch', p1Tag: 'KI-E-Mail-Assistent – direkt in Outlook.',
-        p1D: "Vizpatch ist ein KI-E-Mail-Assistent, der eingehende Mails einordnet, sie in Ordner sortieren kann und für Anfragen fertige Antwortentwürfe ablegt. Die Entwürfe stützen sich auf hinterlegtes Fachwissen und eigene Textvorlagen und treffen den Schreibstil des Nutzers. Über einen Chat direkt in Outlook steuert man das gesamte Postfach in natürlicher Sprache: Vizpatch sucht Mails, fasst sie zusammen, löscht, sendet und leitet sie weiter, hilft beim Schreiben, erstellt Entwürfe mit Anhängen, verwaltet Ordner, kann Newsletter abbestellen und wertet Anhänge oder Scans aus. Dahinter stehen 42 Werkzeuge, die das Sprachmodell per Tool Calling aufruft; als Modell sind Claude, GPT oder Gemini wählbar. Vizpatch läuft per Docker Compose auf dem Server des Kunden. Bevor Daten an das LLM gehen, werden sensible Angaben wie E-Mail-Adressen, Telefonnummern, IBANs und Kreditkartennummern pseudonymisiert (Art. 32 DSGVO). Mails gehen erst nach Freigabe raus, beinahe jede Aktion lässt sich rückgängig machen, und über 2.300 automatisierte Tests sichern das Verhalten ab.",
+        p1Title: 'Vizpatch', p1Tag: 'KI-E-Mail-Assistent – in Outlook und per App.',
+        p1D: "Vizpatch ist ein KI-E-Mail-Assistent, der eingehende Mails einordnet, sie in Ordner sortieren kann und für Anfragen fertige Antwortentwürfe ablegt. Die Entwürfe stützen sich auf hinterlegtes Fachwissen und eigene Textvorlagen und treffen den Schreibstil des Nutzers. Über einen Chat direkt in Outlook steuert man das gesamte Postfach in natürlicher Sprache: Vizpatch sucht Mails, fasst sie zusammen, löscht, sendet und leitet sie weiter, hilft beim Schreiben, erstellt Entwürfe mit Anhängen, verwaltet Ordner, kann Newsletter abbestellen und wertet Anhänge oder Scans aus. Dahinter stehen 42 Werkzeuge, die das Sprachmodell per Tool Calling aufruft; als Modell sind Claude, GPT oder Gemini wählbar. Neben dem Outlook-Add-in lässt sich Vizpatch auch per Smartphone-App steuern – über einen eigenen MCP-Server, der direkt ans Backend angebunden ist und ganz ohne Outlook auskommt. Vizpatch läuft per Docker Compose auf dem Server des Kunden. Bevor Daten an das LLM gehen, werden sensible Angaben wie E-Mail-Adressen, Telefonnummern, IBANs und Kreditkartennummern pseudonymisiert (Art. 32 DSGVO). Mails gehen erst nach Freigabe raus, beinahe jede Aktion lässt sich rückgängig machen, und über 2.300 automatisierte Tests sichern das Verhalten ab.",
         p2Title: 'Vizlock', p2Tag: 'Verschlüsselungstool für Windows – per Rechtsklick im Explorer, komplett offline.',
         p2D: "Vizlock ist ein Windows-Tool zur Verschlüsselung sensibler Daten. Per Rechtsklick im Explorer verschlüsseln Mitarbeiter einzelne Dateien oder beliebig tief verschachtelte Ordner mit einem Passwort – ganz ohne Server, Cloud oder Netzwerkverbindung. Die verschlüsselten Dateien verraten weder Inhalt noch Dateinamen, Ordnerstruktur oder Dateigröße. Beim Entschlüsseln kommen die Daten bit-identisch zurück, samt Struktur und Zeitstempeln. Verschlüsselte Dateien und Ordner lassen sich außerdem direkt nutzen: Ein Doppelklick in Vizlock genügt, um eine Datei im Standardprogramm für ihre Dateiendung zu öffnen, zu bearbeiten und zu speichern. Für einen kurzen Blick oder eine kleine Änderung muss man also nicht jedes Mal entschlüsseln, neu verschlüsseln und das Passwort erneut eingeben. Manipulationen am Chiffrat werden zuverlässig erkannt, und Originale werden erst gelöscht, wenn das verschlüsselte Ergebnis gesichert und geprüft ist. So setzt das Tool Art. 32 DSGVO auf Endgeräten technisch um. Abgesichert wird das durch acht Release-Gates in GitHub Actions, die nicht nur Unit-Tests ausführen, sondern das ausgelieferte NativeAOT-Binary selbst prüfen: Wiederherstellbarkeit, Absturzsicherheit, Fuzzing, Explorer-Integration und Installer-Integrität, jeweils mit Gegenproben.",
         p3Title: 'Praxis-Website', p3Tag: 'Website für eine Kinderarztpraxis – mit eigener Online-Terminbuchung.',
@@ -634,8 +778,8 @@ class Component extends DCLogic {
         intro: 'A selection of software I have developed professionally for clients.',
         live: 'Live test', code: 'Github',
         comingSoon: 'Coming Soon', wip: '— work in progress —',
-        p1Title: 'Vizpatch', p1Tag: 'AI email assistant – right inside Outlook.',
-        p1D: "Vizpatch is an AI email assistant that categorises incoming mail, can sort it into folders and saves ready-made reply drafts for requests. The drafts draw on stored expertise and custom text templates and match the user's writing style. Through a chat directly in Outlook, the entire mailbox can be controlled in natural language: Vizpatch searches mails, summarises, deletes, sends and forwards them, helps with writing, creates drafts with attachments, manages folders, can unsubscribe from newsletters and analyses attachments or scans. Behind it are 42 tools that the language model calls via tool calling; Claude, GPT or Gemini can be selected as the model. Vizpatch runs on the client's server via Docker Compose. Before any data reaches the LLM, sensitive details such as email addresses, phone numbers, IBANs and credit card numbers are pseudonymised (Art. 32 GDPR). Mails only go out after approval, almost every action can be undone, and more than 2,300 automated tests safeguard the behaviour.",
+        p1Title: 'Vizpatch', p1Tag: 'AI email assistant – in Outlook and via app.',
+        p1D: "Vizpatch is an AI email assistant that categorises incoming mail, can sort it into folders and saves ready-made reply drafts for requests. The drafts draw on stored expertise and custom text templates and match the user's writing style. Through a chat directly in Outlook, the entire mailbox can be controlled in natural language: Vizpatch searches mails, summarises, deletes, sends and forwards them, helps with writing, creates drafts with attachments, manages folders, can unsubscribe from newsletters and analyses attachments or scans. Behind it are 42 tools that the language model calls via tool calling; Claude, GPT or Gemini can be selected as the model. Besides the Outlook add-in, Vizpatch can also be controlled from a smartphone app – via a dedicated MCP server connected directly to the backend, with no Outlook required. Vizpatch runs on the client's server via Docker Compose. Before any data reaches the LLM, sensitive details such as email addresses, phone numbers, IBANs and credit card numbers are pseudonymised (Art. 32 GDPR). Mails only go out after approval, almost every action can be undone, and more than 2,300 automated tests safeguard the behaviour.",
         p2Title: 'Vizlock', p2Tag: 'Encryption tool for Windows – right-click in Explorer, fully offline.',
         p2D: "Vizlock is a Windows tool for encrypting sensitive data. With a right-click in Explorer, employees encrypt individual files or arbitrarily deeply nested folders with a password – entirely without a server, cloud or network connection. The encrypted files reveal neither content nor file names, folder structure or file size. On decryption, the data comes back bit-identical, including structure and timestamps. Encrypted files and folders can also be used directly: a double-click in Vizlock is all it takes to open a file in the default program for its file extension, edit it and save it. A quick look or a small change therefore doesn't require decrypting, re-encrypting and re-entering the password every time. Tampering with the ciphertext is reliably detected, and originals are only deleted once the encrypted result has been saved and verified. In this way, the tool technically implements Art. 32 GDPR on endpoints. This is safeguarded by eight release gates in GitHub Actions that go beyond unit tests and verify the shipped NativeAOT binary itself: recoverability, crash safety, fuzzing, Explorer integration and installer integrity, each with counter-checks.",
         p3Title: 'Practice Website', p3Tag: 'Website for a paediatric practice – with custom online booking.',
@@ -668,6 +812,7 @@ class Component extends DCLogic {
     { mark: '', name: 'Agentic Coding', icon: 'agent' },
     { mark: '', name: 'Codebase Mapping', icon: 'map' },
     { mark: '✦', name: 'Claude' },
+    { mark: 'MCP', name: 'MCP' },
     { mark: 'Py', name: 'Python' },
     { mark: 'FA', name: 'FastAPI' },
     { mark: 'C#', name: 'C#' },
@@ -684,7 +829,7 @@ class Component extends DCLogic {
     { mark: '{ }', name: 'Rest-Api' },
     { mark: 'Dk', name: 'Docker' },
     { mark: 'CI/CD', name: 'CI/CD' },
-    { mark: '▶', name: 'GitHub Actions' },
+    { mark: '', name: 'GitHub Actions', icon: 'gha' },
     { mark: '⎇', name: 'GIT', icon: 'big' },
     { mark: '>_', name: 'PowerShell' },
     { mark: '◭', name: 'Firebase' },
